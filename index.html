@@ -1069,13 +1069,31 @@
             document.getElementById('detailProductPrice').innerText = formatRupiah(p.price);
             document.getElementById('detailProductDesc').innerText = p.description || 'Deskripsi produk kosong.';
 
-            document.getElementById('btnTambahKeranjang').onclick = () => {
+            // Periksa login saat menekan tombol "Tambah ke Keranjang"
+            document.getElementById('btnTambahKeranjang').onclick = async () => {
+                const user = await dapatkanUserAktif();
+                if (!user) {
+                    tampilkanToast("Silakan login terlebih dahulu untuk mulai belanja!", "#dc2626");
+                    setTimeout(() => {
+                        window.location.href = "auth.html";
+                    }, 1500);
+                    return;
+                }
                 tambahKeKeranjang(p);
                 tampilkanToast(`"${p.name}" masuk keranjang!`, "#10b981");
                 tutupDetailProduk();
             };
 
-            document.getElementById('btnBeliLangsung').onclick = () => {
+            // Periksa login saat menekan tombol "Beli Sekarang"
+            document.getElementById('btnBeliLangsung').onclick = async () => {
+                const user = await dapatkanUserAktif();
+                if (!user) {
+                    tampilkanToast("Silakan login terlebih dahulu untuk belanja langsung!", "#dc2626");
+                    setTimeout(() => {
+                        window.location.href = "auth.html";
+                    }, 1500);
+                    return;
+                }
                 tambahKeKeranjang(p);
                 tutupDetailProduk();
                 toggleCartDrawer();

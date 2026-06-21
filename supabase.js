@@ -1,5 +1,5 @@
 // Hubungkan aplikasi ke Supabase DB
-// Silakan ganti URL dan KEY dengan konfigurasi asli dari Dashboard Supabase Anda
+// Konfigurasi asli database Supabase Sandy Place milik Anda
 const SUPABASE_URL = "https://aprnwmcliuubjosmtqis.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_OX9pW9J_w-oC6QCZPqPYcg_a0TogFm3";
 
