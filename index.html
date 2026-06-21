@@ -584,13 +584,15 @@
 
         async function navigasiKeProfil(event) {
             if (event) event.preventDefault();
+            
+            console.log('navigasiKeProfil: Checking login...');
             const user = await dapatkanUserAktif();
+            
             if (!user) {
-                tampilkanToast("Silakan login terlebih dahulu untuk mengakses fitur ini!", "#dc2626");
-                setTimeout(() => {
-                    window.location.href = "auth.html";
-                }, 1500);
+                console.log('navigasiKeProfil: No user, redirecting to auth.html');
+                await redirectKeAuth("Silakan login untuk mengakses profil!");
             } else {
+                console.log('navigasiKeProfil: User valid, going to profile');
                 window.location.href = "profil.html";
             }
         }
@@ -1208,10 +1210,12 @@
         }
 
         async function prosesCheckoutPesanan() {
+            console.log('prosesCheckoutPesanan: Starting checkout...');
             const user = await dapatkanUserAktif();
+            
             if (!user) {
-                tampilkanToast("Silakan login terlebih dahulu untuk melakukan pemesanan!", "#dc2626");
-                setTimeout(() => { window.location.href = "auth.html"; }, 1500);
+                console.log('prosesCheckoutPesanan: No user, redirecting');
+                await redirectKeAuth("Silakan login untuk melakukan pemesanan!");
                 return;
             }
 

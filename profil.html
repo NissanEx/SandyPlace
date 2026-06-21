@@ -493,29 +493,30 @@
 
         async function periksaSesi() {
             try {
-                const user = await dapatkanUserAktif();
+                console.log('periksaSesi: Starting session check...');
                 
-                // PENTING: Jika tidak ada user, redirect ke auth.html
+                // Gunakan fungsi cekSesiDanRedirect dari supabase.js
+                const user = await cekSesiDanRedirect();
+                
+                // Jika cekSesiDanRedirect mengembalikan null, berarti sudah di-redirect
                 if (!user) {
-                    // Sembunyikan loading screen dan redirect
-                    document.getElementById('loadingScreen').classList.add('hidden');
-                    tampilkanToast("Silakan login terlebih dahulu!", "#dc2626");
-                    setTimeout(() => {
-                        window.location.href = "auth.html";
-                    }, 1500);
+                    console.log('periksaSesi: User tidak valid, redirect sudah dilakukan');
                     return;
                 }
 
                 idUserAktif = user.id;
+                console.log('periksaSesi: User valid, loading data... ID:', idUserAktif);
+                
                 await muatDataProfil();
                 await muatProdukToko();
                 
                 // Sembunyikan loading screen setelah data dimuat
                 document.getElementById('loadingScreen').classList.add('hidden');
+                console.log('periksaSesi: Data loaded, profile ready');
             } catch (error) {
-                console.error("Error saat cek sesi:", error);
+                console.error("Error saat periksaSesi:", error);
                 document.getElementById('loadingScreen').classList.add('hidden');
-                window.location.href = "auth.html";
+                await redirectKeAuth("Terjadi error, silakan login kembali");
             }
         }
 
