@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandy Place – Masuk / Daftar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Supabase JS Client dari CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --gray-pill: #e1e1e1;
+            --transition-speed: 0.4s;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 60px;
+            width: 100%;
+            background: transparent;
+        }
+
+        .logo {
+            font-size: 44px;
+            line-height: 0.8;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            user-select: none;
+            text-decoration: none;
+        }
+        .logo .light { font-weight: 400; color: #8c8c8c; }
+        .logo .bold  { font-weight: 700; color: #000; margin-left: 55px; margin-top: -6px; }
+
+        .cs-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #000000;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            padding: 8px;
+        }
+        .cs-btn:hover {
+            transform: scale(1.08);
+            opacity: 0.8;
+        }
+
+        .auth-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 60px 60px 60px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .auth-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 80px;
+            width: 100%;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .auth-grid {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+            .header-bar {
+                padding: 20px 30px;
+            }
+            .auth-container {
+                padding: 0 30px 40px 30px;
+            }
+        }
+
+        .quote-panel {
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 28px;
+            padding: 55px;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .quote-panel:hover {
+            transform: translateY(-4px);
+        }
+
+        .quote-content-wrapper {
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .quote-content-wrapper.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .quote-book-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+        }
+
+        .quote-text {
+            font-size: 20px;
+            line-height: 1.7;
+            font-style: italic;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #f3f4f6;
+        }
+
+        .quote-author {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: right;
+            color: #ffffff;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 8px;
+            position: absolute;
+            bottom: 25px;
+            left: 55px;
+        }
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: background 0.3s ease, width 0.3s ease;
+        }
+        .carousel-dot.active {
+            background: #ffffff;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        .form-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            max-width: 520px;
+            margin-left: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .form-panel {
+                margin: 0 auto;
+            }
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 40px;
+            transition: opacity 0.2s ease;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            align-items: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        .form-label {
+            font-size: 18px;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--gray-pill);
+            color: #1a1a1a;
+            border: none;
+            outline: none;
+            padding: 14px 24px;
+            border-radius: 9999px;
+            font-family: 'Lora', serif;
+            font-size: 16px;
+            transition: background-color 0.2s ease;
+        }
+        .form-input:focus {
+            background-color: #d6d6d6;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
+        .btn-auth {
+            font-family: 'Lora', serif;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 12px 32px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+        }
+
+        .btn-auth.active {
+            background-color: #000000;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .btn-auth.active:hover {
+            transform: scale(1.04);
+            background-color: #1a1a1a;
+        }
+
+        .btn-auth.inactive {
+            background-color: var(--gray-pill);
+            color: #000000;
+        }
+        .btn-auth.inactive:hover {
+            transform: scale(1.04);
+            background-color: #d1d1d1;
+        }
+
+        .row-transition {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-bottom: 0;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-bottom 0.4s ease;
+        }
+
+        .row-transition.show {
+            max-height: 100px;
+            opacity: 1;
+            margin-bottom: 24px;
+        }
+
+        .cs-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        .cs-modal {
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 28px;
+            max-width: 450px;
+            width: 100%;
+            padding: 35px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast-notif {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #000;
+            color: white;
+            border: 1px solid #fff;
+            padding: 16px 28px;
+            border-radius: 9999px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 3000;
+            font-weight: 600;
+            font-size: 14px;
+            align-items: center;
+            gap: 10px;
+            animation: slideUpFade 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-bar">
+        <a class="logo" href="index.html">
+            <span class="light">Sandy</span>
+            <span class="bold">Place</span>
+        </a>
+        
+        <button class="cs-btn" onclick="toggleCSModal(true)" aria-label="Customer Service" title="Hubungi CS">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 20C4 16.5 7 14 12 14C17 14 20 16.5 20 20H4Z" />
+                <circle cx="12" cy="8.5" r="4.5" />
+                <path d="M7.5 9C7.5 6 9.5 4 12 4C14.5 4 16.5 6 16.5 9" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                <rect x="6" y="7.5" width="2" height="4" rx="1" />
+                <rect x="16" y="7.5" width="2" height="4" rx="1" />
+                <path d="M17 10C17 12 15.5 13 14.5 13" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-grid">
+            
+            <!-- Panel Kutipan Kiri -->
+            <div class="quote-panel">
+                <div class="quote-content-wrapper" id="quoteWrapper">
+                    <div class="quote-book-title" id="bookTitle">Madilog</div>
+                    <div class="quote-text" id="quoteBody">
+                        "Bila kaum muda yang telah belajar di sekolah dan menganggap dirinya terlalu tinggi dan pintar untuk melebur dengan masyarakat yang bekerja dengan cangkul dan hanya memiliki cita-cita yang sederhana, maka lebih baik pendidikan itu tidak diberikan sama sekali."
+                    </div>
+                    <div class="quote-author" id="bookAuthor">Tan Malaka</div>
+                </div>
+
+                <div class="carousel-dots">
+                    <div class="carousel-dot active" onclick="jumpToQuote(0)" data-idx="0"></div>
+                    <div class="carousel-dot" onclick="jumpToQuote(1)" data-idx="1"></div>
+                    <div class="carousel-dot" onclick="jumpToQuote(2)" data-idx="2"></div>
+                </div>
+            </div>
+
+            <!-- Panel Form Otentikasi Kanan -->
+            <div class="form-panel">
+                <h2 class="form-title" id="formHeader">Sign In</h2>
+                
+                <form id="authForm" onsubmit="handleFormSubmit(event)">
+                    <!-- Baris Nama Lengkap (Khusus Pendaftaran) -->
+                    <div class="form-row row-transition" id="fullNameRow">
+                        <label class="form-label" for="userFullName">Nama :</label>
+                        <input type="text" id="userFullName" class="form-input" placeholder="Masukkan nama lengkap Anda">
+                    </div>
+
+                    <!-- Baris Email (Pendaftaran & Masuk) -->
+                    <div class="form-row" id="emailRow">
+                        <label class="form-label" for="userEmail">Email :</label>
+                        <input type="email" id="userEmail" class="form-input" placeholder="Masukkan Email Anda" required>
+                    </div>
+
+                    <!-- Baris Password (Pendaftaran & Masuk) -->
+                    <div class="form-row">
+                        <label class="form-label" for="userPassword">Password :</label>
+                        <input type="password" id="userPassword" class="form-input" placeholder="Masukkan kata sandi" required>
+                    </div>
+
+                    <!-- Konfirmasi Password (Khusus Pendaftaran) -->
+                    <div class="form-row row-transition" id="confirmRow">
+                        <label class="form-label" for="confirmPassword">Confirm :</label>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Ulangi kata sandi">
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="button" id="signUpBtn" class="btn-auth inactive" onclick="setMode('signup')">Sign-Up</button>
+                        <button type="submit" id="signInBtn" class="btn-auth active">Sign-In</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Dukungan Layanan Pelanggan -->
+    <div class="cs-overlay" id="csOverlay" onclick="toggleCSModal(false)">
+        <div class="cs-modal" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold mb-4 text-black border-b border-gray-100 pb-3 font-serif">Layanan CS Sandy Place</h3>
+            <p class="text-gray-600 text-sm mb-6 leading-relaxed">Butuh bantuan transaksi, kendala masuk akun, atau pertanyaan terkait pengunggahan produk? Hubungi saluran resmi kami:</p>
+            <div class="space-y-3">
+                <a href="https://wa.me/6282261068992" target="_blank" class="flex items-center justify-between p-3.5 bg-green-50 hover:bg-green-100 rounded-xl text-green-800 transition">
+                    <span class="font-semibold text-sm">WhatsApp Support</span>
+                    <span class="text-xs font-bold px-2.5 py-1 bg-green-200/50 rounded-full">Aktif</span>
+                </a>
+            </div>
+            <button class="mt-6 w-full py-3 rounded-xl bg-black text-white text-sm font-semibold hover:bg-neutral-800 transition" onclick="toggleCSModal(false)">Tutup</button>
+        </div>
+    </div>
+
+    <div id="shopToast" class="toast-notif"><span id="toastMessage"></span></div>
+
+    <script>
+        const quotesRepository = [
+            {
+                book: "Madilog",
+                quote: `"Bila kaum muda yang telah belajar di sekolah dan menganggap dirinya terlalu tinggi dan pintar untuk melebur dengan masyarakat yang bekerja dengan cangkul dan hanya memiliki cita-cita yang sederhana, maka lebih baik pendidikan itu tidak diberikan sama sekali."`,
+                author: "Tan Malaka"
+            },
+            {
+                book: "Bumi Manusia",
+                quote: `"Kalian boleh maju dalam pelajaran, mungkin mendapat pangkat atau gelar setinggi-langit, tapi tanpa mencintai sastra, kalian hanya akan menjadi hewan yang pandai."`,
+                author: "Pramoedya Ananta Toer"
+            },
+            {
+                book: "Catatan Seorang Demonstran",
+                quote: `"Hanya ada dua pilihan, menjadi apatis atau mengabdi. Karena dunia ini milik mereka yang berani melangkah, bukan mereka yang hanya diam mengeluh."`,
+                author: "Soe Hok Gie"
+            }
+        ];
+
+        let currentQuoteIndex = 0;
+        let quoteInterval;
+        let authMode = 'signin'; 
+
+        function renderQuote(index) {
+            const wrapper = document.getElementById('quoteWrapper');
+            const titleEl = document.getElementById('bookTitle');
+            const bodyEl = document.getElementById('quoteBody');
+            const authorEl = document.getElementById('bookAuthor');
+            const dots = document.querySelectorAll('.carousel-dot');
+
+            wrapper.classList.add('fade-out');
+
+            setTimeout(() => {
+                const target = quotesRepository[index];
+                titleEl.innerText = target.book;
+                bodyEl.innerText = target.quote;
+                authorEl.innerText = target.author;
+
+                dots.forEach((dot, dIdx) => {
+                    dot.classList.toggle('active', dIdx === index);
+                });
+
+                wrapper.classList.remove('fade-out');
+            }, 350);
+        }
+
+        function rotateQuote() {
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotesRepository.length;
+            renderQuote(currentQuoteIndex);
+        }
+
+        function jumpToQuote(index) {
+            clearInterval(quoteInterval);
+            currentQuoteIndex = index;
+            renderQuote(currentQuoteIndex);
+            startQuoteCarousel();
+        }
+
+        function startQuoteCarousel() {
+            quoteInterval = setInterval(rotateQuote, 6500);
+        }
+
+        function setMode(mode) {
+            if (authMode === mode) return;
+            authMode = mode;
+
+            const header = document.getElementById('formHeader');
+            const fullNameRow = document.getElementById('fullNameRow');
+            const confirmRow = document.getElementById('confirmRow');
+            const signUpBtn = document.getElementById('signUpBtn');
+            const signInBtn = document.getElementById('signInBtn');
+
+            if (mode === 'signup') {
+                header.innerText = "Sign Up";
+                fullNameRow.classList.add('show');
+                confirmRow.classList.add('show');
+                
+                document.getElementById('userFullName').setAttribute('required', 'true');
+                document.getElementById('confirmPassword').setAttribute('required', 'true');
+
+                signUpBtn.className = "btn-auth active";
+                signUpBtn.setAttribute('type', 'submit');
+
+                signInBtn.className = "btn-auth inactive";
+                signInBtn.setAttribute('type', 'button');
+                signInBtn.setAttribute('onclick', "setMode('signin')");
+            } else {
+                header.innerText = "Sign In";
+                fullNameRow.classList.remove('show');
+                confirmRow.classList.remove('show');
+
+                document.getElementById('userFullName').removeAttribute('required');
+                document.getElementById('confirmPassword').removeAttribute('required');
+
+                signInBtn.className = "btn-auth active";
+                signInBtn.setAttribute('type', 'submit');
+                signInBtn.removeAttribute('onclick');
+
+                signUpBtn.className = "btn-auth inactive";
+                signUpBtn.setAttribute('type', 'button');
+                signUpBtn.setAttribute('onclick', "setMode('signup')");
+            }
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('userEmail').value.trim();
+            const pass = document.getElementById('userPassword').value;
+
+            if (authMode === 'signup') {
+                const fullName = document.getElementById('userFullName').value.trim();
+                const confirmPass = document.getElementById('confirmPassword').value;
+
+                if (pass !== confirmPass) {
+                    showToast("Konfirmasi kata sandi tidak cocok!", "#dc2626");
+                    return;
+                }
+
+                showToast("Sedang mendaftarkan akun di Supabase...", "#4285F4");
+
+                // Proses pendaftaran dengan Supabase Auth
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: pass,
+                });
+
+                if (error) {
+                    showToast("Pendaftaran Gagal: " + error.message, "#dc2626");
+                    return;
+                }
+
+                if (data.user) {
+                    // Buat baris profil di table profiles sesuai ERD schema
+                    const { error: profileError } = await supabase
+                        .from('profiles')
+                        .insert([{
+                            id: data.user.id,
+                            name: fullName,
+                            email: email,
+                            phone: "",
+                            address: "",
+                            message: "Selamat datang di profil saya! Silakan jelajahi toko saya di bawah.",
+                            followers: 0,
+                            following: 0
+                        }]);
+
+                    if (profileError) {
+                        console.error("Gagal membuat profil data:", profileError);
+                    }
+
+                    showToast("Pendaftaran Berhasil! Silakan masuk.", "#10b981");
+                    setTimeout(() => {
+                        setMode('signin');
+                    }, 1500);
+                }
+            } else {
+                showToast("Sedang melakukan verifikasi masuk...", "#4285F4");
+                
+                // Proses masuk dengan Supabase Auth
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: pass
+                });
+
+                if (error) {
+                    showToast("Login Gagal: " + error.message, "#dc2626");
+                    return;
+                }
+
+                showToast(`Selamat datang kembali!`, "#10b981");
+                setTimeout(() => {
+                    window.location.href = "profil.html";
+                }, 1500);
+            }
+        }
+
+        function toggleCSModal(show) {
+            const overlay = document.getElementById('csOverlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        function showToast(message, colorHex) {
+            const toast = document.getElementById('shopToast');
+            const toastMsg = document.getElementById('toastMessage');
+            if (toast && toastMsg) {
+                toastMsg.innerText = message;
+                toast.style.borderColor = colorHex || '#fff';
+                toast.style.display = 'flex';
+                setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            startQuoteCarousel();
+            // Jika sudah ada user masuk, langsung arahkan ke profil
+            const user = await dapatkanUserAktif();
+            if (user) {
+                window.location.href = "profil.html";
+            }
+        });
+    </script>
+</body>
+</html>

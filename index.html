@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandy Place Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --panel-bg: #111113;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111113; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 4px; }
+
+        .logo {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            line-height: 0.8;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            user-select: none;
+            text-decoration: none;
+        }
+        @media (min-width: 768px) {
+            .logo { font-size: 36px; }
+        }
+        .logo .light { font-weight: 300; color: #8c8c8c; }
+        .logo .bold  { font-weight: 700; color: #000; margin-left: 35px; margin-top: -4px; }
+        @media (min-width: 768px) {
+            .logo .bold { margin-left: 45px; margin-top: -6px; }
+        }
+
+        .hero-carousel {
+            margin: 12px;
+            height: 300px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            background-color: #111113;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        @media (min-width: 768px) {
+            .hero-carousel {
+                margin: 20px 40px 40px 40px;
+                height: 440px;
+                border-radius: 40px;
+            }
+        }
+        
+        .hero-slides {
+            display: flex; 
+            height: 100%; 
+            width: 500%;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            z-index: 3;
+        }
+        
+        .slide {
+            width: 20%; 
+            height: 100%;
+            display: flex; 
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px; 
+            box-sizing: border-box;
+            background: transparent;
+        }
+        @media (min-width: 768px) {
+            .slide { padding: 0 100px; }
+        }
+        
+        .hero-text { flex: 1; max-width: 100%; color: #ffffff; }
+        @media (min-width: 768px) {
+            .hero-text { max-width: 55%; }
+        }
+        
+        .hero-text h1 { 
+            font-family: 'Lora', serif;
+            font-size: 24px; 
+            font-weight: 600;
+            line-height: 1.25; 
+            margin-bottom: 12px; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.15); 
+        }
+        @media (min-width: 768px) {
+            .hero-text h1 { font-size: 46px; margin-bottom: 20px; }
+        }
+        
+        .hero-text p  { 
+            font-size: 13px; 
+            color: #e0e0e0; 
+            margin-bottom: 20px; 
+            font-weight: 300;
+        }
+        @media (min-width: 768px) {
+            .hero-text p { font-size: 16px; margin-bottom: 35px; }
+        }
+        
+        .btn-promo {
+            background: #ffffff; 
+            color: #000000;
+            padding: 10px 24px; 
+            border-radius: 20px;
+            font-family: 'Lora', serif;
+            font-weight: 600; 
+            font-size: 12px;
+            cursor: pointer; 
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        @media (min-width: 768px) {
+            .btn-promo { padding: 14px 40px; border-radius: 25px; font-size: 14px; }
+        }
+        .btn-promo:hover { transform: scale(1.05); background-color: #f0f0f0; }
+        
+        .hero-visual-wrapper {
+            width: 140px;
+            height: 140px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .hero-visual-wrapper { display: flex; width: 320px; height: 320px; }
+        }
+
+        .hero-visual {
+            width: 260px; 
+            height: 260px; 
+            border-radius: 50%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            position: relative; 
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        .bg-pastel-yellow { background: #ffd54f; }
+        .bg-pastel-pink   { background: #ff8da1; }
+        .bg-pastel-blue   { background: #64b5f6; }
+        .bg-pastel-green  { background: #81c784; }
+        .bg-pastel-orange { background: #ffb74d; }
+        
+        .hero-visual svg { width: 120px; height: 120px; color: #ffffff; }
+
+        .carousel-dots {
+            position: absolute; 
+            bottom: 20px;
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex; 
+            gap: 8px; 
+            z-index: 10;
+        }
+        
+        .dot {
+            width: 8px; 
+            height: 8px; 
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4); 
+            cursor: pointer;
+        }
+        .dot.active { background: #ffffff; width: 20px; border-radius: 6px; }
+
+        .main-content-panel {
+            background-color: var(--panel-bg);
+            border-radius: 28px 28px 28px 28px;
+            padding: 32px 16px;
+            color: #ffffff;
+            margin: 12px;
+        }
+        @media (min-width: 768px) {
+            .main-content-panel { 
+                border-radius: 40px; 
+                padding: 60px 50px; 
+                margin: 0 40px;
+            }
+        }
+        
+        .brands-header {
+            display: flex; 
+            justify-content: space-between;
+            align-items: flex-end; 
+            margin-bottom: 28px;
+        }
+        .brands-header h2 { 
+            font-family: 'Lora', serif;
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #ffffff; 
+        }
+        @media (min-width: 768px) {
+            .brands-header h2 { font-size: 32px; }
+        }
+        
+        .see-all { 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: #818cf8; 
+            text-decoration: none; 
+        }
+
+        .search-results-view { display: none; padding: 16px; background: #fafafa; }
+        @media (min-width: 768px) { .search-results-view { padding: 40px; } }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        @media (min-width: 640px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
+        
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #f1f1f4;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.06);
+            border-color: #e4e4e7;
+        }
+        .product-card-img {
+            height: 180px;
+            background: #f7f7f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .product-card-img img { width: 100%; height: 100%; object-fit: cover; }
+        .product-card-body { padding: 16px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
+        .product-card-title { font-weight: 600; font-size: 14px; color: #111113; }
+        .product-card-desc { font-size: 11px; color: #71717a; }
+        .product-card-price { font-weight: 700; color: #111113; margin-top: auto; font-size: 15px; }
+
+        .toast-notif {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #000;
+            color: white;
+            border: 1px solid #fff;
+            padding: 16px 28px;
+            border-radius: 9999px;
+            z-index: 3000;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="navbar sticky top-0 z-50 flex flex-col md:flex-row items-stretch md:items-center justify-between px-4 md:px-10 py-4 md:py-6 bg-white/95 backdrop-blur-md border-b border-gray-100 gap-4 shadow-sm">
+        <div class="flex items-center justify-between">
+            <a class="logo" href="index.html" onclick="event.preventDefault(); kembalikeBeranda();">
+                <span class="light">Sandy</span>
+                <span class="bold">Place</span>
+            </a>
+            <div class="flex items-center gap-4 md:hidden">
+                <button class="text-gray-400 hover:text-black relative" onclick="toggleCartDrawer()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-badge absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+                <a href="profil.html" class="navbarAvatarMobile w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-xs overflow-hidden border" id="avatarNavbarMobile">S</a>
+            </div>
+        </div>
+
+        <!-- Kolom Pencarian -->
+        <div class="search-container flex-1 max-w-full md:max-w-[650px] md:mx-8 relative">
+            <input type="text" id="searchInput" class="w-full px-5 py-3 rounded-full border border-gray-200 text-sm focus:outline-none focus:border-black pr-12 text-black" placeholder="Cari produk impian (contoh: pc, baju, sepatu)...">
+            <button id="searchBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="user-menu hidden md:flex items-center gap-6">
+            <button class="text-gray-400 hover:text-black relative" onclick="toggleCartDrawer()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-badge absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+            </button>
+            <a href="profil.html" id="navbarAvatar" class="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-sm overflow-hidden border border-gray-100 hover:scale-105 transition">S</a>
+        </div>
+    </header>
+
+    <!-- ===== CAROUSEL UTAMA ===== -->
+    <div id="homeView">
+        <main class="hero-carousel">
+            <div class="hero-slides" id="heroSlides">
+                <!-- Slide 1 -->
+                <div class="slide bg-gradient-to-r from-neutral-900 to-indigo-950">
+                    <div class="hero-text">
+                        <span class="text-xs bg-indigo-500/30 text-indigo-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">EDISI KHUSUS</span>
+                        <h1>Koleksi Premium<br>Rilis Baru Akhir Pekan.</h1>
+                        <p>Dapatkan pakaian pilihan kurator terbaik dengan potongan harga spesial.</p>
+                        <button class="btn-promo" onclick="cariBerdasarkanTag('baju')">Lihat Koleksi</button>
+                    </div>
+                    <div class="hero-visual-wrapper">
+                        <div class="hero-visual bg-pastel-yellow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M20.37 4.65a2.11 2.11 0 0 0-1.2-.65l-4.71-.67a.38.38 0 0 1-.29-.21l-2.1-4.27a2.13 2.13 0 0 0-3.81 0L6.16 3.12a.38.38 0 0 1-.29.21L1.16 4a2.11 2.11 0 0 0-1.2.65 2.15 2.15 0 0 0-.35 1.34l.75 7.14a2.14 2.14 0 0 0 2.13 1.91h14.7a2.14 2.14 0 0 0 2.13-1.91l.75-7.14a2.15 2.15 0 0 0-.35-1.34Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="slide bg-gradient-to-r from-neutral-900 to-emerald-950">
+                    <div class="hero-text">
+                        <span class="text-xs bg-emerald-500/30 text-emerald-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">PERKAKAS KERJA</span>
+                        <h1>Setup Kerja Estetik<br>Koleksi PC & Gadget.</h1>
+                        <p>Tingkatkan produktivitas kerja dengan perlengkapan komputer modern.</p>
+                        <button class="btn-promo" onclick="cariBerdasarkanTag('pc')">Jelajahi Gadget</button>
+                    </div>
+                    <div class="hero-visual-wrapper">
+                        <div class="hero-visual bg-pastel-green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="2" y="3" width="20" height="13" rx="2" />
+                                <line x1="12" y1="16" x2="12" y2="21" />
+                                <line x1="8" y1="21" x2="16" y2="21" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="slide bg-gradient-to-r from-neutral-900 to-amber-950">
+                    <div class="hero-text">
+                        <span class="text-xs bg-amber-500/30 text-amber-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GAYA HIDUP</span>
+                        <h1>Langkah Percaya Diri<br>Katalog Sepatu Trendi.</h1>
+                        <p>Dari kasual hingga olahraga, temukan sepatu yang paling pas untuk Anda.</p>
+                        <button class="btn-promo" onclick="cariBerdasarkanTag('sepatu')">Cari Sepatu</button>
+                    </div>
+                    <div class="hero-visual-wrapper">
+                        <div class="hero-visual bg-pastel-orange">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M3 18v-6a9 9 0 0 1 18 0v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 4 -->
+                <div class="slide bg-gradient-to-r from-neutral-900 to-rose-950">
+                    <div class="hero-text">
+                        <span class="text-xs bg-rose-500/30 text-rose-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">KERAJINAN LOKAL</span>
+                        <h1>Karya Seni Orisinal<br>Hiasan Rumah Minimalis.</h1>
+                        <p>Sentuhan artistik dari pengrajin komunitas lokal Sandy Place.</p>
+                        <button class="btn-promo" onclick="cariBerdasarkanTag('aksesoris')">Lihat Seni</button>
+                    </div>
+                    <div class="hero-visual-wrapper">
+                        <div class="hero-visual bg-pastel-pink">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2L2 22h20L12 2Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 5 -->
+                <div class="slide bg-gradient-to-r from-neutral-900 to-zinc-900">
+                    <div class="hero-text">
+                        <span class="text-xs bg-zinc-500/30 text-zinc-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GABUNG SELLER</span>
+                        <h1>Bangun Toko Anda<br>Mulai Jualan Gratis.</h1>
+                        <p>Unggah produk Anda langsung ke database dan jangkau seluruh anggota.</p>
+                        <button class="btn-promo" onclick="window.location.href='profil.html'">Kelola Toko</button>
+                    </div>
+                    <div class="hero-visual-wrapper">
+                        <div class="hero-visual bg-pastel-blue">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5Zm4 3h6v2H9V6Zm0 4h6v2H9v-2Zm0 4h6v2H9v-2Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bulatan Slider -->
+            <div class="carousel-dots">
+                <div class="dot active" onclick="pindahSlide(0)"></div>
+                <div class="dot" onclick="pindahSlide(1)"></div>
+                <div class="dot" onclick="pindahSlide(2)"></div>
+                <div class="dot" onclick="pindahSlide(3)"></div>
+                <div class="dot" onclick="pindahSlide(4)"></div>
+            </div>
+        </main>
+
+        <!-- ===== PANEL JELAJAH BRAND & TOKO (MAKSIMAL 6 BRAND) ===== -->
+        <div class="main-content-panel">
+            <section class="brands-section">
+                <div class="brands-header">
+                    <div>
+                        <h2 class="font-serif text-white">Jelajahi Brand & Toko Kreator</h2>
+                        <p class="text-xs text-zinc-400">Temukan barang impian langsung dari 6 brand pilihan Sandy Place</p>
+                    </div>
+                    <a href="profil.html" class="see-all">Kelola Toko Saya</a>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" id="brandsDatabaseGrid">
+                    <!-- Memuat tepat 6 kartu toko dinamis + premium mock -->
+                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ===== ETALASE PRODUK DI LUAR PANEL HITAM (LATAR BELAKANG PUTIH) ===== -->
+        <div class="bg-white px-4 md:px-10 py-12 md:py-20 max-w-7xl mx-auto">
+            <section class="pt-2">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                    <div>
+                        <h2 class="font-serif text-3xl md:text-4xl text-neutral-900 font-bold" id="productSectionTitle">Produk Terbaru Komunitas</h2>
+                        <p class="text-sm text-zinc-600 mt-2" id="searchFeedback">Menampilkan seluruh katalog produk aktif dari komunitas penjual</p>
+                    </div>
+                </div>
+                
+                <div class="product-grid" id="communityProductsGrid">
+                    <!-- Katalog produk dinamis dimuat di sini -->
+                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ===== TOKO DETAIL VIEW ===== -->
+    <div id="shopDetailView" class="hidden px-4 md:px-10 py-8 bg-zinc-50 min-h-[100vh] pb-24">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-6">
+                <button onclick="kembalikeBeranda()" class="flex items-center gap-2 text-zinc-500 hover:text-black transition text-sm font-semibold">
+                    ← Kembali ke Beranda
+                </button>
+            </div>
+
+            <!-- Banner Toko Atas -->
+            <div class="relative w-full rounded-2xl overflow-hidden bg-black aspect-[16/5] shadow-xl">
+                <img id="shopDetailBanner" class="w-full h-full object-cover opacity-80" src="" alt="Banner Toko">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                <div class="absolute inset-x-8 bottom-8 flex flex-col md:flex-row items-center md:items-end gap-6 z-10 text-white">
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white bg-zinc-900 flex-shrink-0">
+                        <img id="shopDetailAvatar" class="w-full h-full object-cover" src="" alt="Avatar Toko">
+                    </div>
+                    <div>
+                        <h1 id="shopDetailName" class="font-serif text-2xl md:text-4xl font-bold">Nama Toko</h1>
+                        <p id="shopDetailDesc" class="text-zinc-400 text-sm mt-1">"Deskripsi toko kami"</p>
+                    </div>
+                    <div class="ml-auto flex gap-3">
+                        <button onclick="hubungiPenjualWhatsApp()" class="px-6 py-2.5 rounded-full bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition">Hubungi Penjual (WA)</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <h3 class="font-serif text-2xl md:text-3xl font-bold text-neutral-900 mb-6">Koleksi Produk Pilihan Toko</h3>
+                <div class="product-grid" id="shopProductsGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DETAIL PRODUK ===== -->
+    <div id="productDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="tutupDetailProduk()"></div>
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row overflow-hidden">
+            <div class="w-full md:w-1/2 bg-zinc-100 aspect-square">
+                <img id="detailProductImg" src="" alt="" class="w-full h-full object-cover">
+            </div>
+            <div class="w-full md:w-1/2 p-6 flex flex-col justify-between text-black bg-white">
+                <div>
+                    <h2 id="detailProductName" class="font-serif text-2xl font-bold mb-2 text-neutral-900">Nama Produk</h2>
+                    <div id="detailProductPrice" class="text-xl font-bold text-indigo-600 mb-4">Rp 0</div>
+                    <p id="detailProductDesc" class="text-sm text-zinc-600 mb-6"></p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <button id="btnTambahKeranjang" class="w-full py-3 rounded-xl border border-zinc-950 font-semibold text-sm hover:bg-zinc-50 transition text-zinc-950">Tambah ke Keranjang</button>
+                    <button id="btnBeliLangsung" class="w-full py-3 rounded-xl bg-black text-white font-semibold text-sm hover:bg-zinc-800 transition">Beli Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== KERANJANG DRAWER ===== -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/60" onclick="toggleCartDrawer()"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white text-black shadow-2xl flex flex-col justify-between transform transition duration-300" id="cartDrawerContent">
+            <div class="p-6 border-b flex items-center justify-between">
+                <h3 class="font-serif text-lg font-bold text-neutral-900">Keranjang Belanja</h3>
+                <button onclick="toggleCartDrawer()" class="text-zinc-500 hover:text-black">✕</button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cartItemsContainer"></div>
+            <div class="p-6 border-t bg-zinc-50 space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-zinc-600 text-sm">Total Belanja</span>
+                    <span class="text-lg font-bold text-neutral-950" id="cartSubtotal">Rp 0</span>
+                </div>
+                <button onclick="prosesCheckoutPesanan()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">Pesan Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="shopToast" class="toast-notif"><span id="toastMessage"></span></div>
+
+    <!-- ===== LOGIKA UTAMA ===== -->
+    <script>
+        let keranjang = [];
+        let katalogSellers = [];
+        let katalogProducts = [];
+        let detailTokoAktif = null;
+        let slideAktif = 0;
+
+        // Premium mock brands fallback untuk melengkapi hingga genap 6 brand pilihan
+        const premiumMockBrands = [
+            {
+                id: "mock-1",
+                name: "Exotic Denim",
+                message: "Pakaian denim lokal berkualitas tinggi dengan jahitan kuat",
+                banner_url: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=600",
+                avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
+                phone: "082261068992"
+            },
+            {
+                id: "mock-2",
+                name: "TechForge Workspaces",
+                message: "Kombinasi peripheral aesthetic dan perlengkapan workstation modern",
+                banner_url: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&q=80&w=600",
+                avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
+                phone: "082261068992"
+            },
+            {
+                id: "mock-3",
+                name: "Langkah Kaki Leather",
+                message: "Sepatu kulit buatan tangan premium dengan lekukan anatomi sempurna",
+                banner_url: "https://images.unsplash.com/photo-1449241595118-963d74d80c31?auto=format&fit=crop&q=80&w=600",
+                avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300",
+                phone: "082261068992"
+            },
+            {
+                id: "mock-4",
+                name: "Seni Bumi Atelier",
+                message: "Vas tanah liat, lukisan estetik & dekorasi interior minimalis",
+                banner_url: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&q=80&w=600",
+                avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=300",
+                phone: "082261068992"
+            },
+            {
+                id: "mock-5",
+                name: "Aura Jewelry House",
+                message: "Perhiasan perak murni dan logam berharga yang dirancang artisan lokal",
+                banner_url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=600",
+                avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300",
+                phone: "082261068992"
+            },
+            {
+                id: "mock-6",
+                name: "PaperCut Stationery",
+                message: "Notebook daur ulang & agenda harian estetik ramah lingkungan",
+                banner_url: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=80&w=600",
+                avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300",
+                phone: "082261068992"
+            }
+        ];
+
+        // --- SISTEM SLIDER ANIMASI ---
+        function pindahSlide(idx) {
+            slideAktif = idx;
+            const container = document.getElementById('heroSlides');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (container) {
+                container.style.transform = `translateX(-${idx * 20}%)`;
+            }
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === idx);
+            });
+        }
+
+        function putarSlideOtomatis() {
+            slideAktif = (slideAktif + 1) % 5;
+            pindahSlide(slideAktif);
+        }
+
+        // --- PENGAMBILAN DATA SUPABASE ---
+        async function muatDataMarketplace() {
+            try {
+                // Ambil semua daftar seller dari table profiles
+                const { data: profiles, error: errorProfiles } = await supabase
+                    .from('profiles')
+                    .select('*');
+
+                if (!errorProfiles && profiles) {
+                    katalogSellers = profiles;
+                }
+                
+                renderDaftarToko();
+
+                // Ambil semua daftar produk terdaftar di Supabase
+                const { data: products, error: errorProducts } = await supabase
+                    .from('products')
+                    .select('*');
+
+                if (!errorProducts && products) {
+                    katalogProducts = products;
+                    renderProdukKomunitas(katalogProducts);
+                }
+
+                // Muat data user login untuk navbar avatar
+                const user = await dapatkanUserAktif();
+                if (user) {
+                    const { data: currentProfile } = await supabase
+                        .from('profiles')
+                        .select('avatar_url, name')
+                        .eq('id', user.id)
+                        .single();
+
+                    if (currentProfile) {
+                        const avatarSrc = currentProfile.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300';
+                        const avatarHtml = `<img src="${avatarSrc}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
+                        const navbarAvatar = document.getElementById('navbarAvatar');
+                        const avatarNavbarMobile = document.getElementById('avatarNavbarMobile');
+                        if (navbarAvatar) navbarAvatar.innerHTML = avatarHtml;
+                        if (avatarNavbarMobile) avatarNavbarMobile.innerHTML = avatarHtml;
+                    }
+                }
+            } catch (err) {
+                console.error("Terjadi masalah pengambilan data dari database Supabase:", err);
+                // Fallback rendering jika koneksi Supabase terputus
+                renderDaftarToko();
+            }
+        }
+
+        // Memastikan Tepat 6 Brand Pilihan Tampil Menarik di Grid Hitam
+        function renderDaftarToko() {
+            const container = document.getElementById('brandsDatabaseGrid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            // Gabungkan real database sellers dengan mock premium untuk memastikan tepat 6 item menarik
+            let gabunganBrand = [...katalogSellers];
+            
+            if (gabunganBrand.length < 6) {
+                const sisaSlot = 6 - gabunganBrand.length;
+                for (let i = 0; i < sisaSlot; i++) {
+                    gabunganBrand.push(premiumMockBrands[i % premiumMockBrands.length]);
+                }
+            }
+            
+            // Batasi tepat menjadi 6 brand saja
+            const enamBrandTerpilih = gabunganBrand.slice(0, 6);
+
+            enamBrandTerpilih.forEach(brand => {
+                const card = document.createElement('div');
+                card.className = "relative overflow-hidden rounded-[24px] bg-zinc-900 border border-zinc-800/80 group cursor-pointer transition transform hover:-translate-y-2 duration-300";
+                card.onclick = () => {
+                    if (brand.id.startsWith('mock-')) {
+                        bukaDetailTokoMock(brand);
+                    } else {
+                        bukaDetailToko(brand.id);
+                    }
+                };
+
+                const bannerUrl = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600";
+                card.innerHTML = `
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10"></div>
+                    <img src="${bannerUrl}" alt="${brand.name}" class="w-full h-[200px] object-cover opacity-75 group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-x-6 bottom-6 z-20">
+                        <span class="bg-indigo-600 text-[9px] font-bold tracking-widest uppercase px-2 py-0.5 rounded text-white">PRO SELLER</span>
+                        <h3 class="font-serif text-xl font-bold text-white mt-2">${brand.name || 'Toko Kreator'}</h3>
+                        <p class="text-zinc-400 text-xs mt-1 italic line-clamp-1">"${brand.message || ''}"</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderProdukKomunitas(daftarProduk) {
+            const container = document.getElementById('communityProductsGrid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!daftarProduk || daftarProduk.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-zinc-500 italic text-sm">
+                        Produk tidak ditemukan. Silakan gunakan kata pencarian lain.
+                    </div>`;
+                return;
+            }
+
+            daftarProduk.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => bukaDetailProduk(p.id);
+
+                const fotoUrl = p.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=300';
+                card.innerHTML = `
+                    <div class="product-card-img">
+                        <img src="${fotoUrl}" alt="${p.name}">
+                    </div>
+                    <div class="product-card-body">
+                        <span class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest font-mono">SUPABASE DB</span>
+                        <h4 class="product-card-title line-clamp-2">${p.name}</h4>
+                        <p class="product-card-desc line-clamp-1">${p.description || ''}</p>
+                        <div class="product-card-price">${formatRupiah(p.price)}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- SISTEM PENELUSURAN DAN FILTER ---
+        function inisialisasiPencarian() {
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+
+            function cari() {
+                const query = searchInput.value.trim().toLowerCase();
+                const sectionTitle = document.getElementById('productSectionTitle');
+                const feedbackText = document.getElementById('searchFeedback');
+
+                if (!query) {
+                    sectionTitle.innerText = "Produk Terbaru Komunitas";
+                    feedbackText.innerText = "Menampilkan seluruh katalog produk aktif dari komunitas penjual";
+                    renderProdukKomunitas(katalogProducts);
+                    return;
+                }
+
+                const hasilFilter = katalogProducts.filter(p => {
+                    const matchNama = p.name ? p.name.toLowerCase().includes(query) : false;
+                    const matchDesc = p.description ? p.description.toLowerCase().includes(query) : false;
+                    const matchTag = p.tag ? p.tag.toLowerCase().includes(query) : false;
+                    return matchNama || matchDesc || matchTag;
+                });
+
+                sectionTitle.innerText = `Hasil pencarian: "${query}"`;
+                feedbackText.innerText = `Menemukan ${hasilFilter.length} produk yang cocok dengan pencarian Anda`;
+                renderProdukKomunitas(hasilFilter);
+
+                document.getElementById('communityProductsGrid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if (searchBtn) searchBtn.onclick = cari;
+            if (searchInput) {
+                searchInput.onkeyup = (e) => {
+                    if (e.key === 'Enter') cari();
+                };
+            }
+        }
+
+        function cariBerdasarkanTag(tag) {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = tag;
+                const btn = document.getElementById('searchBtn');
+                if (btn) btn.click();
+            }
+        }
+
+        // --- NAVIGASI KE DETAIL TOKO ---
+        function bukaDetailToko(tokoId) {
+            const brand = katalogSellers.find(b => b.id === tokoId);
+            if (!brand) return;
+
+            detailTokoAktif = brand;
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('shopDetailView').style.display = 'block';
+
+            document.getElementById('shopDetailBanner').src = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600";
+            document.getElementById('shopDetailAvatar').src = brand.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300";
+            document.getElementById('shopDetailName').innerText = brand.name || "Toko Kreator";
+            document.getElementById('shopDetailDesc').innerText = `"${brand.message || ''}"`;
+
+            const filteredProducts = katalogProducts.filter(p => p.user_id === tokoId);
+            const grid = document.getElementById('shopProductsGrid');
+            grid.innerHTML = '';
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-sm">Toko ini belum mengunggah produk.</div>`;
+                return;
+            }
+
+            filteredProducts.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => bukaDetailProduk(p.id);
+
+                const fotoUrl = p.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=300';
+                card.innerHTML = `
+                    <div class="product-card-img">
+                        <img src="${fotoUrl}" alt="${p.name}">
+                    </div>
+                    <div class="product-card-body">
+                        <h4 class="product-card-title line-clamp-1">${p.name}</h4>
+                        <div class="product-card-price">${formatRupiah(p.price)}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mendukung preview interaktif untuk brand pelengkap mock
+        function bukaDetailTokoMock(brand) {
+            detailTokoAktif = brand;
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('shopDetailView').style.display = 'block';
+
+            document.getElementById('shopDetailBanner').src = brand.banner_url;
+            document.getElementById('shopDetailAvatar').src = brand.avatar_url;
+            document.getElementById('shopDetailName').innerText = brand.name;
+            document.getElementById('shopDetailDesc').innerText = `"${brand.message}"`;
+
+            const grid = document.getElementById('shopProductsGrid');
+            grid.innerHTML = `
+                <div class="col-span-full py-12 text-center text-zinc-500 text-sm">
+                    Katalog contoh tidak terafiliasi database dinamis. <br>
+                    <span class="text-xs text-indigo-500 font-semibold cursor-pointer underline" onclick="kembalikeBeranda()">Klik di sini untuk menjelajahi produk komunitas.</span>
+                </div>
+            `;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function kembalikeBeranda() {
+            document.getElementById('homeView').style.display = 'block';
+            document.getElementById('shopDetailView').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function bukaDetailProduk(idProduk) {
+            const p = katalogProducts.find(prod => prod.id === idProduk);
+            if (!p) return;
+
+            document.getElementById('detailProductImg').src = p.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=300';
+            document.getElementById('detailProductName').innerText = p.name;
+            document.getElementById('detailProductPrice').innerText = formatRupiah(p.price);
+            document.getElementById('detailProductDesc').innerText = p.description || 'Deskripsi produk kosong.';
+
+            document.getElementById('btnTambahKeranjang').onclick = () => {
+                tambahKeKeranjang(p);
+                tampilkanToast(`"${p.name}" masuk keranjang!`, "#10b981");
+                tutupDetailProduk();
+            };
+
+            document.getElementById('btnBeliLangsung').onclick = () => {
+                tambahKeKeranjang(p);
+                tutupDetailProduk();
+                toggleCartDrawer();
+            };
+
+            document.getElementById('productDetailModal').classList.remove('hidden');
+        }
+
+        function tutupDetailProduk() {
+            document.getElementById('productDetailModal').classList.add('hidden');
+        }
+
+        // ===== TRANSAKSI & KERANJANG =====
+        function tambahKeKeranjang(produk) {
+            const ada = keranjang.find(item => item.id === produk.id);
+            if (ada) {
+                ada.qty += 1;
+            } else {
+                keranjang.push({
+                    id: produk.id,
+                    name: produk.name,
+                    price: produk.price,
+                    photo_url: produk.photo_url,
+                    qty: 1,
+                    user_id: produk.user_id 
+                });
+            }
+            perbaruiBadgeKeranjang();
+        }
+
+        function perbaruiBadgeKeranjang() {
+            const total = keranjang.reduce((sum, i) => sum + i.qty, 0);
+            document.querySelectorAll('.cart-badge').forEach(b => {
+                if (total > 0) {
+                    b.innerText = total;
+                    b.classList.remove('hidden');
+                } else {
+                    b.classList.add('hidden');
+                }
+            });
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            if (drawer) {
+                if (drawer.classList.contains('hidden')) {
+                    drawer.classList.remove('hidden');
+                    renderIsiKeranjang();
+                } else {
+                    drawer.classList.add('hidden');
+                }
+            }
+        }
+
+        function renderIsiKeranjang() {
+            const container = document.getElementById('cartItemsContainer');
+            const subtotalEl = document.getElementById('cartSubtotal');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let subtotal = 0;
+            if (keranjang.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-zinc-500 italic text-sm">Keranjang kosong. Cari produk menarik di etalase!</div>`;
+                if (subtotalEl) subtotalEl.innerText = formatRupiah(0);
+                return;
+            }
+
+            keranjang.forEach((item, index) => {
+                subtotal += item.price * item.qty;
+                const row = document.createElement('div');
+                row.className = "flex items-center gap-4 bg-zinc-50 border p-3 rounded-2xl";
+                row.innerHTML = `
+                    <img src="${item.photo_url || 'https://placehold.co/80x80'}" class="w-16 h-16 object-cover rounded-xl bg-zinc-200">
+                    <div class="flex-1 min-w-0 text-black">
+                        <h4 class="font-semibold text-xs truncate">${item.name}</h4>
+                        <div class="text-xs text-indigo-600 font-bold">${formatRupiah(item.price)}</div>
+                        <div class="flex items-center gap-2 mt-2">
+                            <button onclick="ubahJumlahItem(${index}, -1)" class="w-5 h-5 bg-zinc-200 rounded-md text-xs font-bold flex items-center justify-center hover:bg-zinc-300">-</button>
+                            <span class="text-xs font-semibold">${item.qty}</span>
+                            <button onclick="ubahJumlahItem(${index}, 1)" class="w-5 h-5 bg-zinc-200 rounded-md text-xs font-bold flex items-center justify-center hover:bg-zinc-300">+</button>
+                        </div>
+                    </div>
+                    <button onclick="hapusItemKeranjang(${index})" class="text-xs text-rose-600 hover:underline px-2">Hapus</button>
+                `;
+                container.appendChild(row);
+            });
+            if (subtotalEl) subtotalEl.innerText = formatRupiah(subtotal);
+        }
+
+        function ubahJumlahItem(index, value) {
+            keranjang[index].qty += value;
+            if (keranjang[index].qty <= 0) {
+                keranjang.splice(index, 1);
+            }
+            perbaruiBadgeKeranjang();
+            renderIsiKeranjang();
+        }
+
+        function hapusItemKeranjang(index) {
+            keranjang.splice(index, 1);
+            perbaruiBadgeKeranjang();
+            renderIsiKeranjang();
+        }
+
+        async function prosesCheckoutPesanan() {
+            const user = await dapatkanUserAktif();
+            if (!user) {
+                tampilkanToast("Silakan login terlebih dahulu untuk melakukan pemesanan!", "#dc2626");
+                setTimeout(() => { window.location.href = "auth.html"; }, 1500);
+                return;
+            }
+
+            if (keranjang.length === 0) {
+                tampilkanToast("Keranjang Anda kosong!", "#dc2626");
+                return;
+            }
+
+            tampilkanToast("Sedang memproses pesanan...", "#4285F4");
+
+            const pesananPerPenjual = {};
+            keranjang.forEach(item => {
+                if (!pesananPerPenjual[item.user_id]) {
+                    pesananPerPenjual[item.user_id] = [];
+                }
+                pesananPerPenjual[item.user_id].push(item);
+            });
+
+            const { data: profilPembeli } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            const alamatPenerima = profilPembeli?.address || "Alamat belum disetel oleh pembeli";
+            const teleponPenerima = profilPembeli?.phone || "082261068992";
+
+            try {
+                for (const sellerId in pesananPerPenjual) {
+                    const items = pesananPerPenjual[sellerId];
+                    const totalBayar = items.reduce((sum, it) => sum + (it.price * it.qty), 0);
+
+                    const { data: orderData, error: errorOrder } = await supabase
+                        .from('orders')
+                        .insert([{
+                            buyer_id: user.id,
+                            seller_id: sellerId,
+                            total: totalBayar,
+                            status: "Menunggu Konfirmasi",
+                            shipping_address: alamatPenerima,
+                            shipping_phone: teleponPenerima
+                        }])
+                        .select()
+                        .single();
+
+                    if (errorOrder || !orderData) {
+                        tampilkanToast("Gagal memproses salah satu pesanan.", "#dc2626");
+                        console.error(errorOrder);
+                        return;
+                    }
+
+                    const payloadItems = items.map(it => ({
+                        order_id: orderData.id,
+                        product_id: it.id,
+                        product_name: it.name,
+                        qty: it.qty,
+                        price: it.price
+                    }));
+
+                    const { error: errorItems } = await supabase
+                        .from('order_items')
+                        .insert(payloadItems);
+
+                    if (errorItems) {
+                        console.error("Gagal menyimpan rincian item pesanan:", errorItems);
+                    }
+                }
+
+                tampilkanToast("Pesanan berhasil dikirim!", "#10b981");
+                keranjang = [];
+                perbaruiBadgeKeranjang();
+                toggleCartDrawer();
+            } catch (err) {
+                console.error("Kesalahan checkout:", err);
+                tampilkanToast("Gagal melakukan checkout otomatis.", "#dc2626");
+            }
+        }
+
+        function hubungiPenjualWhatsApp() {
+            if (!detailTokoAktif) return;
+            const phone = detailTokoAktif.phone || "082261068992";
+            let formattedPhone = phone.replace(/[^0-9]/g, '');
+            if (formattedPhone.startsWith('0')) {
+                formattedPhone = '62' + formattedPhone.slice(1);
+            }
+            const link = `https://wa.me/${formattedPhone}?text=Halo%20${encodeURIComponent(detailTokoAktif.name)},%20saya%20tertarik%20dengan%20produk%20Anda.`;
+            window.open(link, '_blank');
+        }
+
+        function tampilkanToast(message, colorHex) {
+            const toast = document.getElementById('shopToast');
+            const toastMsg = document.getElementById('toastMessage');
+            if (toast && toastMsg) {
+                toastMsg.innerText = message;
+                toast.style.borderColor = colorHex || '#fff';
+                toast.style.display = 'flex';
+                setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            }
+        }
+
+        // --- INISIALISASI HALAMAN ---
+        document.addEventListener('DOMContentLoaded', () => {
+            muatDataMarketplace();
+            inisialisasiPencarian();
+            setInterval(putarSlideOtomatis, 5000);
+        });
+    </script>
+</body>
+</html>
