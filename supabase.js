@@ -35,21 +35,22 @@ async function dapatkanUserAktif() {
     }
     
     try {
-        const { data: { user }, error } = await supabase.auth.getUser();
+        // PERBAIKAN: Gunakan getSession() alih-alih getUser().
+        // getSession() membaca langsung dari LocalStorage (instan dan tidak butuh loading internet).
+        const { data: { session }, error } = await supabase.auth.getSession();
         
-        if (error) {
-            console.warn('Error dapatkanUserAktif:', error.message);
+        if (error || !session) {
+            console.log('ℹ Tidak ada sesi aktif (user belum login)');
             return null;
         }
         
         // Debug log
-        if (user) {
-            console.log('✓ User ditemukan:', user.email);
-        } else {
-            console.log('ℹ Tidak ada user login');
+        if (session.user) {
+            console.log('✓ User ditemukan:', session.user.email);
+            return session.user;
         }
         
-        return user;
+        return null;
     } catch (error) {
         console.error('Exception di dapatkanUserAktif:', error);
         return null;
@@ -78,11 +79,11 @@ async function redirectKeAuth(message = "Silakan login terlebih dahulu!") {
         tampilkanToast(message, "#dc2626");
     }
     
-    // Tunggu 1.5 detik sebelum redirect
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // PERBAIKAN: Kurangi delay dari 1500ms menjadi 400ms agar aplikasi terasa responsif
+    await new Promise(resolve => setTimeout(resolve, 400));
     
-    // Redirect ke auth.html
-    window.location.href = "auth.html";
+    // PERBAIKAN: Gunakan replace() untuk mencegah tumpukan riwayat (history) browser yang salah
+    window.location.replace("auth.html");
 }
 
 // ===== HELPER: CEK SESI DAN REDIRECT JIKA PERLU =====

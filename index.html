@@ -21,16 +21,15 @@
             background-color: #ffffff;
             color: #1a1a1a;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #111113; }
         ::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 4px; }
 
         .logo {
             font-family: 'Lora', serif;
-            font-size: 28px;
-            line-height: 0.8;
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -38,19 +37,13 @@
             user-select: none;
             text-decoration: none;
         }
-        @media (min-width: 768px) {
-            .logo { font-size: 36px; }
-        }
         .logo .light { font-weight: 300; color: #8c8c8c; }
-        .logo .bold  { font-weight: 700; color: #000; margin-left: 35px; margin-top: -4px; }
-        @media (min-width: 768px) {
-            .logo .bold { margin-left: 45px; margin-top: -6px; }
-        }
+        .logo .bold  { font-weight: 700; color: #000; margin-top: -2px; }
 
         .hero-carousel {
             margin: 12px;
-            height: 300px;
-            border-radius: 24px;
+            height: 260px;
+            border-radius: 20px;
             position: relative;
             overflow: hidden;
             background-color: #111113;
@@ -94,10 +87,10 @@
         
         .hero-text h1 { 
             font-family: 'Lora', serif;
-            font-size: 24px; 
+            font-size: 20px; 
             font-weight: 600;
             line-height: 1.25; 
-            margin-bottom: 12px; 
+            margin-bottom: 8px; 
             text-shadow: 0 2px 10px rgba(0,0,0,0.15); 
         }
         @media (min-width: 768px) {
@@ -105,23 +98,28 @@
         }
         
         .hero-text p  { 
-            font-size: 13px; 
-            color: #e0e0e0; 
-            margin-bottom: 20px; 
+            font-size: 11px; 
+            color: #d1d1d6; 
+            margin-bottom: 16px; 
             font-weight: 300;
+            line-clamp: 2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         @media (min-width: 768px) {
-            .hero-text p { font-size: 16px; margin-bottom: 35px; }
+            .hero-text p { font-size: 16px; margin-bottom: 35px; display: block; }
         }
         
         .btn-promo {
             background: #ffffff; 
             color: #000000;
-            padding: 10px 24px; 
-            border-radius: 20px;
+            padding: 8px 18px; 
+            border-radius: 9999px;
             font-family: 'Lora', serif;
             font-weight: 600; 
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer; 
             transition: transform 0.2s, background-color 0.2s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
@@ -163,27 +161,37 @@
 
         .carousel-dots {
             position: absolute; 
-            bottom: 20px;
+            bottom: 12px;
             left: 50%; 
             transform: translateX(-50%);
             display: flex; 
-            gap: 8px; 
+            gap: 6px; 
             z-index: 10;
+        }
+        @media (min-width: 768px) {
+            .carousel-dots { bottom: 20px; gap: 8px; }
         }
         
         .dot {
-            width: 8px; 
-            height: 8px; 
+            width: 6px; 
+            height: 6px; 
             border-radius: 50%;
             background: rgba(255,255,255,0.4); 
             cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .dot.active { background: #ffffff; width: 20px; border-radius: 6px; }
+        @media (min-width: 768px) {
+            .dot { width: 8px; height: 8px; }
+        }
+        .dot.active { background: #ffffff; width: 16px; border-radius: 6px; }
+        @media (min-width: 768px) {
+            .dot.active { width: 20px; }
+        }
 
         .main-content-panel {
             background-color: var(--panel-bg);
-            border-radius: 28px 28px 28px 28px;
-            padding: 32px 16px;
+            border-radius: 20px;
+            padding: 24px 16px;
             color: #ffffff;
             margin: 12px;
         }
@@ -197,13 +205,22 @@
         
         .brands-header {
             display: flex; 
-            justify-content: space-between;
-            align-items: flex-end; 
-            margin-bottom: 28px;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        @media (min-width: 768px) {
+            .brands-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end; 
+                margin-bottom: 28px;
+                gap: 0;
+            }
         }
         .brands-header h2 { 
             font-family: 'Lora', serif;
-            font-size: 20px; 
+            font-size: 18px; 
             font-weight: 700; 
             color: #ffffff; 
         }
@@ -212,10 +229,14 @@
         }
         
         .see-all { 
-            font-size: 13px; 
+            font-size: 12px; 
             font-weight: 600; 
             color: #818cf8; 
             text-decoration: none; 
+            align-self: flex-start;
+        }
+        @media (min-width: 768px) {
+            .see-all { font-size: 13px; align-self: auto; }
         }
 
         .search-results-view { display: none; padding: 16px; background: #fafafa; }
@@ -224,14 +245,14 @@
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            gap: 12px;
         }
-        @media (min-width: 640px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 640px) { .product-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
         @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
         
         .product-card {
             background: white;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid #f1f1f4;
             overflow: hidden;
             cursor: pointer;
@@ -240,91 +261,116 @@
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
         }
+        @media (min-width: 768px) {
+            .product-card { border-radius: 20px; }
+        }
         .product-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.06);
             border-color: #e4e4e7;
         }
         .product-card-img {
-            height: 180px;
+            height: 140px;
             background: #f7f7f9;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
+        @media (min-width: 768px) {
+            .product-card-img { height: 180px; }
+        }
         .product-card-img img { width: 100%; height: 100%; object-fit: cover; }
-        .product-card-body { padding: 16px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
-        .product-card-title { font-weight: 600; font-size: 14px; color: #111113; }
-        .product-card-desc { font-size: 11px; color: #71717a; }
-        .product-card-price { font-weight: 700; color: #111113; margin-top: auto; font-size: 15px; }
+        .product-card-body { padding: 12px; display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+        @media (min-width: 768px) {
+            .product-card-body { padding: 16px; gap: 6px; }
+        }
+        .product-card-title { font-weight: 600; font-size: 13px; color: #111113; line-height: 1.3; }
+        @media (min-width: 768px) {
+            .product-card-title { font-size: 14px; }
+        }
+        .product-card-desc { font-size: 10px; color: #71717a; }
+        @media (min-width: 768px) {
+            .product-card-desc { font-size: 11px; }
+        }
+        .product-card-price { font-weight: 700; color: #111113; margin-top: auto; font-size: 13px; }
+        @media (min-width: 768px) {
+            .product-card-price { font-size: 15px; }
+        }
 
         .toast-notif {
             display: none;
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #000;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 380px;
+            background: #000000;
             color: white;
-            border: 1px solid #fff;
-            padding: 16px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
             border-radius: 9999px;
             z-index: 3000;
             font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
             align-items: center;
+            justify-content: center;
             gap: 10px;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .toast-notif {
+                left: auto;
+                right: 30px;
+                transform: none;
+                width: auto;
+                text-align: left;
+                justify-content: flex-start;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
 
     <!-- ===== NAVBAR ===== -->
-    <header class="navbar sticky top-0 z-50 flex flex-col md:flex-row items-stretch md:items-center justify-between px-4 md:px-10 py-4 md:py-6 bg-white/95 backdrop-blur-md border-b border-gray-100 gap-4 shadow-sm">
-        <div class="flex items-center justify-between">
-            <a class="logo" href="index.html" onclick="event.preventDefault(); kembalikeBeranda();">
-                <span class="light">Sandy</span>
-                <span class="bold">Place</span>
-            </a>
-            <div class="flex items-center gap-4 md:hidden">
-                <button class="text-gray-400 hover:text-black relative" onclick="toggleCartDrawer()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span class="cart-badge absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
-                </button>
-                <a href="profil.html" onclick="navigasiKeProfil(event)" class="navbarAvatarMobile w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-xs overflow-hidden border" id="avatarNavbarMobile">S</a>
-            </div>
-        </div>
+    <header class="navbar sticky top-0 z-50 flex items-center justify-between px-3 md:px-10 py-3 md:py-6 bg-white/95 backdrop-blur-md border-b border-gray-100 gap-2 md:gap-4 shadow-sm">
+        <!-- Bagian Kiri: Logo -->
+        <a class="logo flex-shrink-0" href="index.html" onclick="event.preventDefault(); kembalikeBeranda();">
+            <span class="light text-[15px] md:text-2xl leading-none font-light text-zinc-400">Sandy</span>
+            <span class="bold text-lg md:text-3xl leading-none font-bold text-black ml-4 md:ml-6">Place</span>
+        </a>
 
-        <!-- Kolom Pencarian -->
-        <div class="search-container flex-1 max-w-full md:max-w-[650px] md:mx-8 flex flex-col gap-2">
+        <!-- Bagian Tengah: Kolom Pencarian (Merapat di antara Logo & Keranjang) -->
+        <div class="search-container flex-1 max-w-full md:max-w-[620px] mx-1 md:mx-6 flex flex-col gap-1">
             <div class="relative w-full">
-                <input type="text" id="searchInput" class="w-full px-5 py-3 rounded-full border border-gray-200 text-sm focus:outline-none focus:border-black pr-12 text-black" placeholder="Cari produk impian (contoh: pc, baju, sepatu)...">
-                <button id="searchBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <input type="text" id="searchInput" class="w-full px-3 md:px-5 py-2 md:py-2.5 rounded-full border border-gray-200 text-[11px] md:text-sm focus:outline-none focus:border-black pr-9 text-black" placeholder="Cari pc, baju, sepatu...">
+                <button id="searchBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black p-0.5">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </button>
             </div>
-            <!-- Opsi Pilihan Pencarian (Disembunyikan secara default menggunakan 'hidden') -->
-            <div id="searchOptionsContainer" class="hidden flex items-center gap-2 text-[11px] self-start ml-2 transition-all duration-300">
-                <span class="text-zinc-400 font-medium">Opsi Cari:</span>
-                <button id="searchOptionProduct" onclick="setSearchMode('product')" class="px-3 py-1 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm">Barang</button>
-                <button id="searchOptionShop" onclick="setSearchMode('shop')" class="px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200">Toko / Brand</button>
+            <!-- Opsi Pilihan Pencarian -->
+            <div id="searchOptionsContainer" class="hidden flex items-center gap-1 text-[8px] md:text-[10px] self-start ml-2 transition-all">
+                <span class="text-zinc-400 font-medium">Opsi:</span>
+                <button id="searchOptionProduct" onclick="setSearchMode('product')" class="px-2 py-0.5 rounded-full bg-neutral-900 text-white font-semibold transition">Barang</button>
+                <button id="searchOptionShop" onclick="setSearchMode('shop')" class="px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200">Toko</button>
             </div>
         </div>
 
-        <div class="user-menu hidden md:flex items-center gap-6">
-            <button class="text-gray-400 hover:text-black relative" onclick="toggleCartDrawer()">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- Bagian Kanan: Keranjang & Avatar Menu -->
+        <div class="flex items-center gap-2 md:gap-6 flex-shrink-0">
+            <button class="text-gray-400 hover:text-black relative p-1" onclick="toggleCartDrawer()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                <span class="cart-badge absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                <span class="cart-badge absolute -top-1 -right-1 bg-indigo-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
             </button>
-            <a href="profil.html" onclick="navigasiKeProfil(event)" id="navbarAvatar" class="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-sm overflow-hidden border border-gray-100 hover:scale-105 transition">S</a>
+            <a href="profil.html" onclick="navigasiKeProfil(event)" id="navbarAvatar" class="w-7.5 h-7.5 md:w-9 md:h-9 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-xs md:text-sm overflow-hidden border border-gray-100 hover:scale-105 transition">S</a>
         </div>
     </header>
 
@@ -337,7 +383,7 @@
                     <!-- Slide 1 -->
                     <div class="slide bg-gradient-to-r from-neutral-900 to-indigo-950">
                         <div class="hero-text">
-                            <span class="text-xs bg-indigo-500/30 text-indigo-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">EDISI KHUSUS</span>
+                            <span class="text-[9px] md:text-xs bg-indigo-500/30 text-indigo-300 font-extrabold uppercase px-2 py-0.5 md:py-1 rounded-md mb-2 inline-block">EDISI KHUSUS</span>
                             <h1>Koleksi Premium<br>Rilis Baru Akhir Pekan.</h1>
                             <p>Dapatkan pakaian pilihan kurator terbaik dengan potongan harga spesial.</p>
                             <button class="btn-promo" onclick="cariBerdasarkanTag('baju')">Lihat Koleksi</button>
@@ -353,7 +399,7 @@
                     <!-- Slide 2 -->
                     <div class="slide bg-gradient-to-r from-neutral-900 to-emerald-950">
                         <div class="hero-text">
-                            <span class="text-xs bg-emerald-500/30 text-emerald-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">PERKAKAS KERJA</span>
+                            <span class="text-[9px] md:text-xs bg-emerald-500/30 text-emerald-300 font-extrabold uppercase px-2 py-0.5 md:py-1 rounded-md mb-2 inline-block">PERKAKAS KERJA</span>
                             <h1>Setup Kerja Estetik<br>Koleksi PC & Gadget.</h1>
                             <p>Tingkatkan produktivitas kerja dengan perlengkapan komputer modern.</p>
                             <button class="btn-promo" onclick="cariBerdasarkanTag('pc')">Jelajahi Gadget</button>
@@ -371,7 +417,7 @@
                     <!-- Slide 3 -->
                     <div class="slide bg-gradient-to-r from-neutral-900 to-amber-950">
                         <div class="hero-text">
-                            <span class="text-xs bg-amber-500/30 text-amber-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GAYA HIDUP</span>
+                            <span class="text-[9px] md:text-xs bg-amber-500/30 text-amber-300 font-extrabold uppercase px-2 py-0.5 md:py-1 rounded-md mb-2 inline-block">GAYA HIDUP</span>
                             <h1>Langkah Percaya Diri<br>Katalog Sepatu Trendi.</h1>
                             <p>Dari kasual hingga olahraga, temukan sepatu yang paling pas untuk Anda.</p>
                             <button class="btn-promo" onclick="cariBerdasarkanTag('sepatu')">Cari Sepatu</button>
@@ -387,7 +433,7 @@
                     <!-- Slide 4 -->
                     <div class="slide bg-gradient-to-r from-neutral-900 to-rose-950">
                         <div class="hero-text">
-                            <span class="text-xs bg-rose-500/30 text-rose-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">KERAJINAN LOKAL</span>
+                            <span class="text-[9px] md:text-xs bg-rose-500/30 text-rose-300 font-extrabold uppercase px-2 py-0.5 md:py-1 rounded-md mb-2 inline-block">KERAJINAN LOKAL</span>
                             <h1>Karya Seni Orisinal<br>Hiasan Rumah Minimalis.</h1>
                             <p>Sentuhan artistik dari pengrajin komunitas lokal Sandy Place.</p>
                             <button class="btn-promo" onclick="cariBerdasarkanTag('aksesoris')">Lihat Seni</button>
@@ -403,7 +449,7 @@
                     <!-- Slide 5 -->
                     <div class="slide bg-gradient-to-r from-neutral-900 to-zinc-900">
                         <div class="hero-text">
-                            <span class="text-xs bg-zinc-500/30 text-zinc-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GABUNG SELLER</span>
+                            <span class="text-[9px] md:text-xs bg-zinc-500/30 text-zinc-300 font-extrabold uppercase px-2 py-0.5 md:py-1 rounded-md mb-2 inline-block">GABUNG SELLER</span>
                             <h1>Bangun Toko Anda<br>Mulai Jualan Gratis.</h1>
                             <p>Unggah produk Anda langsung ke database dan jangkau seluruh anggota.</p>
                             <button class="btn-promo" onclick="navigasiKeProfil(event)">Kelola Toko</button>
@@ -434,57 +480,57 @@
                     <div class="brands-header">
                         <div>
                             <h2 class="font-serif text-white">Jelajahi Brand & Toko Kreator</h2>
-                            <p class="text-xs text-zinc-400">Temukan barang impian langsung dari 6 brand pilihan Sandy Place</p>
+                            <p class="text-xs text-zinc-400 mt-0.5">Temukan barang impian langsung dari 6 brand pilihan Sandy Place</p>
                         </div>
-                        <a href="profil.html" onclick="navigasiKeProfil(event)" class="see-all">Kelola Toko Saya</a>
+                        <a href="profil.html" onclick="navigasiKeProfil(event)" class="see-all">Kelola Toko Saya →</a>
                     </div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" id="brandsDatabaseGrid">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8" id="brandsDatabaseGrid">
                         <!-- Memuat tepat 6 kartu toko dinamis + premium mock -->
-                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
                     </div>
                 </section>
             </div>
 
             <!-- ===== ETALASE PRODUK DI LUAR PANEL HITAM ===== -->
-            <div class="bg-white px-4 md:px-10 py-12 md:py-20 max-w-7xl mx-auto">
+            <div class="bg-white px-4 md:px-10 py-8 md:py-20 max-w-7xl mx-auto">
                 <section class="pt-2">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-8 gap-2">
                         <div>
-                            <h2 class="font-serif text-3xl md:text-4xl text-neutral-900 font-bold" id="productSectionTitle">Produk Terbaru Komunitas</h2>
-                            <p class="text-sm text-zinc-600 mt-2" id="searchFeedback">Menampilkan seluruh katalog produk aktif dari komunitas penjual</p>
+                            <h2 class="font-serif text-xl md:text-4xl text-neutral-900 font-bold" id="productSectionTitle">Produk Terbaru Komunitas</h2>
+                            <p class="text-xs md:text-sm text-zinc-600 mt-1" id="searchFeedback">Menampilkan seluruh katalog produk aktif dari komunitas penjual</p>
                         </div>
                     </div>
                     
                     <div class="product-grid" id="communityProductsGrid">
                         <!-- Katalog produk dinamis dimuat di sini -->
-                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
-                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
-                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
-                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                        <div class="animate-pulse bg-zinc-100 h-[220px] md:h-[280px] rounded-20"></div>
+                        <div class="animate-pulse bg-zinc-100 h-[220px] md:h-[280px] rounded-20"></div>
+                        <div class="animate-pulse bg-zinc-100 h-[220px] md:h-[280px] rounded-20"></div>
+                        <div class="animate-pulse bg-zinc-100 h-[220px] md:h-[280px] rounded-20"></div>
                     </div>
                 </section>
             </div>
         </div>
 
         <!-- ===== FOKUS AREA HASIL PENCARIAN ===== -->
-        <div id="searchResultsSection" class="hidden bg-white px-4 md:px-10 py-12 md:py-20 max-w-7xl mx-auto min-h-[60vh]">
+        <div id="searchResultsSection" class="hidden bg-white px-4 md:px-10 py-8 md:py-20 max-w-7xl mx-auto min-h-[60vh]">
             <section class="pt-2">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-zinc-100 pb-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-8 gap-4 border-b border-zinc-100 pb-5 md:pb-6">
                     <div>
                         <div class="flex items-center gap-2 mb-1">
-                            <span id="searchBadgeMode" class="bg-indigo-600 text-[10px] font-bold text-white uppercase tracking-widest px-2.5 py-1 rounded-md">BARANG</span>
-                            <span class="text-xs text-zinc-400">Hasil Pencarian Fokus</span>
+                            <span id="searchBadgeMode" class="bg-indigo-600 text-[9px] md:text-[10px] font-bold text-white uppercase tracking-widest px-2 py-0.5 rounded-md">BARANG</span>
+                            <span class="text-[11px] text-zinc-400">Hasil Pencarian Fokus</span>
                         </div>
-                        <h2 class="font-serif text-3xl md:text-4xl text-neutral-900 font-bold" id="searchFocusTitle">Hasil Pencarian</h2>
-                        <p class="text-sm text-zinc-600 mt-2" id="searchFocusFeedback">Menampilkan pencarian yang cocok</p>
+                        <h2 class="font-serif text-2xl md:text-4xl text-neutral-900 font-bold" id="searchFocusTitle">Hasil Pencarian</h2>
+                        <p class="text-xs md:text-sm text-zinc-600 mt-1" id="searchFocusFeedback">Menampilkan pencarian yang cocok</p>
                     </div>
-                    <button onclick="resetPencarian()" class="px-5 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white rounded-full text-xs font-semibold transition shadow-md flex items-center gap-1.5">
+                    <button onclick="resetPencarian()" class="w-full md:w-auto px-4 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white rounded-full text-xs font-semibold transition shadow-md flex items-center justify-center gap-1.5">
                         ✕ Bersihkan Pencarian
                     </button>
                 </div>
@@ -493,61 +539,62 @@
                 <div class="product-grid hidden" id="searchFocusProductsGrid"></div>
 
                 <!-- Grid Hasil Pencarian Toko / Brand -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 hidden" id="searchFocusShopsGrid"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 hidden" id="searchFocusShopsGrid"></div>
             </section>
         </div>
     </div>
 
     <!-- ===== TOKO DETAIL VIEW ===== -->
-    <div id="shopDetailView" class="hidden px-4 md:px-10 py-8 bg-zinc-50 min-h-[100vh] pb-24">
+    <div id="shopDetailView" class="hidden px-4 md:px-10 py-6 md:py-8 bg-zinc-50 min-h-[100vh] pb-24">
         <div class="max-w-7xl mx-auto">
-            <div class="mb-6">
+            <div class="mb-5">
                 <button onclick="kembalikeBeranda()" class="flex items-center gap-2 text-zinc-500 hover:text-black transition text-sm font-semibold">
                     ← Kembali ke Beranda
                 </button>
             </div>
 
             <!-- Banner Toko Atas -->
-            <div class="relative w-full rounded-2xl overflow-hidden bg-black aspect-[16/5] shadow-xl">
+            <div class="relative w-full rounded-2xl overflow-hidden bg-black aspect-[16/9] md:aspect-[16/5] shadow-xl">
                 <img id="shopDetailBanner" class="w-full h-full object-cover opacity-80" src="" alt="Banner Toko">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
-                <div class="absolute inset-x-8 bottom-8 flex flex-col md:flex-row items-center md:items-end gap-6 z-10 text-white">
-                    <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white bg-zinc-900 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+                <div class="absolute inset-x-4 md:inset-x-8 bottom-4 md:bottom-8 flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6 z-10 text-white text-center md:text-left">
+                    <div class="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden border-2 md:border-4 border-white bg-zinc-900 flex-shrink-0">
                         <img id="shopDetailAvatar" class="w-full h-full object-cover" src="" alt="Avatar Toko">
                     </div>
                     <div>
-                        <h1 id="shopDetailName" class="font-serif text-2xl md:text-4xl font-bold">Nama Toko</h1>
-                        <p id="shopDetailDesc" class="text-zinc-400 text-sm mt-1">"Deskripsi toko kami"</p>
+                        <h1 id="shopDetailName" class="font-serif text-lg md:text-4xl font-bold">Nama Toko</h1>
+                        <p id="shopDetailDesc" class="text-zinc-400 text-xs md:text-sm mt-0.5 md:mt-1">"Deskripsi toko kami"</p>
                     </div>
-                    <div class="ml-auto flex gap-3">
-                        <button onclick="hubungiPenjualWhatsApp()" class="px-6 py-2.5 rounded-full bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition">Hubungi Penjual (WA)</button>
+                    <div class="w-full md:w-auto md:ml-auto">
+                        <button onclick="hubungiPenjualWhatsApp()" class="w-full md:w-auto px-5 py-2 md:py-2.5 rounded-full bg-emerald-600 text-white text-xs md:text-sm font-semibold hover:bg-emerald-700 transition">Hubungi Penjual (WA)</button>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-12">
-                <h3 class="font-serif text-2xl md:text-3xl font-bold text-neutral-900 mb-6">Koleksi Produk Pilihan Toko</h3>
+            <div class="mt-8 md:mt-12">
+                <h3 class="font-serif text-lg md:text-3xl font-bold text-neutral-900 mb-4 md:mb-6">Koleksi Produk Pilihan Toko</h3>
                 <div class="product-grid" id="shopProductsGrid"></div>
             </div>
         </div>
     </div>
 
     <!-- ===== MODAL DETAIL PRODUK ===== -->
-    <div id="productDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="tutupDetailProduk()"></div>
-        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row overflow-hidden">
-            <div class="w-full md:w-1/2 bg-zinc-100 aspect-square">
+    <div id="productDetailModal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-xs" onclick="tutupDetailProduk()"></div>
+        <div class="bg-white rounded-t-3xl md:rounded-3xl max-w-2xl w-full max-h-[85vh] md:max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row overflow-hidden animate-slide-up md:animate-none">
+            <div class="w-full md:w-1/2 bg-zinc-100 aspect-square md:aspect-auto md:h-full">
                 <img id="detailProductImg" src="" alt="" class="w-full h-full object-cover">
             </div>
-            <div class="w-full md:w-1/2 p-6 flex flex-col justify-between text-black bg-white">
+            <div class="w-full md:w-1/2 p-5 md:p-6 flex flex-col justify-between text-black bg-white gap-6">
                 <div>
-                    <h2 id="detailProductName" class="font-serif text-2xl font-bold mb-2 text-neutral-900">Nama Produk</h2>
-                    <div id="detailProductPrice" class="text-xl font-bold text-indigo-600 mb-4">Rp 0</div>
-                    <p id="detailProductDesc" class="text-sm text-zinc-600 mb-6"></p>
+                    <div class="w-12 h-1 bg-zinc-200 rounded-full mx-auto mb-4 md:hidden"></div>
+                    <h2 id="detailProductName" class="font-serif text-xl md:text-2xl font-bold mb-1 md:mb-2 text-neutral-900">Nama Produk</h2>
+                    <div id="detailProductPrice" class="text-lg md:text-xl font-bold text-indigo-600 mb-3 md:mb-4">Rp 0</div>
+                    <p id="detailProductDesc" class="text-xs md:text-sm text-zinc-600 leading-relaxed"></p>
                 </div>
-                <div class="flex flex-col gap-2">
-                    <button id="btnTambahKeranjang" class="w-full py-3 rounded-xl border border-zinc-950 font-semibold text-sm hover:bg-zinc-50 transition text-zinc-950">Tambah ke Keranjang</button>
-                    <button id="btnBeliLangsung" class="w-full py-3 rounded-xl bg-black text-white font-semibold text-sm hover:bg-zinc-800 transition">Beli Sekarang</button>
+                <div class="flex flex-col gap-2 pt-4 border-t border-zinc-100 md:border-t-0">
+                    <button id="btnTambahKeranjang" class="w-full py-2.5 md:py-3 rounded-xl border border-zinc-950 font-semibold text-xs md:text-sm hover:bg-zinc-50 transition text-zinc-950">Tambah ke Keranjang</button>
+                    <button id="btnBeliLangsung" class="w-full py-2.5 md:py-3 rounded-xl bg-black text-white font-semibold text-xs md:text-sm hover:bg-zinc-800 transition">Beli Sekarang</button>
                 </div>
             </div>
         </div>
@@ -557,17 +604,17 @@
     <div id="cartDrawer" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/60" onclick="toggleCartDrawer()"></div>
         <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white text-black shadow-2xl flex flex-col justify-between transform transition duration-300" id="cartDrawerContent">
-            <div class="p-6 border-b flex items-center justify-between">
-                <h3 class="font-serif text-lg font-bold text-neutral-900">Keranjang Belanja</h3>
-                <button onclick="toggleCartDrawer()" class="text-zinc-500 hover:text-black">✕</button>
+            <div class="p-4 md:p-6 border-b flex items-center justify-between">
+                <h3 class="font-serif text-base md:text-lg font-bold text-neutral-900">Keranjang Belanja</h3>
+                <button onclick="toggleCartDrawer()" class="text-zinc-500 hover:text-black p-1.5 text-lg">✕</button>
             </div>
-            <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cartItemsContainer"></div>
-            <div class="p-6 border-t bg-zinc-50 space-y-4">
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-3 md:space-y-4" id="cartItemsContainer"></div>
+            <div class="p-4 md:p-6 border-t bg-zinc-50 space-y-3 md:space-y-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-zinc-600 text-sm">Total Belanja</span>
-                    <span class="text-lg font-bold text-neutral-950" id="cartSubtotal">Rp 0</span>
+                    <span class="text-zinc-600 text-xs md:text-sm">Total Belanja</span>
+                    <span class="text-base md:text-lg font-bold text-neutral-950" id="cartSubtotal">Rp 0</span>
                 </div>
-                <button onclick="prosesCheckoutPesanan()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">Pesan Sekarang</button>
+                <button onclick="prosesCheckoutPesanan()" class="w-full py-2.5 md:py-3 bg-indigo-600 text-white rounded-xl font-semibold text-xs md:text-sm hover:bg-indigo-700 transition">Pesan Sekarang</button>
             </div>
         </div>
     </div>
@@ -597,7 +644,6 @@
             }
         }
 
-        // Premium mock brands fallback untuk melengkapi hingga genap 6 brand pilihan
         const premiumMockBrands = [
             {
                 id: "mock-1",
@@ -709,15 +755,13 @@
                         const avatarSrc = currentProfile.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300';
                         const avatarHtml = `<img src="${avatarSrc}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
                         const navbarAvatar = document.getElementById('navbarAvatar');
-                        const avatarNavbarMobile = document.getElementById('avatarNavbarMobile');
                         if (navbarAvatar) navbarAvatar.innerHTML = avatarHtml;
-                        if (avatarNavbarMobile) avatarNavbarMobile.innerHTML = avatarHtml;
                     }
                 }
             } catch (err) {
                 console.error("Terjadi masalah pengambilan data dari database Supabase:", err);
                 renderDaftarToko();
-                renderProdukKomunitas([]); // Membersihkan skeleton loading jika gagal terhubung
+                renderProdukKomunitas([]); 
             }
         }
 
@@ -726,7 +770,6 @@
             if (!container) return;
             container.innerHTML = '';
 
-            // Gabungkan real database sellers dengan mock premium untuk memastikan tepat 6 item menarik
             let gabunganBrand = [...katalogSellers];
             
             if (gabunganBrand.length < 6) {
@@ -806,13 +849,13 @@
             const searchInput = document.getElementById('searchInput');
 
             if (mode === 'product') {
-                btnProduct.className = "px-3 py-1 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm";
-                btnShop.className = "px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200";
-                searchInput.placeholder = "Cari produk impian (contoh: pc, baju, sepatu)...";
+                btnProduct.className = "px-2 py-0.5 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm";
+                btnShop.className = "px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200";
+                searchInput.placeholder = "Cari pc, baju, sepatu...";
             } else {
-                btnProduct.className = "px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200";
-                btnShop.className = "px-3 py-1 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm";
-                searchInput.placeholder = "Cari nama toko atau deskripsi brand kreatif...";
+                btnProduct.className = "px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200";
+                btnShop.className = "px-2 py-0.5 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm";
+                searchInput.placeholder = "Cari nama toko/brand...";
             }
             
             if (searchInput.value.trim() !== '') {
@@ -1000,7 +1043,7 @@
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('shopDetailView').style.display = 'block';
 
-            document.getElementById('shopDetailBanner').src = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600";
+            document.getElementById('shopDetailBanner').src = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&0&w=600";
             document.getElementById('shopDetailAvatar').src = brand.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300";
             document.getElementById('shopDetailName').innerText = brand.name || "Toko Kreator";
             document.getElementById('shopDetailDesc').innerText = `"${brand.message || ''}"`;
@@ -1010,7 +1053,7 @@
             grid.innerHTML = '';
 
             if (filteredProducts.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-sm">Toko ini belum mengunggah produk.</div>`;
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-xs md:text-sm">Toko ini belum mengunggah produk.</div>`;
                 return;
             }
 
@@ -1069,7 +1112,6 @@
             document.getElementById('detailProductPrice').innerText = formatRupiah(p.price);
             document.getElementById('detailProductDesc').innerText = p.description || 'Deskripsi produk kosong.';
 
-            // Periksa login saat menekan tombol "Tambah ke Keranjang"
             document.getElementById('btnTambahKeranjang').onclick = async () => {
                 const user = await dapatkanUserAktif();
                 if (!user) {
@@ -1084,7 +1126,6 @@
                 tutupDetailProduk();
             };
 
-            // Periksa login saat menekan tombol "Beli Sekarang"
             document.getElementById('btnBeliLangsung').onclick = async () => {
                 const user = await dapatkanUserAktif();
                 if (!user) {
@@ -1156,7 +1197,7 @@
 
             let subtotal = 0;
             if (keranjang.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-zinc-500 italic text-sm">Keranjang kosong. Cari produk menarik di etalase!</div>`;
+                container.innerHTML = `<div class="text-center py-12 text-zinc-500 italic text-xs md:text-sm">Keranjang kosong. Cari produk menarik di etalase!</div>`;
                 if (subtotalEl) subtotalEl.innerText = formatRupiah(0);
                 return;
             }
@@ -1198,7 +1239,6 @@
             renderIsiKeranjang();
         }
 
-        // ===== PENGECEKAN LOGIN UNTUK AKSES PROFIL =====
         async function arahkeProfilDenganCek() {
             const user = await dapatkanUserAktif();
             if (!user) {
@@ -1305,7 +1345,6 @@
             window.open(link, '_blank');
         }
 
-        // --- TOAST NOTIFICATION ---
         function tampilkanToast(message, colorHex) {
             const toast = document.getElementById('shopToast');
             const toastMsg = document.getElementById('toastMessage');
@@ -1317,7 +1356,6 @@
             }
         }
 
-        // --- INISIALISASI HALAMAN ---
         document.addEventListener('DOMContentLoaded', () => {
             muatDataMarketplace();
             inisialisasiPencarian();
