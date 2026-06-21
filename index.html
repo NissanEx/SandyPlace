@@ -9,7 +9,7 @@
     <script src="supabase.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -293,18 +293,26 @@
                     </svg>
                     <span class="cart-badge absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
                 </button>
-                <a href="profil.html" class="navbarAvatarMobile w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-xs overflow-hidden border" id="avatarNavbarMobile">S</a>
+                <a href="profil.html" onclick="navigasiKeProfil(event)" class="navbarAvatarMobile w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-xs overflow-hidden border" id="avatarNavbarMobile">S</a>
             </div>
         </div>
 
         <!-- Kolom Pencarian -->
-        <div class="search-container flex-1 max-w-full md:max-w-[650px] md:mx-8 relative">
-            <input type="text" id="searchInput" class="w-full px-5 py-3 rounded-full border border-gray-200 text-sm focus:outline-none focus:border-black pr-12 text-black" placeholder="Cari produk impian (contoh: pc, baju, sepatu)...">
-            <button id="searchBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </button>
+        <div class="search-container flex-1 max-w-full md:max-w-[650px] md:mx-8 flex flex-col gap-2">
+            <div class="relative w-full">
+                <input type="text" id="searchInput" class="w-full px-5 py-3 rounded-full border border-gray-200 text-sm focus:outline-none focus:border-black pr-12 text-black" placeholder="Cari produk impian (contoh: pc, baju, sepatu)...">
+                <button id="searchBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <!-- Opsi Pilihan Pencarian (Disembunyikan secara default menggunakan 'hidden') -->
+            <div id="searchOptionsContainer" class="hidden flex items-center gap-2 text-[11px] self-start ml-2 transition-all duration-300">
+                <span class="text-zinc-400 font-medium">Opsi Cari:</span>
+                <button id="searchOptionProduct" onclick="setSearchMode('product')" class="px-3 py-1 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm">Barang</button>
+                <button id="searchOptionShop" onclick="setSearchMode('shop')" class="px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200">Toko / Brand</button>
+            </div>
         </div>
 
         <div class="user-menu hidden md:flex items-center gap-6">
@@ -315,148 +323,176 @@
                 </svg>
                 <span class="cart-badge absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
             </button>
-            <a href="profil.html" id="navbarAvatar" class="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-sm overflow-hidden border border-gray-100 hover:scale-105 transition">S</a>
+            <a href="profil.html" onclick="navigasiKeProfil(event)" id="navbarAvatar" class="w-10 h-10 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold text-sm overflow-hidden border border-gray-100 hover:scale-105 transition">S</a>
         </div>
     </header>
 
-    <!-- ===== CAROUSEL UTAMA ===== -->
+    <!-- ===== CAROUSEL UTAMA & AREA BERANDA ===== -->
     <div id="homeView">
-        <main class="hero-carousel">
-            <div class="hero-slides" id="heroSlides">
-                <!-- Slide 1 -->
-                <div class="slide bg-gradient-to-r from-neutral-900 to-indigo-950">
-                    <div class="hero-text">
-                        <span class="text-xs bg-indigo-500/30 text-indigo-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">EDISI KHUSUS</span>
-                        <h1>Koleksi Premium<br>Rilis Baru Akhir Pekan.</h1>
-                        <p>Dapatkan pakaian pilihan kurator terbaik dengan potongan harga spesial.</p>
-                        <button class="btn-promo" onclick="cariBerdasarkanTag('baju')">Lihat Koleksi</button>
-                    </div>
-                    <div class="hero-visual-wrapper">
-                        <div class="hero-visual bg-pastel-yellow">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M20.37 4.65a2.11 2.11 0 0 0-1.2-.65l-4.71-.67a.38.38 0 0 1-.29-.21l-2.1-4.27a2.13 2.13 0 0 0-3.81 0L6.16 3.12a.38.38 0 0 1-.29.21L1.16 4a2.11 2.11 0 0 0-1.2.65 2.15 2.15 0 0 0-.35 1.34l.75 7.14a2.14 2.14 0 0 0 2.13 1.91h14.7a2.14 2.14 0 0 0 2.13-1.91l.75-7.14a2.15 2.15 0 0 0-.35-1.34Z"/>
-                            </svg>
+        <!-- Konten Default Beranda -->
+        <div id="homeDefaultContent">
+            <main class="hero-carousel">
+                <div class="hero-slides" id="heroSlides">
+                    <!-- Slide 1 -->
+                    <div class="slide bg-gradient-to-r from-neutral-900 to-indigo-950">
+                        <div class="hero-text">
+                            <span class="text-xs bg-indigo-500/30 text-indigo-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">EDISI KHUSUS</span>
+                            <h1>Koleksi Premium<br>Rilis Baru Akhir Pekan.</h1>
+                            <p>Dapatkan pakaian pilihan kurator terbaik dengan potongan harga spesial.</p>
+                            <button class="btn-promo" onclick="cariBerdasarkanTag('baju')">Lihat Koleksi</button>
+                        </div>
+                        <div class="hero-visual-wrapper">
+                            <div class="hero-visual bg-pastel-yellow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M20.37 4.65a2.11 2.11 0 0 0-1.2-.65l-4.71-.67a.38.38 0 0 1-.29-.21l-2.1-4.27a2.13 2.13 0 0 0-3.81 0L6.16 3.12a.38.38 0 0 1-.29.21L1.16 4a2.11 2.11 0 0 0-1.2-.65 2.15 2.15 0 0 0-.35 1.34l.75 7.14a2.14 2.14 0 0 0 2.13 1.91h14.7a2.14 2.14 0 0 0 2.13-1.91l.75-7.14a2.15 2.15 0 0 0-.35-1.34Z"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Slide 2 -->
-                <div class="slide bg-gradient-to-r from-neutral-900 to-emerald-950">
-                    <div class="hero-text">
-                        <span class="text-xs bg-emerald-500/30 text-emerald-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">PERKAKAS KERJA</span>
-                        <h1>Setup Kerja Estetik<br>Koleksi PC & Gadget.</h1>
-                        <p>Tingkatkan produktivitas kerja dengan perlengkapan komputer modern.</p>
-                        <button class="btn-promo" onclick="cariBerdasarkanTag('pc')">Jelajahi Gadget</button>
-                    </div>
-                    <div class="hero-visual-wrapper">
-                        <div class="hero-visual bg-pastel-green">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="2" y="3" width="20" height="13" rx="2" />
-                                <line x1="12" y1="16" x2="12" y2="21" />
-                                <line x1="8" y1="21" x2="16" y2="21" />
-                            </svg>
+                    <!-- Slide 2 -->
+                    <div class="slide bg-gradient-to-r from-neutral-900 to-emerald-950">
+                        <div class="hero-text">
+                            <span class="text-xs bg-emerald-500/30 text-emerald-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">PERKAKAS KERJA</span>
+                            <h1>Setup Kerja Estetik<br>Koleksi PC & Gadget.</h1>
+                            <p>Tingkatkan produktivitas kerja dengan perlengkapan komputer modern.</p>
+                            <button class="btn-promo" onclick="cariBerdasarkanTag('pc')">Jelajahi Gadget</button>
+                        </div>
+                        <div class="hero-visual-wrapper">
+                            <div class="hero-visual bg-pastel-green">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="2" y="3" width="20" height="13" rx="2" />
+                                    <line x1="12" y1="16" x2="12" y2="21" />
+                                    <line x1="8" y1="21" x2="16" y2="21" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Slide 3 -->
-                <div class="slide bg-gradient-to-r from-neutral-900 to-amber-950">
-                    <div class="hero-text">
-                        <span class="text-xs bg-amber-500/30 text-amber-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GAYA HIDUP</span>
-                        <h1>Langkah Percaya Diri<br>Katalog Sepatu Trendi.</h1>
-                        <p>Dari kasual hingga olahraga, temukan sepatu yang paling pas untuk Anda.</p>
-                        <button class="btn-promo" onclick="cariBerdasarkanTag('sepatu')">Cari Sepatu</button>
-                    </div>
-                    <div class="hero-visual-wrapper">
-                        <div class="hero-visual bg-pastel-orange">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M3 18v-6a9 9 0 0 1 18 0v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3Z" />
-                            </svg>
+                    <!-- Slide 3 -->
+                    <div class="slide bg-gradient-to-r from-neutral-900 to-amber-950">
+                        <div class="hero-text">
+                            <span class="text-xs bg-amber-500/30 text-amber-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GAYA HIDUP</span>
+                            <h1>Langkah Percaya Diri<br>Katalog Sepatu Trendi.</h1>
+                            <p>Dari kasual hingga olahraga, temukan sepatu yang paling pas untuk Anda.</p>
+                            <button class="btn-promo" onclick="cariBerdasarkanTag('sepatu')">Cari Sepatu</button>
+                        </div>
+                        <div class="hero-visual-wrapper">
+                            <div class="hero-visual bg-pastel-orange">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M3 18v-6a9 9 0 0 1 18 0v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3Z" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Slide 4 -->
-                <div class="slide bg-gradient-to-r from-neutral-900 to-rose-950">
-                    <div class="hero-text">
-                        <span class="text-xs bg-rose-500/30 text-rose-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">KERAJINAN LOKAL</span>
-                        <h1>Karya Seni Orisinal<br>Hiasan Rumah Minimalis.</h1>
-                        <p>Sentuhan artistik dari pengrajin komunitas lokal Sandy Place.</p>
-                        <button class="btn-promo" onclick="cariBerdasarkanTag('aksesoris')">Lihat Seni</button>
-                    </div>
-                    <div class="hero-visual-wrapper">
-                        <div class="hero-visual bg-pastel-pink">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M12 2L2 22h20L12 2Z" />
-                            </svg>
+                    <!-- Slide 4 -->
+                    <div class="slide bg-gradient-to-r from-neutral-900 to-rose-950">
+                        <div class="hero-text">
+                            <span class="text-xs bg-rose-500/30 text-rose-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">KERAJINAN LOKAL</span>
+                            <h1>Karya Seni Orisinal<br>Hiasan Rumah Minimalis.</h1>
+                            <p>Sentuhan artistik dari pengrajin komunitas lokal Sandy Place.</p>
+                            <button class="btn-promo" onclick="cariBerdasarkanTag('aksesoris')">Lihat Seni</button>
+                        </div>
+                        <div class="hero-visual-wrapper">
+                            <div class="hero-visual bg-pastel-pink">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2L2 22h20L12 2Z" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Slide 5 -->
-                <div class="slide bg-gradient-to-r from-neutral-900 to-zinc-900">
-                    <div class="hero-text">
-                        <span class="text-xs bg-zinc-500/30 text-zinc-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GABUNG SELLER</span>
-                        <h1>Bangun Toko Anda<br>Mulai Jualan Gratis.</h1>
-                        <p>Unggah produk Anda langsung ke database dan jangkau seluruh anggota.</p>
-                        <button class="btn-promo" onclick="window.location.href='profil.html'">Kelola Toko</button>
-                    </div>
-                    <div class="hero-visual-wrapper">
-                        <div class="hero-visual bg-pastel-blue">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5Zm4 3h6v2H9V6Zm0 4h6v2H9v-2Zm0 4h6v2H9v-2Z" />
-                            </svg>
+                    <!-- Slide 5 -->
+                    <div class="slide bg-gradient-to-r from-neutral-900 to-zinc-900">
+                        <div class="hero-text">
+                            <span class="text-xs bg-zinc-500/30 text-zinc-300 font-extrabold uppercase px-2.5 py-1 rounded-md mb-2 inline-block">GABUNG SELLER</span>
+                            <h1>Bangun Toko Anda<br>Mulai Jualan Gratis.</h1>
+                            <p>Unggah produk Anda langsung ke database dan jangkau seluruh anggota.</p>
+                            <button class="btn-promo" onclick="navigasiKeProfil(event)">Kelola Toko</button>
+                        </div>
+                        <div class="hero-visual-wrapper">
+                            <div class="hero-visual bg-pastel-blue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5Zm4 3h6v2H9V6Zm0 4h6v2H9v-2Zm0 4h6v2H9v-2Z" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Bulatan Slider -->
-            <div class="carousel-dots">
-                <div class="dot active" onclick="pindahSlide(0)"></div>
-                <div class="dot" onclick="pindahSlide(1)"></div>
-                <div class="dot" onclick="pindahSlide(2)"></div>
-                <div class="dot" onclick="pindahSlide(3)"></div>
-                <div class="dot" onclick="pindahSlide(4)"></div>
-            </div>
-        </main>
-
-        <!-- ===== PANEL JELAJAH BRAND & TOKO (MAKSIMAL 6 BRAND) ===== -->
-        <div class="main-content-panel">
-            <section class="brands-section">
-                <div class="brands-header">
-                    <div>
-                        <h2 class="font-serif text-white">Jelajahi Brand & Toko Kreator</h2>
-                        <p class="text-xs text-zinc-400">Temukan barang impian langsung dari 6 brand pilihan Sandy Place</p>
-                    </div>
-                    <a href="profil.html" class="see-all">Kelola Toko Saya</a>
                 </div>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" id="brandsDatabaseGrid">
-                    <!-- Memuat tepat 6 kartu toko dinamis + premium mock -->
-                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
-                    <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                <!-- Bulatan Slider -->
+                <div class="carousel-dots">
+                    <div class="dot active" onclick="pindahSlide(0)"></div>
+                    <div class="dot" onclick="pindahSlide(1)"></div>
+                    <div class="dot" onclick="pindahSlide(2)"></div>
+                    <div class="dot" onclick="pindahSlide(3)"></div>
+                    <div class="dot" onclick="pindahSlide(4)"></div>
                 </div>
-            </section>
+            </main>
+
+            <!-- ===== PANEL JELAJAH BRAND & TOKO (MAKSIMAL 6 BRAND) ===== -->
+            <div class="main-content-panel">
+                <section class="brands-section">
+                    <div class="brands-header">
+                        <div>
+                            <h2 class="font-serif text-white">Jelajahi Brand & Toko Kreator</h2>
+                            <p class="text-xs text-zinc-400">Temukan barang impian langsung dari 6 brand pilihan Sandy Place</p>
+                        </div>
+                        <a href="profil.html" onclick="navigasiKeProfil(event)" class="see-all">Kelola Toko Saya</a>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" id="brandsDatabaseGrid">
+                        <!-- Memuat tepat 6 kartu toko dinamis + premium mock -->
+                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                        <div class="animate-pulse bg-zinc-800 h-[200px] rounded-[24px]"></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ===== ETALASE PRODUK DI LUAR PANEL HITAM ===== -->
+            <div class="bg-white px-4 md:px-10 py-12 md:py-20 max-w-7xl mx-auto">
+                <section class="pt-2">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                        <div>
+                            <h2 class="font-serif text-3xl md:text-4xl text-neutral-900 font-bold" id="productSectionTitle">Produk Terbaru Komunitas</h2>
+                            <p class="text-sm text-zinc-600 mt-2" id="searchFeedback">Menampilkan seluruh katalog produk aktif dari komunitas penjual</p>
+                        </div>
+                    </div>
+                    
+                    <div class="product-grid" id="communityProductsGrid">
+                        <!-- Katalog produk dinamis dimuat di sini -->
+                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                        <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
+                    </div>
+                </section>
+            </div>
         </div>
 
-        <!-- ===== ETALASE PRODUK DI LUAR PANEL HITAM (LATAR BELAKANG PUTIH) ===== -->
-        <div class="bg-white px-4 md:px-10 py-12 md:py-20 max-w-7xl mx-auto">
+        <!-- ===== FOKUS AREA HASIL PENCARIAN ===== -->
+        <div id="searchResultsSection" class="hidden bg-white px-4 md:px-10 py-12 md:py-20 max-w-7xl mx-auto min-h-[60vh]">
             <section class="pt-2">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-zinc-100 pb-6">
                     <div>
-                        <h2 class="font-serif text-3xl md:text-4xl text-neutral-900 font-bold" id="productSectionTitle">Produk Terbaru Komunitas</h2>
-                        <p class="text-sm text-zinc-600 mt-2" id="searchFeedback">Menampilkan seluruh katalog produk aktif dari komunitas penjual</p>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span id="searchBadgeMode" class="bg-indigo-600 text-[10px] font-bold text-white uppercase tracking-widest px-2.5 py-1 rounded-md">BARANG</span>
+                            <span class="text-xs text-zinc-400">Hasil Pencarian Fokus</span>
+                        </div>
+                        <h2 class="font-serif text-3xl md:text-4xl text-neutral-900 font-bold" id="searchFocusTitle">Hasil Pencarian</h2>
+                        <p class="text-sm text-zinc-600 mt-2" id="searchFocusFeedback">Menampilkan pencarian yang cocok</p>
                     </div>
+                    <button onclick="resetPencarian()" class="px-5 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white rounded-full text-xs font-semibold transition shadow-md flex items-center gap-1.5">
+                        ✕ Bersihkan Pencarian
+                    </button>
                 </div>
-                
-                <div class="product-grid" id="communityProductsGrid">
-                    <!-- Katalog produk dinamis dimuat di sini -->
-                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
-                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
-                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
-                    <div class="animate-pulse bg-zinc-100 h-[280px] rounded-20"></div>
-                </div>
+
+                <!-- Grid Hasil Pencarian Barang -->
+                <div class="product-grid hidden" id="searchFocusProductsGrid"></div>
+
+                <!-- Grid Hasil Pencarian Toko / Brand -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 hidden" id="searchFocusShopsGrid"></div>
             </section>
         </div>
     </div>
@@ -544,6 +580,19 @@
         let katalogProducts = [];
         let detailTokoAktif = null;
         let slideAktif = 0;
+
+        async function navigasiKeProfil(event) {
+            if (event) event.preventDefault();
+            const user = await dapatkanUserAktif();
+            if (!user) {
+                tampilkanToast("Silakan login terlebih dahulu untuk mengakses fitur ini!", "#dc2626");
+                setTimeout(() => {
+                    window.location.href = "auth.html";
+                }, 1500);
+            } else {
+                window.location.href = "profil.html";
+            }
+        }
 
         // Premium mock brands fallback untuk melengkapi hingga genap 6 brand pilihan
         const premiumMockBrands = [
@@ -660,7 +709,6 @@
                 }
             } catch (err) {
                 console.error("Terjadi masalah pengambilan data dari database Supabase:", err);
-                // Fallback rendering jika koneksi Supabase terputus
                 renderDaftarToko();
             }
         }
@@ -681,7 +729,6 @@
                 }
             }
             
-            // Batasi tepat menjadi 6 brand saja
             const enamBrandTerpilih = gabunganBrand.slice(0, 6);
 
             enamBrandTerpilih.forEach(brand => {
@@ -743,22 +790,89 @@
             });
         }
 
-        // --- SISTEM PENELUSURAN DAN FILTER ---
+        // --- SISTEM PENELUSURAN DAN FILTER DENGAN FOKUS HASIL ---
+        let currentSearchMode = 'product';
+
+        function setSearchMode(mode) {
+            currentSearchMode = mode;
+            const btnProduct = document.getElementById('searchOptionProduct');
+            const btnShop = document.getElementById('searchOptionShop');
+            const searchInput = document.getElementById('searchInput');
+
+            if (mode === 'product') {
+                btnProduct.className = "px-3 py-1 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm";
+                btnShop.className = "px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200";
+                searchInput.placeholder = "Cari produk impian (contoh: pc, baju, sepatu)...";
+            } else {
+                btnProduct.className = "px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 font-semibold transition hover:bg-zinc-200";
+                btnShop.className = "px-3 py-1 rounded-full bg-neutral-900 text-white font-semibold transition shadow-sm";
+                searchInput.placeholder = "Cari nama toko atau deskripsi brand kreatif...";
+            }
+            
+            if (searchInput.value.trim() !== '') {
+                jalankanPencarian();
+            }
+        }
+
         function inisialisasiPencarian() {
             const searchInput = document.getElementById('searchInput');
             const searchBtn = document.getElementById('searchBtn');
+            const searchOptionsContainer = document.getElementById('searchOptionsContainer');
 
-            function cari() {
-                const query = searchInput.value.trim().toLowerCase();
-                const sectionTitle = document.getElementById('productSectionTitle');
-                const feedbackText = document.getElementById('searchFeedback');
+            if (searchBtn) searchBtn.onclick = jalankanPencarian;
+            if (searchInput) {
+                searchInput.onkeyup = (e) => {
+                    if (e.key === 'Enter') jalankanPencarian();
+                };
 
-                if (!query) {
-                    sectionTitle.innerText = "Produk Terbaru Komunitas";
-                    feedbackText.innerText = "Menampilkan seluruh katalog produk aktif dari komunitas penjual";
-                    renderProdukKomunitas(katalogProducts);
-                    return;
-                }
+                // Logic memunculkan & menyembunyikan opsi cari secara dinamis
+                searchInput.oninput = () => {
+                    if (searchInput.value.trim() !== '') {
+                        searchOptionsContainer.classList.remove('hidden');
+                    } else {
+                        searchOptionsContainer.classList.add('hidden');
+                        // Kembalikan ke beranda default jika kosong
+                        resetPencarian();
+                    }
+                };
+
+                searchInput.onfocus = () => {
+                    if (searchInput.value.trim() !== '') {
+                        searchOptionsContainer.classList.remove('hidden');
+                    }
+                };
+            }
+        }
+
+        function jalankanPencarian() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const defaultContent = document.getElementById('homeDefaultContent');
+            const searchSection = document.getElementById('searchResultsSection');
+            const searchOptionsContainer = document.getElementById('searchOptionsContainer');
+            
+            const badgeMode = document.getElementById('searchBadgeMode');
+            const titleFocus = document.getElementById('searchFocusTitle');
+            const feedbackFocus = document.getElementById('searchFocusFeedback');
+            
+            const productsGrid = document.getElementById('searchFocusProductsGrid');
+            const shopsGrid = document.getElementById('searchFocusShopsGrid');
+
+            if (!query) {
+                resetPencarian();
+                return;
+            }
+
+            // Tampilkan opsi penjelajah saat pencarian berjalan aktif
+            searchOptionsContainer.classList.remove('hidden');
+
+            // Sembunyikan semua kompartemen bawaan beranda demi menjaga fokus hasil
+            defaultContent.classList.add('hidden');
+            searchSection.classList.remove('hidden');
+
+            if (currentSearchMode === 'product') {
+                badgeMode.innerText = "BARANG";
+                badgeMode.className = "bg-indigo-600 text-[10px] font-bold text-white uppercase tracking-widest px-2.5 py-1 rounded-md";
+                titleFocus.innerText = `Hasil Cari Barang: "${query}"`;
 
                 const hasilFilter = katalogProducts.filter(p => {
                     const matchNama = p.name ? p.name.toLowerCase().includes(query) : false;
@@ -767,27 +881,113 @@
                     return matchNama || matchDesc || matchTag;
                 });
 
-                sectionTitle.innerText = `Hasil pencarian: "${query}"`;
-                feedbackText.innerText = `Menemukan ${hasilFilter.length} produk yang cocok dengan pencarian Anda`;
-                renderProdukKomunitas(hasilFilter);
+                feedbackFocus.innerText = `Menemukan ${hasilFilter.length} barang yang cocok dengan pencarian Anda`;
+                
+                productsGrid.innerHTML = '';
+                productsGrid.classList.remove('hidden');
+                shopsGrid.classList.add('hidden');
 
-                document.getElementById('communityProductsGrid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (hasilFilter.length === 0) {
+                    productsGrid.innerHTML = `
+                        <div class="col-span-full py-16 text-center text-zinc-500 italic text-sm bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">
+                            Tidak ada produk terdaftar yang sesuai kata kunci pencarian.
+                        </div>`;
+                } else {
+                    hasilFilter.forEach(p => {
+                        const card = document.createElement('div');
+                        card.className = 'product-card';
+                        card.onclick = () => bukaDetailProduk(p.id);
+
+                        const fotoUrl = p.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=300';
+                        card.innerHTML = `
+                            <div class="product-card-img">
+                                <img src="${fotoUrl}" alt="${p.name}">
+                            </div>
+                            <div class="product-card-body">
+                                <span class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest font-mono">SUPABASE DB</span>
+                                <h4 class="product-card-title line-clamp-2">${p.name}</h4>
+                                <p class="product-card-desc line-clamp-1">${p.description || ''}</p>
+                                <div class="product-card-price">${formatRupiah(p.price)}</div>
+                            </div>
+                        `;
+                        productsGrid.appendChild(card);
+                    });
+                }
+            } else {
+                badgeMode.innerText = "TOKO & BRAND";
+                badgeMode.className = "bg-emerald-600 text-[10px] font-bold text-white uppercase tracking-widest px-2.5 py-1 rounded-md";
+                titleFocus.innerText = `Hasil Cari Toko: "${query}"`;
+
+                let gabunganBrand = [...katalogSellers];
+                if (gabunganBrand.length < 6) {
+                    const sisaSlot = 6 - gabunganBrand.length;
+                    for (let i = 0; i < sisaSlot; i++) {
+                        gabunganBrand.push(premiumMockBrands[i % premiumMockBrands.length]);
+                    }
+                }
+
+                const hasilFilter = gabunganBrand.filter(b => {
+                    const matchNama = b.name ? b.name.toLowerCase().includes(query) : false;
+                    const matchMsg = b.message ? b.message.toLowerCase().includes(query) : false;
+                    return matchNama || matchMsg;
+                });
+
+                feedbackFocus.innerText = `Menemukan ${hasilFilter.length} brand & toko kreatif yang cocok`;
+                
+                shopsGrid.innerHTML = '';
+                shopsGrid.classList.remove('hidden');
+                productsGrid.classList.add('hidden');
+
+                if (hasilFilter.length === 0) {
+                    shopsGrid.innerHTML = `
+                        <div class="col-span-full py-16 text-center text-zinc-500 italic text-sm bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">
+                            Tidak ada toko atau brand terdaftar yang sesuai kata kunci pencarian.
+                        </div>`;
+                } else {
+                    hasilFilter.forEach(brand => {
+                        const card = document.createElement('div');
+                        card.className = "relative overflow-hidden rounded-[24px] bg-zinc-900 border border-zinc-800/80 group cursor-pointer transition transform hover:-translate-y-2 duration-300";
+                        card.onclick = () => {
+                            if (brand.id.startsWith('mock-')) {
+                                bukaDetailTokoMock(brand);
+                            } else {
+                                bukaDetailToko(brand.id);
+                            }
+                        };
+
+                        const bannerUrl = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600";
+                        card.innerHTML = `
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10"></div>
+                            <img src="${bannerUrl}" alt="${brand.name}" class="w-full h-[200px] object-cover opacity-75 group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-x-6 bottom-6 z-20">
+                                <span class="bg-indigo-600 text-[9px] font-bold tracking-widest uppercase px-2 py-0.5 rounded text-white">PRO SELLER</span>
+                                <h3 class="font-serif text-xl font-bold text-white mt-2">${brand.name || 'Toko Kreator'}</h3>
+                                <p class="text-zinc-400 text-xs mt-1 italic line-clamp-1">"${brand.message || ''}"</p>
+                            </div>
+                        `;
+                        shopsGrid.appendChild(card);
+                    });
+                }
             }
 
-            if (searchBtn) searchBtn.onclick = cari;
-            if (searchInput) {
-                searchInput.onkeyup = (e) => {
-                    if (e.key === 'Enter') cari();
-                };
-            }
+            searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetPencarian() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchOptionsContainer').classList.add('hidden'); // Sembunyikan opsi
+            document.getElementById('homeDefaultContent').classList.remove('hidden');
+            document.getElementById('searchResultsSection').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function cariBerdasarkanTag(tag) {
+            setSearchMode('product');
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
                 searchInput.value = tag;
-                const btn = document.getElementById('searchBtn');
-                if (btn) btn.click();
+                document.getElementById('searchOptionsContainer').classList.remove('hidden'); // Paksa muncul
+                jalankanPencarian();
             }
         }
 
@@ -834,7 +1034,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Mendukung preview interaktif untuk brand pelengkap mock
         function bukaDetailTokoMock(brand) {
             detailTokoAktif = brand;
             document.getElementById('homeView').style.display = 'none';
@@ -1075,6 +1274,7 @@
             window.open(link, '_blank');
         }
 
+        // --- TOAST NOTIFICATION ---
         function tampilkanToast(message, colorHex) {
             const toast = document.getElementById('shopToast');
             const toastMsg = document.getElementById('toastMessage');
