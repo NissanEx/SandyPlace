@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sandy Place Marketplace</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase.js"></script>
@@ -646,7 +647,6 @@
             }
         ];
 
-        // --- SISTEM SLIDER ANIMASI ---
         function pindahSlide(idx) {
             slideAktif = idx;
             const container = document.getElementById('heroSlides');
@@ -665,9 +665,12 @@
             pindahSlide(slideAktif);
         }
 
-        // --- PENGAMBILAN DATA SUPABASE ---
         async function muatDataMarketplace() {
             try {
+                if (!window.supabase || !supabase) {
+                    throw new Error("Koneksi Supabase tidak diinisialisasi dengan benar.");
+                }
+
                 // Ambil semua daftar seller dari table profiles
                 const { data: profiles, error: errorProfiles } = await supabase
                     .from('profiles')
@@ -687,6 +690,8 @@
                 if (!errorProducts && products) {
                     katalogProducts = products;
                     renderProdukKomunitas(katalogProducts);
+                } else {
+                    renderProdukKomunitas([]);
                 }
 
                 // Muat data user login untuk navbar avatar
@@ -710,10 +715,10 @@
             } catch (err) {
                 console.error("Terjadi masalah pengambilan data dari database Supabase:", err);
                 renderDaftarToko();
+                renderProdukKomunitas([]); // Membersihkan skeleton loading jika gagal terhubung
             }
         }
 
-        // Memastikan Tepat 6 Brand Pilihan Tampil Menarik di Grid Hitam
         function renderDaftarToko() {
             const container = document.getElementById('brandsDatabaseGrid');
             if (!container) return;
@@ -764,7 +769,7 @@
             if (!daftarProduk || daftarProduk.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full py-16 text-center text-zinc-500 italic text-sm">
-                        Produk tidak ditemukan. Silakan gunakan kata pencarian lain.
+                        Produk tidak ditemukan atau koneksi database sedang disiapkan.
                     </div>`;
                 return;
             }
@@ -790,7 +795,6 @@
             });
         }
 
-        // --- SISTEM PENELUSURAN DAN FILTER DENGAN FOKUS HASIL ---
         let currentSearchMode = 'product';
 
         function setSearchMode(mode) {
@@ -825,13 +829,11 @@
                     if (e.key === 'Enter') jalankanPencarian();
                 };
 
-                // Logic memunculkan & menyembunyikan opsi cari secara dinamis
                 searchInput.oninput = () => {
                     if (searchInput.value.trim() !== '') {
                         searchOptionsContainer.classList.remove('hidden');
                     } else {
                         searchOptionsContainer.classList.add('hidden');
-                        // Kembalikan ke beranda default jika kosong
                         resetPencarian();
                     }
                 };
@@ -862,10 +864,7 @@
                 return;
             }
 
-            // Tampilkan opsi penjelajah saat pencarian berjalan aktif
             searchOptionsContainer.classList.remove('hidden');
-
-            // Sembunyikan semua kompartemen bawaan beranda demi menjaga fokus hasil
             defaultContent.classList.add('hidden');
             searchSection.classList.remove('hidden');
 
@@ -975,7 +974,7 @@
 
         function resetPencarian() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('searchOptionsContainer').classList.add('hidden'); // Sembunyikan opsi
+            document.getElementById('searchOptionsContainer').classList.add('hidden');
             document.getElementById('homeDefaultContent').classList.remove('hidden');
             document.getElementById('searchResultsSection').classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -986,12 +985,11 @@
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
                 searchInput.value = tag;
-                document.getElementById('searchOptionsContainer').classList.remove('hidden'); // Paksa muncul
+                document.getElementById('searchOptionsContainer').classList.remove('hidden');
                 jalankanPencarian();
             }
         }
 
-        // --- NAVIGASI KE DETAIL TOKO ---
         function bukaDetailToko(tokoId) {
             const brand = katalogSellers.find(b => b.id === tokoId);
             if (!brand) return;
