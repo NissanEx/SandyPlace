@@ -1196,6 +1196,17 @@
             renderIsiKeranjang();
         }
 
+        // ===== PENGECEKAN LOGIN UNTUK AKSES PROFIL =====
+        async function arahkeProfilDenganCek() {
+            const user = await dapatkanUserAktif();
+            if (!user) {
+                tampilkanToast("Silakan login terlebih dahulu!", "#dc2626");
+                setTimeout(() => { window.location.href = "auth.html"; }, 1500);
+                return;
+            }
+            window.location.href = "profil.html";
+        }
+
         async function prosesCheckoutPesanan() {
             const user = await dapatkanUserAktif();
             if (!user) {
