@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sandy Place – Masuk / Daftar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat Supabase JS Client dari CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,600;0,700;1,400&family=Inter:wght=400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
 
         :root {
             --bg-color: #ffffff;
@@ -31,7 +29,6 @@
             overflow-x: hidden;
         }
 
-        /* Header responsif */
         .header-bar {
             display: flex;
             justify-content: space-between;
@@ -46,7 +43,6 @@
             }
         }
 
-        /* Logo responsif */
         .logo {
             font-size: 28px;
             line-height: 0.8;
@@ -82,7 +78,6 @@
             opacity: 0.8;
         }
 
-        /* Kontainer Utama & Grid Responsif */
         .auth-container {
             flex-grow: 1;
             display: flex;
@@ -124,7 +119,6 @@
             }
         }
 
-        /* Sembunyikan kutipan di mobile agar langsung fokus ke form */
         .quote-panel {
             display: none;
         }
@@ -234,7 +228,6 @@
             }
         }
 
-        /* Baris form stacked di mobile, horizontal di desktop */
         .form-row {
             display: flex;
             flex-direction: column;
@@ -281,7 +274,6 @@
             background-color: #d6d6d6;
         }
 
-        /* Tombol responsif: Bersebelahan penuh di mobile, sejajar kanan di desktop */
         .btn-container {
             display: flex;
             justify-content: space-between;
@@ -337,6 +329,12 @@
             background-color: #d1d1d1;
         }
 
+        .btn-auth:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
         .row-transition {
             max-height: 0;
             opacity: 0;
@@ -385,7 +383,6 @@
             }
         }
 
-        /* Toast Notif Mobile Friendly */
         .toast-notif {
             display: none;
             position: fixed;
@@ -417,6 +414,21 @@
                 justify-content: flex-start;
             }
         }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -442,7 +454,6 @@
     <div class="auth-container">
         <div class="auth-grid">
             
-            <!-- Panel Kutipan Kiri (Tampil Mulai Layar MD/Tablet Ke Atas) -->
             <div class="quote-panel">
                 <div class="quote-content-wrapper" id="quoteWrapper">
                     <div class="quote-book-title" id="bookTitle">Madilog</div>
@@ -459,30 +470,25 @@
                 </div>
             </div>
 
-            <!-- Panel Form Otentikasi Kanan -->
             <div class="form-panel">
                 <h2 class="form-title" id="formHeader">Sign In</h2>
                 
                 <form id="authForm" onsubmit="handleFormSubmit(event)">
-                    <!-- Baris Nama Lengkap (Khusus Pendaftaran) -->
                     <div class="form-row row-transition" id="fullNameRow">
                         <label class="form-label" for="userFullName">Nama :</label>
                         <input type="text" id="userFullName" class="form-input" placeholder="Masukkan nama lengkap Anda">
                     </div>
 
-                    <!-- Baris Email (Pendaftaran & Masuk) -->
                     <div class="form-row" id="emailRow">
                         <label class="form-label" for="userEmail">Email :</label>
                         <input type="email" id="userEmail" class="form-input" placeholder="Masukkan Email Anda" required>
                     </div>
 
-                    <!-- Baris Password (Pendaftaran & Masuk) -->
                     <div class="form-row">
                         <label class="form-label" for="userPassword">Password :</label>
                         <input type="password" id="userPassword" class="form-input" placeholder="Masukkan kata sandi" required>
                     </div>
 
-                    <!-- Konfirmasi Password (Khusus Pendaftaran) -->
                     <div class="form-row row-transition" id="confirmRow">
                         <label class="form-label" for="confirmPassword">Confirm :</label>
                         <input type="password" id="confirmPassword" class="form-input" placeholder="Ulangi kata sandi">
@@ -498,7 +504,6 @@
         </div>
     </div>
 
-    <!-- Modal Dukungan Layanan Pelanggan -->
     <div class="cs-overlay" id="csOverlay" onclick="toggleCSModal(false)">
         <div class="cs-modal" onclick="event.stopPropagation()">
             <h3 class="text-2xl font-bold mb-4 text-black border-b border-gray-100 pb-3 font-serif">Layanan CS Sandy Place</h3>
@@ -516,18 +521,12 @@
     <div id="shopToast" class="toast-notif"><span id="toastMessage"></span></div>
 
     <script>
-        // === INISIALISASI SUPABASE SECARA MANDIRI & AMAN ===
+        // === INISIALISASI SUPABASE ===
         const SUPABASE_URL = 'https://aprnwmcliuubjosmtqis.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_OX9pW9J_w-oC6QCZPqPYcg_a0TogFm3';
 
-        // Lakukan pengecekan apakah library CDN sudah termuat dan belum diubah menjadi instansi klien.
-        // Jika masih berupa library mentah (memiliki fungsi createClient), inisialisasikan di sini secara langsung.
-        if (window.supabase && typeof window.supabase.createClient === 'function') {
-            window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-        
-        // Simpan instansi klien di variabel lokal agar aman dari ketidaksiapan berkas supabase.js
-        const supabase = window.supabase;
+        // Inisialisasi Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const quotesRepository = [
             {
@@ -550,6 +549,7 @@
         let currentQuoteIndex = 0;
         let quoteInterval;
         let authMode = 'signin'; 
+        let isSubmitting = false;
 
         function renderQuote(index) {
             const wrapper = document.getElementById('quoteWrapper');
@@ -558,7 +558,7 @@
             const authorEl = document.getElementById('bookAuthor');
             const dots = document.querySelectorAll('.carousel-dot');
 
-            if (!wrapper) return; // Penanganan aman jika elemen tidak dirender di mobile
+            if (!wrapper) return;
 
             wrapper.classList.add('fade-out');
 
@@ -593,7 +593,8 @@
         }
 
         function setMode(mode) {
-            if (authMode === mode) return;
+            if (authMode === mode || isSubmitting) return;
+            
             authMode = mode;
 
             const header = document.getElementById('formHeader');
@@ -601,43 +602,92 @@
             const confirmRow = document.getElementById('confirmRow');
             const signUpBtn = document.getElementById('signUpBtn');
             const signInBtn = document.getElementById('signInBtn');
+            const fullNameInput = document.getElementById('userFullName');
+            const confirmPassInput = document.getElementById('confirmPassword');
 
             if (mode === 'signup') {
                 header.innerText = "Sign Up";
                 fullNameRow.classList.add('show');
                 confirmRow.classList.add('show');
                 
-                document.getElementById('userFullName').setAttribute('required', 'true');
-                document.getElementById('confirmPassword').setAttribute('required', 'true');
+                fullNameInput.setAttribute('required', 'true');
+                confirmPassInput.setAttribute('required', 'true');
 
                 signUpBtn.className = "btn-auth active";
                 signUpBtn.setAttribute('type', 'submit');
+                signUpBtn.onclick = null; // Hapus onclick karena akan disubmit via form
 
                 signInBtn.className = "btn-auth inactive";
                 signInBtn.setAttribute('type', 'button');
-                signInBtn.setAttribute('onclick', "setMode('signin')");
+                signInBtn.onclick = function() { setMode('signin'); };
             } else {
                 header.innerText = "Sign In";
                 fullNameRow.classList.remove('show');
                 confirmRow.classList.remove('show');
 
-                document.getElementById('userFullName').removeAttribute('required');
-                document.getElementById('confirmPassword').removeAttribute('required');
+                fullNameInput.removeAttribute('required');
+                confirmPassInput.removeAttribute('required');
 
                 signInBtn.className = "btn-auth active";
                 signInBtn.setAttribute('type', 'submit');
-                signInBtn.removeAttribute('onclick');
+                signInBtn.onclick = null;
 
                 signUpBtn.className = "btn-auth inactive";
                 signUpBtn.setAttribute('type', 'button');
-                signUpBtn.setAttribute('onclick', "setMode('signup')");
+                signUpBtn.onclick = function() { setMode('signup'); };
             }
+        }
+
+        function setLoading(loading) {
+            isSubmitting = loading;
+            const signInBtn = document.getElementById('signInBtn');
+            const signUpBtn = document.getElementById('signUpBtn');
+            const buttons = [signInBtn, signUpBtn];
+            
+            buttons.forEach(btn => {
+                if (loading) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="loading-spinner"></span> Memproses...';
+                } else {
+                    btn.disabled = false;
+                    if (btn.id === 'signInBtn') {
+                        btn.innerHTML = authMode === 'signin' ? 'Sign-In' : 'Sign-Up';
+                    } else {
+                        btn.innerHTML = authMode === 'signin' ? 'Sign-Up' : 'Sign-Up';
+                    }
+                }
+            });
+        }
+
+        function resetButtons() {
+            const signInBtn = document.getElementById('signInBtn');
+            const signUpBtn = document.getElementById('signUpBtn');
+            
+            if (authMode === 'signin') {
+                signInBtn.innerHTML = 'Sign-In';
+                signUpBtn.innerHTML = 'Sign-Up';
+            } else {
+                signInBtn.innerHTML = 'Sign-In';
+                signUpBtn.innerHTML = 'Sign-Up';
+            }
+            
+            signInBtn.disabled = false;
+            signUpBtn.disabled = false;
+            isSubmitting = false;
         }
 
         async function handleFormSubmit(event) {
             event.preventDefault();
+            
+            if (isSubmitting) return;
+            
             const email = document.getElementById('userEmail').value.trim();
             const pass = document.getElementById('userPassword').value;
+
+            if (!email || !pass) {
+                showToast("Email dan password harus diisi!", "#dc2626");
+                return;
+            }
 
             if (!supabase) {
                 showToast("Supabase belum siap. Silakan muat ulang halaman.", "#dc2626");
@@ -648,73 +698,97 @@
                 const fullName = document.getElementById('userFullName').value.trim();
                 const confirmPass = document.getElementById('confirmPassword').value;
 
+                if (!fullName) {
+                    showToast("Nama lengkap harus diisi!", "#dc2626");
+                    return;
+                }
+
+                if (pass.length < 6) {
+                    showToast("Password minimal 6 karakter!", "#dc2626");
+                    return;
+                }
+
                 if (pass !== confirmPass) {
                     showToast("Konfirmasi kata sandi tidak cocok!", "#dc2626");
                     return;
                 }
 
-                showToast("Sedang mendaftarkan akun di Supabase...", "#4285F4");
+                setLoading(true);
+                showToast("Sedang mendaftarkan akun...", "#4285F4");
 
-                // Mengirim metadata full_name agar trigger handle_new_user() dapat membacanya otomatis
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: pass,
-                    options: {
-                        data: {
-                            full_name: fullName
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email: email,
+                        password: pass,
+                        options: {
+                            data: {
+                                full_name: fullName
+                            }
                         }
-                    }
-                });
+                    });
 
-                if (error) {
-                    showToast("Pendaftaran Gagal: " + error.message, "#dc2626");
-                    return;
-                }
-
-                if (data.user) {
-                    // MENGGUNAKAN UPSERT dengan { onConflict: 'id' }:
-                    // Jika database trigger "handle_new_user" sudah menginsert baris di tabel profiles terlebih dahulu,
-                    // upsert ini akan melakukan update properti tambahan dengan aman (menghindari error duplicate key pkey).
-                    // Menyertakan nama kolom "followers" dan "following" (int4) yang valid sesuai ER Diagram (image_09a37a.png).
-                    const { error: profileError } = await supabase
-                        .from('profiles')
-                        .upsert([{
-                            id: data.user.id,
-                            name: fullName,
-                            email: email,
-                            phone: "",
-                            address: "",
-                            message: "Selamat datang di profil saya! Silakan jelajahi toko saya di bawah.",
-                            followers: 0,
-                            following: 0
-                        }], { onConflict: 'id' });
-
-                    if (profileError) {
-                        console.error("Gagal memperbarui data profil tambahan:", profileError);
+                    if (error) {
+                        showToast("Pendaftaran Gagal: " + error.message, "#dc2626");
+                        resetButtons();
+                        return;
                     }
 
-                    showToast("Pendaftaran Berhasil! Silakan masuk.", "#10b981");
-                    setTimeout(() => {
-                        setMode('signin');
-                    }, 1500);
+                    if (data.user) {
+                        // Buat profil pengguna
+                        const { error: profileError } = await supabase
+                            .from('profiles')
+                            .upsert([{
+                                id: data.user.id,
+                                name: fullName,
+                                email: email,
+                                phone: "",
+                                address: "",
+                                message: "Selamat datang di profil saya! Silakan jelajahi toko saya di bawah.",
+                                followers: 0,
+                                following: 0
+                            }], { onConflict: 'id' });
+
+                        if (profileError) {
+                            console.error("Gagal membuat profil:", profileError);
+                        }
+
+                        showToast("Pendaftaran Berhasil! Silakan masuk.", "#10b981");
+                        setTimeout(() => {
+                            resetButtons();
+                            setMode('signin');
+                            // Reset form
+                            document.getElementById('authForm').reset();
+                        }, 1500);
+                    }
+                } catch (err) {
+                    showToast("Terjadi kesalahan: " + err.message, "#dc2626");
+                    resetButtons();
                 }
             } else {
+                // SIGN IN
+                setLoading(true);
                 showToast("Sedang melakukan verifikasi masuk...", "#4285F4");
                 
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: pass
-                });
+                try {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: pass
+                    });
 
-                if (error) {
-                    showToast("Login Gagal: " + error.message, "#dc2626");
-                    return;
+                    if (error) {
+                        showToast("Login Gagal: " + error.message, "#dc2626");
+                        resetButtons();
+                        return;
+                    }
+
+                    showToast("Selamat datang kembali!", "#10b981");
+                    setTimeout(() => {
+                        window.location.href = "profil.html";
+                    }, 1500);
+                } catch (err) {
+                    showToast("Terjadi kesalahan: " + err.message, "#dc2626");
+                    resetButtons();
                 }
-
-                showToast(`Selamat datang kembali!`, "#10b981");
-                setTimeout(() => {
-                    window.location.href = "profil.html";
-                }, 1500);
             }
         }
 
@@ -730,12 +804,14 @@
                 toastMsg.innerText = message;
                 toast.style.borderColor = colorHex || '#fff';
                 toast.style.display = 'flex';
-                setTimeout(() => { toast.style.display = 'none'; }, 3000);
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => { 
+                    toast.style.display = 'none'; 
+                }, 4000);
             }
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
-            // Hanya aktifkan rotasi kutipan jika panel kutipan dimuat/ditampilkan (layar lebar)
             if (window.innerWidth >= 768) {
                 startQuoteCarousel();
             }
@@ -746,13 +822,24 @@
             }
 
             try {
-                // Pakai getSession() langsung dari supabase client yang telah dipastikan terinisialisasi
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session && session.user) {
                     window.location.href = "profil.html";
                 }
             } catch (e) {
                 console.error("Kesalahan memeriksa sesi aktif:", e);
+            }
+        });
+
+        // Tambahkan event listener untuk tombol Sign-Up jika user mengklik saat mode signin
+        document.addEventListener('DOMContentLoaded', function() {
+            const signUpBtn = document.getElementById('signUpBtn');
+            if (signUpBtn) {
+                signUpBtn.addEventListener('click', function(e) {
+                    if (authMode === 'signin') {
+                        setMode('signup');
+                    }
+                });
             }
         });
     </script>
