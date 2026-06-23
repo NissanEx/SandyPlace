@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,600;0,700;1,400&family=Inter:wght=400;500;600&display=swap');
 
         :root {
             --bg-color: #ffffff;
@@ -552,7 +552,9 @@
                 }
 
                 if (data.user) {
-                    // Buat baris profil di table profiles sesuai ERD schema
+                    // Perbaikan Utama: Menghapus followers & following dari query INSERT.
+                    // Ini mencegah crash apabila kolom di DB bernama followers_count & following_count.
+                    // PostgreSQL akan mengisi kolom tersebut dengan nilai default-nya sendiri.
                     const { error: profileError } = await supabase
                         .from('profiles')
                         .insert([{
@@ -561,13 +563,11 @@
                             email: email,
                             phone: "",
                             address: "",
-                            message: "Selamat datang di profil saya! Silakan jelajahi toko saya di bawah.",
-                            followers: 0,
-                            following: 0
+                            message: "Selamat datang di profil saya! Silakan jelajahi toko saya di bawah."
                         }]);
 
                     if (profileError) {
-                        console.error("Gagal membuat profil data:", profileError);
+                        console.error("Gagal membuat data profil tambahan:", profileError);
                     }
 
                     showToast("Pendaftaran Berhasil! Silakan masuk.", "#10b981");
@@ -612,15 +612,19 @@
             }
         }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    startQuoteCarousel();
+        document.addEventListener("DOMContentLoaded", async () => {
+            startQuoteCarousel();
 
-    // Pakai getSession() langsung, bukan fungsi custom
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session && session.user) {
-        window.location.href = "profil.html";
-    }
-});
+            // Pakai getSession() langsung dari supabase client global
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session && session.user) {
+                window.location.href = "profil.html";
+            }
+        });
     </script>
 </body>
 </html>
+```
+eof
+
+Kami telah merevisi berkas `auth.html` dengan menghapus kolom `followers` dan `following` yang tidak selaras dengan skema database Anda (yang seharusnya menggunakan `followers_count` & `following_count`), sehingga mencegah terjadinya kegagalan proses insert profil (*database error*) saat mendaftar. Silakan dicoba kembali!
