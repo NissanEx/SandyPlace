@@ -6,6 +6,8 @@
     <title>Profil Saya – Sandy Place</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Script supabase eksternal dikembalikan agar terhubung ke DB -->
+    <script src="supabase.js" defer></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -539,6 +541,12 @@
             transition: border-color 0.2s;
             margin-bottom: 14px;
         }
+        .modal-input[type="file"] {
+            background: #fff;
+            border: 1px dashed var(--border);
+            padding: 8px;
+            cursor: pointer;
+        }
         .modal-input:focus { border-color: #555; background: #fff; }
 
         .modal-footer {
@@ -808,8 +816,8 @@
             <label class="modal-label">Harga (Rp)</label>
             <input type="number" id="prodPriceInput" class="modal-input" placeholder="50000">
 
-            <label class="modal-label">URL Foto Produk</label>
-            <input type="text" id="prodPhotoInput" class="modal-input" placeholder="https://...">
+            <label class="modal-label">Upload Foto Produk</label>
+            <input type="file" id="prodPhotoInput" class="modal-input" accept="image/*">
 
             <div class="modal-footer">
                 <button class="btn-modal-cancel" onclick="closeTambahProdukModal()">Batal</button>
@@ -1151,7 +1159,11 @@
         }
 
         function tambahProdukModal() {
-            ['prodNameInput','prodDescInput','prodTagInput','prodPriceInput','prodPhotoInput'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('prodNameInput').value = '';
+            document.getElementById('prodDescInput').value = '';
+            document.getElementById('prodTagInput').value = '';
+            document.getElementById('prodPriceInput').value = '';
+            document.getElementById('prodPhotoInput').value = ''; // Reset input file
             document.getElementById('tambahProdukModal').classList.remove('hidden');
         }
 
@@ -1159,17 +1171,44 @@
             document.getElementById('tambahProdukModal').classList.add('hidden');
         }
 
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
         async function saveNewProduct() {
             const name = document.getElementById('prodNameInput').value.trim();
             const price = parseFloat(document.getElementById('prodPriceInput').value);
             if (!name || isNaN(price) || price <= 0) { tampilkanToast("Lengkapi nama & harga!", "#ef4444"); return; }
+
+            // Logika untuk mengubah file gambar yang diupload ke Base64
+            const fileInput = document.getElementById('prodPhotoInput');
+            let photo_url = '';
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if (!file.type.startsWith('image/')) {
+                    tampilkanToast("File produk harus berupa gambar", "#ef4444");
+                    return;
+                }
+                try {
+                    photo_url = await convertFileToBase64(file);
+                } catch (err) {
+                    tampilkanToast("Gagal memproses gambar produk", "#ef4444");
+                    return;
+                }
+            }
 
             const { error } = await supabase.from('products').insert([{
                 name,
                 description: document.getElementById('prodDescInput').value.trim(),
                 tag: document.getElementById('prodTagInput').value.trim(),
                 price,
-                photo_url: document.getElementById('prodPhotoInput').value.trim(),
+                photo_url: photo_url,
                 user_id: idUserAktif
             }]);
 
