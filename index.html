@@ -7,7 +7,6 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Memastikan penundaan eksekusi sampai script library terunduh sempurna -->
     <script src="supabase.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +39,6 @@
         .logo .light { font-weight: 300; color: #8c8c8c; }
         .logo .bold  { font-weight: 700; color: #000; }
 
-        /* Carousel Responsiveness */
         .hero-carousel {
             margin: 12px;
             height: 220px;
@@ -339,15 +337,14 @@
 </head>
 <body>
 
-    <!-- ===== STREAMING_CHUNK:Rendering premium navigation bar... ===== -->
-    <!-- PERBAIKAN: Lebar dan Padding Bar Atas Mobile Dioptimalkan, Menggunakan Struktur yang Sangat Seimbang & Presisi -->
     <header id="globalNavbar" class="navbar sticky top-0 z-50 flex items-center justify-between px-3 md:px-10 py-2.5 md:py-5 bg-white/95 backdrop-blur-md border-b border-gray-100 gap-1.5 md:gap-4 shadow-sm transition-all duration-300">
-        <a class="logo flex-shrink-0 flex items-center" href="index.html" onclick="event.preventDefault(); kembalikeBeranda();">
-            <span class="light text-[13px] md:text-2xl leading-none font-light text-zinc-400">Sandy</span>
-            <span class="bold text-[15px] md:text-3xl leading-none font-bold text-black ml-1 md:ml-1.5">Place</span>
+        <!-- Logo styling updated to match profile.html -->
+        <a class="logo flex-shrink-0 flex items-center flex-col md:flex-row" href="index.html" onclick="event.preventDefault(); kembalikeBeranda();">
+             <span class="light text-[14px] md:text-lg leading-none font-normal text-[#8c8c8c] tracking-wider mb-[-2px] md:mb-0 md:mr-1">Sandy</span>
+             <span class="bold text-[22px] md:text-2xl leading-none font-bold text-black ml-4 md:ml-0 mt-[-2px] md:mt-0">Place</span>
         </a>
 
-        <!-- Kontainer Pencarian yang Lebih Fleksibel & Anti-Penyok di Mobile -->
+        <!-- Kontainer Pencarian -->
         <div class="search-container flex-1 min-w-0 max-w-[620px] mx-1.5 md:mx-6 flex flex-col gap-0.5 md:gap-1">
             <div class="relative w-full">
                 <input type="text" id="searchInput" class="w-full px-3 md:px-5 py-1.5 md:py-2.5 rounded-full border border-gray-200 text-[10px] md:text-sm focus:outline-none focus:border-black pr-8 text-black" placeholder="Cari pc, baju, sepatu...">
@@ -364,7 +361,7 @@
             </div>
         </div>
 
-        <!-- Tombol Aksi Kanan & Profile Avatar Terstandarisasi -->
+        <!-- Tombol Aksi Kanan & Profile Avatar -->
         <div class="flex items-center gap-1.5 md:gap-6 flex-shrink-0">
             <button class="text-gray-400 hover:text-black relative p-1.5" onclick="toggleCartDrawer()">
                 <svg width="18" height="18" class="md:w-[22px] md:h-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -380,7 +377,6 @@
         </div>
     </header>
 
-    <!-- ===== CAROUSEL UTAMA & AREA BERANDA ===== -->
     <div id="homeView">
         <div id="homeDefaultContent">
             <main class="hero-carousel">
@@ -478,7 +474,6 @@
                 </div>
             </main>
 
-            <!-- ===== PANEL JELAJAH BRAND & TOKO ===== -->
             <div class="main-content-panel">
                 <section class="brands-section">
                     <div class="brands-header">
@@ -490,6 +485,7 @@
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8" id="brandsDatabaseGrid">
+                        <!-- Placeholder loading brands -->
                         <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
                         <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
                         <div class="animate-pulse bg-zinc-800 h-[150px] md:h-[200px] rounded-[20px] md:rounded-[24px]"></div>
@@ -500,7 +496,6 @@
                 </section>
             </div>
 
-            <!-- ===== ETALASE PRODUK DI LUAR PANEL ===== -->
             <div class="bg-white px-4 md:px-10 py-8 md:py-20 max-w-7xl mx-auto">
                 <section class="pt-2">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-8 gap-2">
@@ -511,6 +506,7 @@
                     </div>
                     
                     <div class="product-grid" id="communityProductsGrid">
+                        <!-- Placeholder loading products -->
                         <div class="animate-pulse bg-zinc-100 h-[220px] md:h-[280px] rounded-20"></div>
                         <div class="animate-pulse bg-zinc-100 h-[220px] md:h-[280px] rounded-20"></div>
                         <div class="animate-pulse bg-zinc-100 h-[220px] md:h-[280px] rounded-20"></div>
@@ -520,7 +516,6 @@
             </div>
         </div>
 
-        <!-- ===== FOKUS AREA HASIL PENCARIAN ===== -->
         <div id="searchResultsSection" class="hidden bg-white px-4 md:px-10 py-8 md:py-20 max-w-7xl mx-auto min-h-[60vh]">
             <section class="pt-2">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 md:mb-8 gap-4 border-b border-zinc-100 pb-5 md:pb-6">
@@ -543,9 +538,7 @@
         </div>
     </div>
 
-    <!-- ===== TOKO DETAIL VIEW (PERBAIKAN: Layout Imersif & Anti-Tertimpa di Mobile) ===== -->
     <div id="shopDetailView" class="hidden min-h-screen bg-zinc-50 pb-24 relative z-50">
-        <!-- Floating Header Menu untuk kembali di atas banner -->
         <div class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-zinc-100 px-4 py-3 md:px-10 flex items-center justify-between shadow-sm">
             <button onclick="kembalikeBeranda()" class="flex items-center gap-2 text-zinc-700 hover:text-black transition text-xs md:text-sm font-bold bg-zinc-100 hover:bg-zinc-200 px-3 py-2 rounded-full">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
@@ -557,26 +550,21 @@
         </div>
 
         <div class="max-w-7xl mx-auto px-4 md:px-10 pt-4">
-            <!-- Banner Imersif dengan Tinggi Tetap Responsif -->
             <div class="relative w-full rounded-2xl md:rounded-3xl overflow-hidden bg-black h-36 md:h-64 shadow-md">
                 <img id="shopDetailBanner" class="w-full h-full object-cover opacity-75" src="" alt="Banner Toko">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
             </div>
 
-            <!-- Detail Toko: Menggunakan margin negatif untuk tumpang tindih secara estetis dan aman dari overlap header -->
             <div class="relative px-2 md:px-6 -mt-10 md:-mt-16 flex flex-col md:flex-row items-center md:items-end gap-3 md:gap-6 z-10 text-center md:text-left mb-6">
-                <!-- Avatar Toko yang presisi dan menonjol -->
                 <div class="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden border-4 border-white bg-zinc-900 flex-shrink-0 shadow-lg relative z-20">
                     <img id="shopDetailAvatar" class="w-full h-full object-cover" src="" alt="Avatar Toko">
                 </div>
                 
-                <!-- Nama & Deskripsi Toko (Kontras hitam pada background terang) -->
                 <div class="flex-1 min-w-0 pt-1 md:pt-0 pb-1">
                     <h1 id="shopDetailName" class="font-serif text-lg md:text-4xl font-bold text-neutral-900 drop-shadow-sm">Nama Toko</h1>
                     <p id="shopDetailDesc" class="text-zinc-600 text-xs md:text-sm mt-1 italic">"Deskripsi toko kami"</p>
                 </div>
                 
-                <!-- Tombol Hubungi WhatsApp -->
                 <div class="w-full md:w-auto pt-2 md:pt-0">
                     <button onclick="hubungiPenjualWhatsApp()" class="w-full md:w-auto px-5 py-2.5 rounded-full bg-emerald-600 text-white text-xs md:text-sm font-semibold hover:bg-emerald-700 transition shadow-md flex items-center justify-center gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="inline"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.455L0 24zm6.104-3.52c1.643.975 3.255 1.489 4.84 1.49 5.496.002 9.969-4.433 9.973-9.878.002-2.639-1.025-5.118-2.894-6.989-1.868-1.87-4.344-2.9-6.985-2.902-5.499 0-9.972 4.435-9.976 9.88-.002 1.942.508 3.829 1.48 5.496l-.999 3.648 3.76-.985z"/></svg>
@@ -585,7 +573,6 @@
                 </div>
             </div>
 
-            <!-- Koleksi Produk Pilihan Toko -->
             <div class="mt-8 md:mt-12">
                 <h3 class="font-serif text-base md:text-3xl font-bold text-neutral-900 mb-4 md:mb-6">Koleksi Produk Pilihan Toko</h3>
                 <div class="product-grid" id="shopProductsGrid"></div>
@@ -593,7 +580,6 @@
         </div>
     </div>
 
-    <!-- ===== MODAL DETAIL PRODUK ===== -->
     <div id="productDetailModal" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-xs" onclick="tutupDetailProduk()"></div>
         <div class="bg-white rounded-t-3xl md:rounded-3xl max-w-2xl w-full max-h-[85vh] md:max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row overflow-hidden">
@@ -615,10 +601,9 @@
         </div>
     </div>
 
-    <!-- ===== KERANJANG DRAWER ===== -->
     <div id="cartDrawer" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/60" onclick="toggleCartDrawer()"></div>
-        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white text-black shadow-2xl flex flex-col justify-between transform transition duration-300" id="cartDrawerContent">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white text-black shadow-2xl flex flex-col justify-between transform transition duration-300 translate-x-full" id="cartDrawerContent">
             <div class="p-4 md:p-6 border-b flex items-center justify-between">
                 <h3 class="font-serif text-base md:text-lg font-bold text-neutral-900">Keranjang Belanja</h3>
                 <button onclick="toggleCartDrawer()" class="text-zinc-500 hover:text-black p-1.5 text-lg">✕</button>
@@ -636,22 +621,19 @@
 
     <div id="shopToast" class="toast-notif"><span id="toastMessage"></span></div>
 
-    <!-- ===== LOGIKA UTAMA ===== -->
     <script>
         let keranjang = [];
         let katalogSellers = [];
         let katalogProducts = [];
         let detailTokoAktif = null;
         let slideAktif = 0;
+        let produkAktifUntukDibeli = null;
 
-        // Perbaikan navigasi ke profil agar tidak memicu deteksi instan 'undefined'
+        // Navigasi yang Diperbaiki
         async function navigasiKeProfil(event) {
             if (event) event.preventDefault();
             
-            console.log('navigasiKeProfil: Memeriksa ketersediaan modul autentikasi...');
-            
             if (typeof window.dapatkanUserAktif !== 'function') {
-                console.warn('Modul autentikasi Supabase sedang menyiapkan data. Menunggu...');
                 tampilkanToast("Menyiapkan koneksi aman, mohon tunggu sebentar...", "#6366f1");
                 
                 setTimeout(async () => {
@@ -684,55 +666,14 @@
             }
         }
 
+        // Mock Data
         const premiumMockBrands = [
-            {
-                id: "mock-1",
-                name: "Exotic Denim",
-                message: "Pakaian denim lokal berkualitas tinggi dengan jahitan kuat",
-                banner_url: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=600",
-                avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
-                phone: "082261068992"
-            },
-            {
-                id: "mock-2",
-                name: "TechForge Workspaces",
-                message: "Kombinasi peripheral aesthetic dan perlengkapan workstation modern",
-                banner_url: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&q=80&w=600",
-                avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
-                phone: "082261068992"
-            },
-            {
-                id: "mock-3",
-                name: "Langkah Kaki Leather",
-                message: "Sepatu kulit buatan tangan premium dengan lekukan anatomi sempurna",
-                banner_url: "https://images.unsplash.com/photo-1449241595118-963d74d80c31?auto=format&fit=crop&q=80&w=600",
-                avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300",
-                phone: "082261068992"
-            },
-            {
-                id: "mock-4",
-                name: "Seni Bumi Atelier",
-                message: "Vas tanah liat, lukisan estetik & dekorasi interior minimalis",
-                banner_url: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&q=80&w=600",
-                avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=300",
-                phone: "082261068992"
-            },
-            {
-                id: "mock-5",
-                name: "Aura Jewelry House",
-                message: "Perhiasan perak murni dan logam berharga yang dirancang artisan lokal",
-                banner_url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=600",
-                avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300",
-                phone: "082261068992"
-            },
-            {
-                id: "mock-6",
-                name: "PaperCut Stationery",
-                message: "Notebook daur ulang & agenda harian estetik ramah lingkungan",
-                banner_url: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=80&w=600",
-                avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300",
-                phone: "082261068992"
-            }
+            { id: "mock-1", name: "Exotic Denim", message: "Pakaian denim lokal berkualitas tinggi dengan jahitan kuat", banner_url: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=600", avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300", phone: "082261068992" },
+            { id: "mock-2", name: "TechForge Workspaces", message: "Kombinasi peripheral aesthetic dan perlengkapan workstation modern", banner_url: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&q=80&w=600", avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300", phone: "082261068992" },
+            { id: "mock-3", name: "Langkah Kaki Leather", message: "Sepatu kulit buatan tangan premium dengan lekukan anatomi sempurna", banner_url: "https://images.unsplash.com/photo-1449241595118-963d74d80c31?auto=format&fit=crop&q=80&w=600", avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300", phone: "082261068992" },
+            { id: "mock-4", name: "Seni Bumi Atelier", message: "Vas tanah liat, lukisan estetik & dekorasi interior minimalis", banner_url: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&q=80&w=600", avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=300", phone: "082261068992" },
+            { id: "mock-5", name: "Aura Jewelry House", message: "Perhiasan perak murni dan logam berharga yang dirancang artisan lokal", banner_url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=600", avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300", phone: "082261068992" },
+            { id: "mock-6", name: "PaperCut Stationery", message: "Notebook daur ulang & agenda harian estetik ramah lingkungan", banner_url: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=80&w=600", avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300", phone: "082261068992" }
         ];
 
         function pindahSlide(idx) {
@@ -756,23 +697,15 @@
         async function muatDataMarketplace() {
             try {
                 if (!window.supabase) {
-                    throw new Error("Koneksi Supabase tidak diinisialisasi dengan benar.");
+                    throw new Error("Koneksi Supabase tidak diinisialisasi.");
                 }
 
-                const { data: profiles, error: errorProfiles } = await supabase
-                    .from('profiles')
-                    .select('*');
-
-                if (!errorProfiles && profiles) {
-                    katalogSellers = profiles;
-                }
+                const { data: profiles, error: errorProfiles } = await supabase.from('profiles').select('*');
+                if (!errorProfiles && profiles) { katalogSellers = profiles; }
                 
                 renderDaftarToko();
 
-                const { data: products, error: errorProducts } = await supabase
-                    .from('products')
-                    .select('*');
-
+                const { data: products, error: errorProducts } = await supabase.from('products').select('*');
                 if (!errorProducts && products) {
                     katalogProducts = products;
                     renderProdukKomunitas(katalogProducts);
@@ -780,28 +713,23 @@
                     renderProdukKomunitas([]);
                 }
 
+                // Coba ambil user untuk update avatar di navbar
                 if (typeof window.dapatkanUserAktif === 'function') {
                     const user = await window.dapatkanUserAktif();
                     if (user) {
-                        const { data: currentProfile } = await supabase
-                            .from('profiles')
-                            .select('avatar_url, name')
-                            .eq('id', user.id)
-                            .single();
-
-                        if (currentProfile) {
-                            const avatarSrc = currentProfile.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300';
-                            const avatarHtml = `<img src="${avatarSrc}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
+                        const { data: currentProfile } = await supabase.from('profiles').select('avatar_url').eq('id', user.id).single();
+                        if (currentProfile && currentProfile.avatar_url) {
                             const navbarAvatar = document.getElementById('navbarAvatar');
-                            if (navbarAvatar) navbarAvatar.innerHTML = avatarHtml;
+                            if (navbarAvatar) navbarAvatar.innerHTML = `<img src="${currentProfile.avatar_url}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
                         }
                     }
                 }
             } catch (err) {
-                console.error("Terjadi masalah pengambilan data dari database Supabase:", err);
+                console.error("Gagal muat data:", err);
                 renderDaftarToko();
                 renderProdukKomunitas([]); 
             }
+            muatKeranjang();
         }
 
         function renderDaftarToko() {
@@ -810,25 +738,20 @@
             container.innerHTML = '';
 
             let gabunganBrand = [...katalogSellers];
-            
             if (gabunganBrand.length < 6) {
                 const sisaSlot = 6 - gabunganBrand.length;
                 for (let i = 0; i < sisaSlot; i++) {
                     gabunganBrand.push(premiumMockBrands[i % premiumMockBrands.length]);
                 }
             }
-            
             const enamBrandTerpilih = gabunganBrand.slice(0, 6);
 
             enamBrandTerpilih.forEach(brand => {
                 const card = document.createElement('div');
                 card.className = "relative overflow-hidden rounded-[24px] bg-zinc-900 border border-zinc-800/80 group cursor-pointer transition transform hover:-translate-y-2 duration-300";
                 card.onclick = () => {
-                    if (brand.id.startsWith('mock-')) {
-                        bukaDetailTokoMock(brand);
-                    } else {
-                        bukaDetailToko(brand.id);
-                    }
+                    if (brand.id.startsWith('mock-')) { bukaDetailTokoMock(brand); } 
+                    else { bukaDetailToko(brand.id); }
                 };
 
                 const bannerUrl = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600";
@@ -851,10 +774,7 @@
             container.innerHTML = '';
 
             if (!daftarProduk || daftarProduk.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full py-16 text-center text-zinc-500 italic text-sm">
-                        Produk tidak ditemukan atau koneksi database sedang disiapkan.
-                    </div>`;
+                container.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-sm">Produk belum tersedia.</div>`;
                 return;
             }
 
@@ -897,37 +817,7 @@
                 searchInput.placeholder = "Cari nama toko/brand...";
             }
             
-            if (searchInput.value.trim() !== '') {
-                jalankanPencarian();
-            }
-        }
-
-        function inisialisasiPencarian() {
-            const searchInput = document.getElementById('searchInput');
-            const searchBtn = document.getElementById('searchBtn');
-            const searchOptionsContainer = document.getElementById('searchOptionsContainer');
-
-            if (searchBtn) searchBtn.onclick = jalankanPencarian;
-            if (searchInput) {
-                searchInput.onkeyup = (e) => {
-                    if (e.key === 'Enter') jalankanPencarian();
-                };
-
-                searchInput.oninput = () => {
-                    if (searchInput.value.trim() !== '') {
-                        searchOptionsContainer.classList.remove('hidden');
-                    } else {
-                        searchOptionsContainer.classList.add('hidden');
-                        resetPencarian();
-                    }
-                };
-
-                searchInput.onfocus = () => {
-                    if (searchInput.value.trim() !== '') {
-                        searchOptionsContainer.classList.remove('hidden');
-                    }
-                };
-            }
+            if (searchInput.value.trim() !== '') { jalankanPencarian(); }
         }
 
         function jalankanPencarian() {
@@ -935,18 +825,13 @@
             const defaultContent = document.getElementById('homeDefaultContent');
             const searchSection = document.getElementById('searchResultsSection');
             const searchOptionsContainer = document.getElementById('searchOptionsContainer');
-            
             const badgeMode = document.getElementById('searchBadgeMode');
             const titleFocus = document.getElementById('searchFocusTitle');
             const feedbackFocus = document.getElementById('searchFocusFeedback');
-            
             const productsGrid = document.getElementById('searchFocusProductsGrid');
             const shopsGrid = document.getElementById('searchFocusShopsGrid');
 
-            if (!query) {
-                resetPencarian();
-                return;
-            }
+            if (!query) { resetPencarian(); return; }
 
             searchOptionsContainer.classList.remove('hidden');
             defaultContent.classList.add('hidden');
@@ -965,16 +850,12 @@
                 });
 
                 feedbackFocus.innerText = `Menemukan ${hasilFilter.length} barang yang cocok dengan pencarian Anda`;
-                
                 productsGrid.innerHTML = '';
                 productsGrid.classList.remove('hidden');
                 shopsGrid.classList.add('hidden');
 
                 if (hasilFilter.length === 0) {
-                    productsGrid.innerHTML = `
-                        <div class="col-span-full py-16 text-center text-zinc-500 italic text-sm bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">
-                            Tidak ada produk terdaftar yang sesuai kata kunci pencarian.
-                        </div>`;
+                    productsGrid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-sm bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">Tidak ada produk terdaftar yang sesuai kata kunci pencarian.</div>`;
                 } else {
                     hasilFilter.forEach(p => {
                         const card = document.createElement('div');
@@ -983,9 +864,7 @@
 
                         const fotoUrl = p.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=300';
                         card.innerHTML = `
-                            <div class="product-card-img">
-                                <img src="${fotoUrl}" alt="${p.name}">
-                            </div>
+                            <div class="product-card-img"><img src="${fotoUrl}" alt="${p.name}"></div>
                             <div class="product-card-body">
                                 <span class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest font-mono">SUPABASE DB</span>
                                 <h4 class="product-card-title line-clamp-2">${p.name}</h4>
@@ -1016,26 +895,19 @@
                 });
 
                 feedbackFocus.innerText = `Menemukan ${hasilFilter.length} brand & toko kreatif yang cocok`;
-                
                 shopsGrid.innerHTML = '';
                 shopsGrid.classList.remove('hidden');
                 productsGrid.classList.add('hidden');
 
                 if (hasilFilter.length === 0) {
-                    shopsGrid.innerHTML = `
-                        <div class="col-span-full py-16 text-center text-zinc-500 italic text-sm bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">
-                            Tidak ada toko atau brand terdaftar yang sesuai kata kunci pencarian.
-                        </div>`;
+                    shopsGrid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-sm bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">Tidak ada toko atau brand terdaftar yang sesuai kata kunci pencarian.</div>`;
                 } else {
                     hasilFilter.forEach(brand => {
                         const card = document.createElement('div');
                         card.className = "relative overflow-hidden rounded-[24px] bg-zinc-900 border border-zinc-800/80 group cursor-pointer transition transform hover:-translate-y-2 duration-300";
                         card.onclick = () => {
-                            if (brand.id.startsWith('mock-')) {
-                                bukaDetailTokoMock(brand);
-                            } else {
-                                bukaDetailToko(brand.id);
-                            }
+                            if (brand.id.startsWith('mock-')) { bukaDetailTokoMock(brand); } 
+                            else { bukaDetailToko(brand.id); }
                         };
 
                         const bannerUrl = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600";
@@ -1052,8 +924,6 @@
                     });
                 }
             }
-
-            searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function resetPencarian() {
@@ -1061,351 +931,371 @@
             document.getElementById('searchOptionsContainer').classList.add('hidden');
             document.getElementById('homeDefaultContent').classList.remove('hidden');
             document.getElementById('searchResultsSection').classList.add('hidden');
+            document.getElementById('shopDetailView').classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function cariBerdasarkanTag(tag) {
             setSearchMode('product');
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.value = tag;
-                document.getElementById('searchOptionsContainer').classList.remove('hidden');
-                jalankanPencarian();
+            document.getElementById('searchInput').value = tag;
+            jalankanPencarian();
+        }
+
+        function kembalikeBeranda() {
+            document.getElementById('shopDetailView').classList.add('hidden');
+            document.getElementById('homeView').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            detailTokoAktif = null;
+        }
+
+        async function bukaDetailToko(idUser) {
+            try {
+                const { data: profile } = await supabase.from('profiles').select('*').eq('id', idUser).single();
+                if (!profile) { tampilkanToast("Toko tidak ditemukan", "#dc2626"); return; }
+                
+                detailTokoAktif = profile;
+                tampilkanViewToko(profile);
+
+                const { data: produkToko } = await supabase.from('products').select('*').eq('user_id', idUser);
+                renderProdukDalamToko(produkToko || []);
+            } catch (err) {
+                tampilkanToast("Terjadi kesalahan saat memuat toko", "#dc2626");
             }
         }
 
-        // PERBAIKAN: Menyembunyikan bar atas (globalNavbar) saat masuk ke laman Toko/Brand Kreator
-        function bukaDetailToko(tokoId) {
-            const brand = katalogSellers.find(b => b.id === tokoId);
-            if (!brand) return;
-
+        function bukaDetailTokoMock(brand) {
             detailTokoAktif = brand;
+            tampilkanViewToko(brand);
             
-            // Sembunyikan bar atas
-            document.getElementById('globalNavbar').classList.add('hidden');
-            
-            document.getElementById('homeView').style.display = 'none';
-            document.getElementById('shopDetailView').style.display = 'block';
+            const produkMock = [
+                { id: `prod-m1-${brand.id}`, name: `Produk Unggulan ${brand.name} 1`, price: 150000, description: "Kualitas terbaik langsung dari creator.", photo_url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300", user_id: brand.id },
+                { id: `prod-m2-${brand.id}`, name: `Produk Unggulan ${brand.name} 2`, price: 250000, description: "Desain eksklusif dan bahan premium.", photo_url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=300", user_id: brand.id }
+            ];
+            renderProdukDalamToko(produkMock);
+        }
 
-            document.getElementById('shopDetailBanner').src = brand.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600";
-            document.getElementById('shopDetailAvatar').src = brand.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300";
-            document.getElementById('shopDetailName').innerText = brand.name || "Toko Kreator";
-            document.getElementById('shopDetailDesc').innerText = `"${brand.message || ''}"`;
+        function tampilkanViewToko(profile) {
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('shopDetailView').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            const filteredProducts = katalogProducts.filter(p => p.user_id === tokoId);
-            const grid = document.getElementById('shopProductsGrid');
-            grid.innerHTML = '';
+            const bannerUrl = profile.banner_url || "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=1200";
+            const avatarUrl = profile.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300";
 
-            if (filteredProducts.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-xs md:text-sm">Toko ini belum mengunggah produk.</div>`;
+            document.getElementById('shopDetailBanner').src = bannerUrl;
+            document.getElementById('shopDetailAvatar').src = avatarUrl;
+            document.getElementById('shopDetailName').innerText = profile.name || "Toko Kreator";
+            document.getElementById('shopDetailDesc').innerText = `"${profile.message || 'Selamat datang di toko kami'}"`;
+        }
+
+        function renderProdukDalamToko(daftarProduk) {
+            const container = document.getElementById('shopProductsGrid');
+            container.innerHTML = '';
+
+            if (daftarProduk.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 italic text-sm">Toko ini belum menambahkan produk.</div>`;
                 return;
             }
 
-            filteredProducts.forEach(p => {
+            daftarProduk.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
-                card.onclick = () => bukaDetailProduk(p.id);
+                card.onclick = () => bukaDetailProduk(p.id, p);
 
                 const fotoUrl = p.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=300';
                 card.innerHTML = `
-                    <div class="product-card-img">
-                        <img src="${fotoUrl}" alt="${p.name}">
-                    </div>
+                    <div class="product-card-img"><img src="${fotoUrl}" alt="${p.name}"></div>
                     <div class="product-card-body">
-                        <h4 class="product-card-title line-clamp-1">${p.name}</h4>
+                        <h4 class="product-card-title line-clamp-2">${p.name}</h4>
+                        <p class="product-card-desc line-clamp-1">${p.description || ''}</p>
                         <div class="product-card-price">${formatRupiah(p.price)}</div>
                     </div>
                 `;
-                grid.appendChild(card);
+                container.appendChild(card);
             });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // PERBAIKAN: Menyembunyikan bar atas (globalNavbar) saat masuk ke laman Toko Simulasi (Mock)
-        function bukaDetailTokoMock(brand) {
-            detailTokoAktif = brand;
+        function hubungiPenjualWhatsApp() {
+            if (!detailTokoAktif) return;
+            const phone = detailTokoAktif.phone || '081234567890';
+            const name = detailTokoAktif.name || 'Penjual';
+            const cleanPhone = phone.replace(/\D/g, '');
+            let waNumber = cleanPhone;
+            if (waNumber.startsWith('0')) { waNumber = '62' + waNumber.substring(1); }
             
-            // Sembunyikan bar atas
-            document.getElementById('globalNavbar').classList.add('hidden');
-            
-            document.getElementById('homeView').style.display = 'none';
-            document.getElementById('shopDetailView').style.display = 'block';
-
-            document.getElementById('shopDetailBanner').src = brand.banner_url;
-            document.getElementById('shopDetailAvatar').src = brand.avatar_url;
-            document.getElementById('shopDetailName').innerText = brand.name;
-            document.getElementById('shopDetailDesc').innerText = `"${brand.message}"`;
-
-            const grid = document.getElementById('shopProductsGrid');
-            grid.innerHTML = `
-                <div class="col-span-full py-12 text-center text-zinc-500 text-sm">
-                    Katalog contoh tidak terafiliasi database dinamis. <br>
-                    <span class="text-xs text-indigo-500 font-semibold cursor-pointer underline" onclick="kembalikeBeranda()">Klik di sini untuk menjelajahi produk komunitas.</span>
-                </div>
-            `;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const message = encodeURIComponent(`Halo ${name}, saya melihat toko Anda di Sandy Place Marketplace dan tertarik dengan produk Anda.`);
+            window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
         }
 
-        // PERBAIKAN: Memunculkan kembali bar atas (globalNavbar) saat kembali ke beranda
-        function kembalikeBeranda() {
-            // Tampilkan kembali bar atas
-            document.getElementById('globalNavbar').classList.remove('hidden');
+        function bukaDetailProduk(idProduk, produkDataMock = null) {
+            let produkData = produkDataMock;
             
-            document.getElementById('homeView').style.display = 'block';
-            document.getElementById('shopDetailView').style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+            if (!produkData) {
+                produkData = katalogProducts.find(p => p.id === idProduk);
+            }
 
-        function bukaDetailProduk(idProduk) {
-            const p = katalogProducts.find(prod => prod.id === idProduk);
-            if (!p) return;
+            if (!produkData) { tampilkanToast("Data produk tidak ditemukan", "#dc2626"); return; }
 
-            document.getElementById('detailProductImg').src = p.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=300';
-            document.getElementById('detailProductName').innerText = p.name;
-            document.getElementById('detailProductPrice').innerText = formatRupiah(p.price);
-            document.getElementById('detailProductDesc').innerText = p.description || 'Deskripsi produk kosong.';
-
-            document.getElementById('btnTambahKeranjang').onclick = async () => {
-                const user = await window.dapatkanUserAktif();
-                if (!user) {
-                    tampilkanToast("Silakan login terlebih dahulu untuk mulai belanja!", "#dc2626");
-                    setTimeout(() => {
-                        window.location.href = "auth.html";
-                    }, 1500);
-                    return;
-                }
-                tambahKeKeranjang(p);
-                tampilkanToast(`"${p.name}" masuk keranjang!`, "#10b981");
+            produkAktifUntukDibeli = produkData;
+            
+            document.getElementById('detailProductImg').src = produkData.photo_url || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=600';
+            document.getElementById('detailProductName').innerText = produkData.name;
+            document.getElementById('detailProductPrice').innerText = formatRupiah(produkData.price);
+            document.getElementById('detailProductDesc').innerText = produkData.description || 'Tidak ada deskripsi.';
+            
+            document.getElementById('btnTambahKeranjang').onclick = () => tambahKeKeranjang(produkData);
+            document.getElementById('btnBeliLangsung').onclick = () => {
+                tambahKeKeranjang(produkData);
                 tutupDetailProduk();
-            };
-
-            document.getElementById('btnBeliLangsung').onclick = async () => {
-                const user = await window.dapatkanUserAktif();
-                if (!user) {
-                    tampilkanToast("Silakan login terlebih dahulu untuk belanja langsung!", "#dc2626");
-                    setTimeout(() => {
-                        window.location.href = "auth.html";
-                    }, 1500);
-                    return;
-                }
-                tambahKeKeranjang(p);
-                tutupDetailProduk();
-                toggleCartDrawer();
+                setTimeout(toggleCartDrawer, 300);
             };
 
             document.getElementById('productDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function tutupDetailProduk() {
             document.getElementById('productDetailModal').classList.add('hidden');
-        }
-
-        function tambahKeKeranjang(produk) {
-            const ada = keranjang.find(item => item.id === produk.id);
-            if (ada) {
-                ada.qty += 1;
-            } else {
-                keranjang.push({
-                    id: produk.id,
-                    name: produk.name,
-                    price: produk.price,
-                    photo_url: produk.photo_url,
-                    qty: 1,
-                    user_id: produk.user_id 
-                });
-            }
-            perbaruiBadgeKeranjang();
-        }
-
-        function perbaruiBadgeKeranjang() {
-            const total = keranjang.reduce((sum, i) => sum + i.qty, 0);
-            document.querySelectorAll('.cart-badge').forEach(b => {
-                if (total > 0) {
-                    b.innerText = total;
-                    b.classList.remove('hidden');
-                } else {
-                    b.classList.add('hidden');
-                }
-            });
+            document.body.style.overflow = '';
+            produkAktifUntukDibeli = null;
         }
 
         function toggleCartDrawer() {
             const drawer = document.getElementById('cartDrawer');
-            if (drawer) {
-                if (drawer.classList.contains('hidden')) {
-                    drawer.classList.remove('hidden');
-                    renderIsiKeranjang();
-                } else {
+            const content = document.getElementById('cartDrawerContent');
+            
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('translate-x-full');
+                }, 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                content.classList.add('translate-x-full');
+                setTimeout(() => {
                     drawer.classList.add('hidden');
-                }
+                }, 300);
+                document.body.style.overflow = '';
             }
+        }
+
+        function tambahKeKeranjang(produk) {
+            const existingItem = keranjang.find(item => item.id === produk.id);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                keranjang.push({ ...produk, qty: 1 });
+            }
+            simpanKeranjang();
+            muatKeranjang();
+            tampilkanToast("Ditambahkan ke keranjang!", "#10b981");
+        }
+
+        function ubahKuantitasItem(id, perubahan) {
+            const item = keranjang.find(i => i.id === id);
+            if (item) {
+                item.qty += perubahan;
+                if (item.qty <= 0) {
+                    keranjang = keranjang.filter(i => i.id !== id);
+                }
+                simpanKeranjang();
+                muatKeranjang();
+            }
+        }
+
+        function simpanKeranjang() {
+            localStorage.setItem('sandyplace_cart', JSON.stringify(keranjang));
+            updateBadgeKeranjang();
+        }
+
+        function muatKeranjang() {
+            const saved = localStorage.getItem('sandyplace_cart');
+            if (saved) {
+                try { keranjang = JSON.parse(saved); } catch (e) { keranjang = []; }
+            }
+            updateBadgeKeranjang();
+            renderIsiKeranjang();
+        }
+
+        function updateBadgeKeranjang() {
+            const totalItems = keranjang.reduce((sum, item) => sum + item.qty, 0);
+            const badges = document.querySelectorAll('.cart-badge');
+            badges.forEach(badge => {
+                if (totalItems > 0) {
+                    badge.innerText = totalItems > 99 ? '99+' : totalItems;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            });
         }
 
         function renderIsiKeranjang() {
             const container = document.getElementById('cartItemsContainer');
             const subtotalEl = document.getElementById('cartSubtotal');
-            if (!container) return;
+            
             container.innerHTML = '';
-
             let subtotal = 0;
+
             if (keranjang.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-zinc-500 italic text-xs md:text-sm">Keranjang kosong. Cari produk menarik di etalase!</div>`;
-                if (subtotalEl) subtotalEl.innerText = formatRupiah(0);
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-zinc-400 gap-3 mt-20">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                        <p class="text-sm">Keranjang Anda masih kosong</p>
+                    </div>`;
+                subtotalEl.innerText = 'Rp 0';
                 return;
             }
 
-            keranjang.forEach((item, index) => {
-                subtotal += item.price * item.qty;
-                const row = document.createElement('div');
-                row.className = "flex items-center gap-4 bg-zinc-50 border p-3 rounded-2xl";
-                row.innerHTML = `
-                    <img src="${item.photo_url || 'https://placehold.co/80x80'}" class="w-16 h-16 object-cover rounded-xl bg-zinc-200">
-                    <div class="flex-1 min-w-0 text-black">
-                        <h4 class="font-semibold text-xs truncate">${item.name}</h4>
-                        <div class="text-xs text-indigo-600 font-bold">${formatRupiah(item.price)}</div>
-                        <div class="flex items-center gap-2 mt-2">
-                            <button onclick="ubahJumlahItem(${index}, -1)" class="w-5 h-5 bg-zinc-200 rounded-md text-xs font-bold flex items-center justify-center hover:bg-zinc-300">-</button>
-                            <span class="text-xs font-semibold">${item.qty}</span>
-                            <button onclick="ubahJumlahItem(${index}, 1)" class="w-5 h-5 bg-zinc-200 rounded-md text-xs font-bold flex items-center justify-center hover:bg-zinc-300">+</button>
+            keranjang.forEach(item => {
+                const hargaTotalItem = item.price * item.qty;
+                subtotal += hargaTotalItem;
+                
+                const div = document.createElement('div');
+                div.className = "flex gap-4 p-3 bg-white border border-zinc-100 rounded-2xl shadow-sm";
+                div.innerHTML = `
+                    <div class="w-16 h-16 rounded-xl bg-zinc-100 overflow-hidden flex-shrink-0">
+                        <img src="${item.photo_url || 'https://placehold.co/100x100?text=IMG'}" alt="${item.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between min-w-0">
+                        <h4 class="font-semibold text-xs md:text-sm text-neutral-900 truncate">${item.name}</h4>
+                        <div class="font-bold text-indigo-600 text-xs md:text-sm">${formatRupiah(item.price)}</div>
+                    </div>
+                    <div class="flex flex-col items-end justify-between">
+                        <button onclick="ubahKuantitasItem('${item.id}', -${item.qty})" class="text-zinc-400 hover:text-red-500 transition p-1">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                        </button>
+                        <div class="flex items-center gap-2 bg-zinc-100 rounded-lg p-1">
+                            <button onclick="ubahKuantitasItem('${item.id}', -1)" class="w-6 h-6 flex items-center justify-center bg-white rounded-md shadow-sm text-black font-bold">-</button>
+                            <span class="text-xs font-semibold w-4 text-center">${item.qty}</span>
+                            <button onclick="ubahKuantitasItem('${item.id}', 1)" class="w-6 h-6 flex items-center justify-center bg-white rounded-md shadow-sm text-black font-bold">+</button>
                         </div>
                     </div>
-                    <button onclick="hapusItemKeranjang(${index})" class="text-xs text-rose-600 hover:underline px-2">Hapus</button>
                 `;
-                container.appendChild(row);
+                container.appendChild(div);
             });
-            if (subtotalEl) subtotalEl.innerText = formatRupiah(subtotal);
-        }
 
-        function ubahJumlahItem(index, value) {
-            keranjang[index].qty += value;
-            if (keranjang[index].qty <= 0) {
-                keranjang.splice(index, 1);
-            }
-            perbaruiBadgeKeranjang();
-            renderIsiKeranjang();
-        }
-
-        function hapusItemKeranjang(index) {
-            keranjang.splice(index, 1);
-            perbaruiBadgeKeranjang();
-            renderIsiKeranjang();
+            subtotalEl.innerText = formatRupiah(subtotal);
         }
 
         async function prosesCheckoutPesanan() {
-            console.log('prosesCheckoutPesanan: Memulai checkout...');
-            const user = await window.dapatkanUserAktif();
-            
-            if (!user) {
-                tampilkanToast("Silakan login untuk melakukan pemesanan!", "#dc2626");
-                setTimeout(() => { window.location.href = "auth.html"; }, 1500);
-                return;
-            }
-
             if (keranjang.length === 0) {
-                tampilkanToast("Keranjang Anda kosong!", "#dc2626");
+                tampilkanToast("Keranjang kosong. Silakan belanja dulu!", "#f59e0b");
                 return;
             }
 
-            tampilkanToast("Sedang memproses pesanan...", "#4285F4");
+            if (typeof window.dapatkanUserAktif !== 'function') {
+                tampilkanToast("Sistem sedang disiapkan. Silakan coba sebentar lagi.", "#dc2626");
+                return;
+            }
 
-            const pesananPerPenjual = {};
+            const user = await window.dapatkanUserAktif();
+            if (!user) {
+                tampilkanToast("Anda harus login untuk melakukan pemesanan.", "#dc2626");
+                setTimeout(() => window.location.href = "auth.html", 1500);
+                return;
+            }
+
+            const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+            const phone = profile?.phone || '0800000000';
+            const address = profile?.address || 'Alamat belum diatur';
+
+            // Kelompokkan pesanan berdasarkan toko (user_id penjual)
+            const pesananByToko = {};
             keranjang.forEach(item => {
-                if (!pesananPerPenjual[item.user_id]) {
-                    pesananPerPenjual[item.user_id] = [];
-                }
-                pesananPerPenjual[item.user_id].push(item);
+                const sellerId = item.user_id;
+                if (!pesananByToko[sellerId]) pesananByToko[sellerId] = [];
+                pesananByToko[sellerId].push(item);
             });
 
-            const { data: profilPembeli } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', user.id)
-                .single();
+            let suksesCount = 0;
+            toggleCartDrawer();
+            tampilkanToast("Memproses pesanan Anda...", "#6366f1");
 
-            const alamatPenerima = profilPembeli?.address || "Alamat belum disetel oleh pembeli";
-            const teleponPenerima = profilPembeli?.phone || "082261068992";
+            for (const sellerId in pesananByToko) {
+                const items = pesananByToko[sellerId];
+                let subtotal = 0;
+                items.forEach(i => subtotal += (i.price * i.qty));
 
-            try {
-                for (const sellerId in pesananPerPenjual) {
-                    const items = pesananPerPenjual[sellerId];
-                    const totalBayar = items.reduce((sum, it) => sum + (it.price * it.qty), 0);
-
-                    const { data: orderData, error: errorOrder } = await supabase
-                        .from('orders')
-                        .insert([{
-                            buyer_id: user.id,
-                            seller_id: sellerId,
-                            total: totalBayar,
-                            status: "Menunggu Konfirmasi",
-                            shipping_address: alamatPenerima,
-                            shipping_phone: teleponPenerima
-                        }])
-                        .select()
-                        .single();
-
-                    if (errorOrder || !orderData) {
-                        tampilkanToast("Gagal memproses salah satu pesanan.", "#dc2626");
-                        console.error(errorOrder);
-                        return;
-                    }
-
-                    const payloadItems = items.map(it => ({
-                        order_id: orderData.id,
-                        product_id: it.id,
-                        product_name: it.name,
-                        qty: it.qty,
-                        price: it.price
-                    }));
-
-                    const { error: errorItems } = await supabase
-                        .from('order_items')
-                        .insert(payloadItems);
-
-                    if (errorItems) {
-                        console.error("Gagal menyimpan rincian item pesanan:", errorItems);
-                    }
+                // Jika mock seller, buat simulasi sukses saja
+                if (sellerId.startsWith('mock-')) {
+                    suksesCount++;
+                    continue;
                 }
 
-                tampilkanToast("Pesanan berhasil dikirim!", "#10b981");
-                keranjang = [];
-                perbaruiBadgeKeranjang();
-                toggleCartDrawer();
-            } catch (err) {
-                console.error("Kesalahan checkout:", err);
-                tampilkanToast("Gagal melakukan checkout otomatis.", "#dc2626");
-            }
-        }
+                // Masukkan tabel 'orders'
+                const { data: orderData, error: orderErr } = await supabase.from('orders').insert([{
+                    buyer_id: user.id,
+                    seller_id: sellerId,
+                    total: subtotal,
+                    status: "Menunggu Konfirmasi",
+                    shipping_address: address,
+                    shipping_phone: phone
+                }]).select().single();
 
-        function hubungiPenjualWhatsApp() {
-            if (!detailTokoAktif) return;
-            const phone = detailTokoAktif.phone || "082261068992";
-            let formattedPhone = phone.replace(/[^0-9]/g, '');
-            if (formattedPhone.startsWith('0')) {
-                formattedPhone = '62' + formattedPhone.slice(1);
+                if (orderErr) {
+                    console.error("Gagal buat pesanan:", orderErr);
+                    continue;
+                }
+
+                // Masukkan tabel 'order_items'
+                const itemInserts = items.map(i => ({
+                    order_id: orderData.id,
+                    product_id: i.id,
+                    product_name: i.name,
+                    qty: i.qty,
+                    price: i.price
+                }));
+
+                const { error: itemErr } = await supabase.from('order_items').insert(itemInserts);
+                if (!itemErr) suksesCount++;
             }
-            const link = `https://wa.me/${formattedPhone}?text=Halo%20${encodeURIComponent(detailTokoAktif.name)},%20saya%20tertarik%20dengan%20produk%20Anda.`;
-            window.open(link, '_blank');
+
+            if (suksesCount > 0) {
+                keranjang = [];
+                simpanKeranjang();
+                muatKeranjang();
+                tampilkanToast("Pesanan berhasil dibuat! Cek di Profil > Riwayat.", "#10b981");
+            } else {
+                tampilkanToast("Gagal memproses pesanan. Silakan coba lagi.", "#dc2626");
+            }
         }
 
         function formatRupiah(num) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+            return new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', minimumFractionDigits:0 }).format(num);
         }
 
-        function tampilkanToast(message, colorHex) {
-            const toast = document.getElementById('shopToast');
-            const toastMsg = document.getElementById('toastMessage');
-            if (toast && toastMsg) {
-                toastMsg.innerText = message;
-                toast.style.borderColor = colorHex || '#fff';
-                toast.style.display = 'flex';
-                setTimeout(() => { toast.style.display = 'none'; }, 3000);
-            }
+        function tampilkanToast(msg, color) {
+            const t = document.getElementById('shopToast');
+            document.getElementById('toastMessage').innerText = msg;
+            t.style.borderLeftColor = color || '#ffffff';
+            t.style.display = 'flex';
+            setTimeout(() => t.style.display = 'none', 3000);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            setInterval(putarSlideOtomatis, 4000);
             muatDataMarketplace();
-            inisialisasiPencarian();
-            setInterval(putarSlideOtomatis, 5000);
+            
+            const searchInput = document.getElementById('searchInput');
+            if(searchInput) {
+                searchInput.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') jalankanPencarian();
+                });
+                
+                searchInput.addEventListener('input', () => {
+                    if (searchInput.value.trim() !== '') {
+                        document.getElementById('searchOptionsContainer').classList.remove('hidden');
+                    } else {
+                        document.getElementById('searchOptionsContainer').classList.add('hidden');
+                        resetPencarian();
+                    }
+                });
+            }
+            
+            if(document.getElementById('searchBtn')) {
+                document.getElementById('searchBtn').addEventListener('click', jalankanPencarian);
+            }
         });
     </script>
 </body>
