@@ -612,14 +612,15 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            startQuoteCarousel();
-            // Jika sudah ada user masuk, langsung arahkan ke profil
-            const user = await dapatkanUserAktif();
-            if (user) {
-                window.location.href = "profil.html";
-            }
-        });
+document.addEventListener("DOMContentLoaded", async () => {
+    startQuoteCarousel();
+
+    // Pakai getSession() langsung, bukan fungsi custom
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session && session.user) {
+        window.location.href = "profil.html";
+    }
+});
     </script>
 </body>
 </html>
