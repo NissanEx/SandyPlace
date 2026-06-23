@@ -6,7 +6,6 @@
     <title>Profil Saya – Sandy Place</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
@@ -19,7 +18,6 @@
             --border: #e4e6eb;
             --text-primary: #050505;
             --text-secondary: #65676b;
-            --accent: #1877f2;
             --header-h: 56px;
         }
 
@@ -362,7 +360,13 @@
             font-size: 14px;
             color: var(--text-secondary);
         }
-        .info-row .info-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+        .info-row .info-icon { 
+            font-size: 18px; 
+            flex-shrink: 0; 
+            margin-top: 1px;
+            width: 24px;
+            text-align: center;
+        }
         .info-row span { font-family: 'Lora', serif; line-height: 1.5; }
         .info-row strong { color: var(--text-primary); }
 
@@ -641,6 +645,54 @@
             transition: background 0.2s;
         }
         .btn-add:hover { background: #333; }
+
+        /* Sticker upload styles */
+        .file-upload-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #f7f8fa;
+            border: 2px dashed var(--border);
+            border-radius: 9px;
+            font-family: 'Lora', serif;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: border-color 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+
+        .file-upload-label:hover {
+            border-color: #555;
+            background: #f0f2f5;
+        }
+
+        .file-upload-label .upload-icon {
+            font-size: 20px;
+        }
+
+        .file-name-display {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-family: 'Lora', serif;
+        }
     </style>
 </head>
 <body>
@@ -667,8 +719,8 @@
         <div class="banner-wrap" onclick="editBannerPrompt()">
             <img id="profileBannerImg" src="https://placehold.co/940x320/1a1a2e/ffffff?text=+&font=lora" class="banner-img" alt="banner">
             <div class="banner-edit-overlay">
-                <button class="btn-edit-banner" onclick="editBannerPrompt()">
-                    ✏️ Edit Banner
+                <button class="btn-edit-banner" onclick="event.stopPropagation();editBannerPrompt()">
+                    🖼️ Edit Banner
                 </button>
             </div>
         </div>
@@ -677,7 +729,7 @@
         <div class="profile-info-row">
             <div class="avatar-wrap" onclick="editAvatarPrompt()">
                 <img id="profileAvatar" src="https://placehold.co/168x168/cccccc/888888?text=?" class="avatar-img" alt="avatar">
-                <div class="avatar-overlay"><span>Ubah Foto</span></div>
+                <div class="avatar-overlay"><span>📷 Ubah Foto</span></div>
             </div>
 
             <div class="profile-meta">
@@ -698,12 +750,12 @@
 
         <!-- Tab bar -->
         <div class="tab-bar">
-            <button id="btnTabProducts" class="tab-btn active" onclick="pindahTabToko('products')">Toko Saya</button>
+            <button id="btnTabProducts" class="tab-btn active" onclick="pindahTabToko('products')">📦 Toko Saya</button>
             <button id="btnTabOrders" class="tab-btn" onclick="pindahTabToko('orders')">
-                Pesanan Masuk <span id="ordersBadge" class="tab-badge hidden">0</span>
+                📥 Pesanan Masuk <span id="ordersBadge" class="tab-badge hidden">0</span>
             </button>
             <button id="btnTabMyOrders" class="tab-btn" onclick="pindahTabToko('my-orders')">
-                Belanjaan Saya <span id="myOrdersBadge" class="tab-badge hidden">0</span>
+                🛒 Belanjaan Saya <span id="myOrdersBadge" class="tab-badge hidden">0</span>
             </button>
         </div>
     </div>
@@ -714,13 +766,13 @@
         <!-- Sidebar -->
         <div class="sidebar-col">
             <div class="sidebar-card">
-                <h3>Tentang</h3>
+                <h3>📋 Tentang</h3>
                 <div class="info-row">
-                    <span class="info-icon">✉️</span>
+                    <span class="info-icon">📧</span>
                     <span><strong>Email: </strong><span id="profileEmail">–</span></span>
                 </div>
                 <div class="info-row">
-                    <span class="info-icon">📞</span>
+                    <span class="info-icon">📱</span>
                     <span><strong>Telepon: </strong><span id="profilePhone">–</span></span>
                 </div>
                 <div class="info-row">
@@ -737,7 +789,7 @@
             <div id="tabContentProducts" class="tab-panel active">
                 <div class="main-card">
                     <div class="section-header">
-                        <span class="section-title">Produk Saya</span>
+                        <span class="section-title">📦 Produk Saya</span>
                         <button class="btn-add" onclick="tambahProdukModal()">+ Tambah Produk</button>
                     </div>
                     <div id="productsContainer" class="product-grid"></div>
@@ -748,7 +800,7 @@
             <div id="tabContentOrders" class="tab-panel">
                 <div class="main-card">
                     <div class="section-header">
-                        <span class="section-title">Pesanan Masuk</span>
+                        <span class="section-title">📥 Pesanan Masuk</span>
                     </div>
                     <div id="ordersContainer" class="orders-container"></div>
                 </div>
@@ -758,7 +810,7 @@
             <div id="tabContentMyOrders" class="tab-panel">
                 <div class="main-card">
                     <div class="section-header">
-                        <span class="section-title">Riwayat Belanjaan</span>
+                        <span class="section-title">🛒 Riwayat Belanjaan</span>
                     </div>
                     <div id="myOrdersContainer" class="orders-container"></div>
                 </div>
@@ -770,21 +822,39 @@
     <!-- ===== MODAL: EDIT PROFIL ===== -->
     <div id="editProfilModal" class="modal-overlay hidden">
         <div class="modal-box">
-            <h3 class="modal-title">Edit Profil</h3>
-            <label class="modal-label">Nama Lengkap</label>
+            <h3 class="modal-title">✏️ Edit Profil</h3>
+            
+            <label class="modal-label">👤 Nama Lengkap</label>
             <input type="text" id="editNameInput" class="modal-input" placeholder="Nama lengkap Anda">
 
-            <label class="modal-label">Pesan / Bio</label>
+            <label class="modal-label">💬 Pesan / Bio</label>
             <textarea id="editBioInput" rows="3" class="modal-input" style="resize:vertical;"></textarea>
 
-            <label class="modal-label">No. Telepon</label>
+            <label class="modal-label">📱 No. Telepon</label>
             <input type="text" id="editPhoneInput" class="modal-input" placeholder="08xxxxxxxxxx">
 
-            <label class="modal-label">Alamat</label>
+            <label class="modal-label">📍 Alamat</label>
             <textarea id="editAddressInput" rows="2" class="modal-input" placeholder="Jl. ..." style="resize:vertical;"></textarea>
 
-            <label class="modal-label">URL Banner Profil</label>
-            <input type="text" id="editBannerInput" class="modal-input" placeholder="https://...">
+            <label class="modal-label">🖼️ Foto Profil</label>
+            <div class="file-upload-wrapper">
+                <div class="file-upload-label">
+                    <span class="upload-icon">📤</span>
+                    <span>Pilih file gambar (JPG, PNG)</span>
+                    <input type="file" id="avatarFileInput" accept="image/*" onchange="handleAvatarUpload(event)">
+                </div>
+            </div>
+            <div id="avatarFileName" class="file-name-display"></div>
+
+            <label class="modal-label">🖼️ Banner Profil</label>
+            <div class="file-upload-wrapper">
+                <div class="file-upload-label">
+                    <span class="upload-icon">📤</span>
+                    <span>Pilih file gambar (JPG, PNG)</span>
+                    <input type="file" id="bannerFileInput" accept="image/*" onchange="handleBannerUpload(event)">
+                </div>
+            </div>
+            <div id="bannerFileName" class="file-name-display"></div>
 
             <div class="modal-footer">
                 <button class="btn-modal-cancel" onclick="closeEditProfilModal()">Batal</button>
@@ -796,22 +866,29 @@
     <!-- ===== MODAL: TAMBAH PRODUK ===== -->
     <div id="tambahProdukModal" class="modal-overlay hidden">
         <div class="modal-box">
-            <h3 class="modal-title">Tambah Produk Baru</h3>
+            <h3 class="modal-title">➕ Tambah Produk Baru</h3>
 
-            <label class="modal-label">Nama Produk</label>
+            <label class="modal-label">📝 Nama Produk</label>
             <input type="text" id="prodNameInput" class="modal-input" placeholder="Nama produk">
 
-            <label class="modal-label">Deskripsi</label>
+            <label class="modal-label">📄 Deskripsi</label>
             <textarea id="prodDescInput" rows="3" class="modal-input" placeholder="Deskripsi singkat produk…" style="resize:vertical;"></textarea>
 
-            <label class="modal-label">Tag / Kategori</label>
+            <label class="modal-label">🏷️ Tag / Kategori</label>
             <input type="text" id="prodTagInput" class="modal-input" placeholder="Contoh: buku, fiksi, novel">
 
-            <label class="modal-label">Harga (Rp)</label>
+            <label class="modal-label">💰 Harga (Rp)</label>
             <input type="number" id="prodPriceInput" class="modal-input" placeholder="50000">
 
-            <label class="modal-label">URL Foto Produk</label>
-            <input type="text" id="prodPhotoInput" class="modal-input" placeholder="https://...">
+            <label class="modal-label">🖼️ Foto Produk</label>
+            <div class="file-upload-wrapper">
+                <div class="file-upload-label">
+                    <span class="upload-icon">📤</span>
+                    <span>Pilih file gambar (JPG, PNG)</span>
+                    <input type="file" id="productFileInput" accept="image/*" onchange="handleProductUpload(event)">
+                </div>
+            </div>
+            <div id="productFileName" class="file-name-display"></div>
 
             <div class="modal-footer">
                 <button class="btn-modal-cancel" onclick="closeTambahProdukModal()">Batal</button>
@@ -826,7 +903,76 @@
     <script>
         let idUserAktif = null;
         let userProfilAktif = null;
+        let avatarFile = null;
+        let bannerFile = null;
+        let productFile = null;
 
+        // ===== SUPABASE STORAGE UPLOAD =====
+        async function uploadFileToStorage(file, path) {
+            try {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}.${fileExt}`;
+                const filePath = `${path}/${fileName}`;
+
+                const { data, error } = await supabase.storage
+                    .from('profiles')
+                    .upload(filePath, file);
+
+                if (error) throw error;
+
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('profiles')
+                    .getPublicUrl(filePath);
+
+                return publicUrl;
+            } catch (error) {
+                console.error('Upload error:', error);
+                throw error;
+            }
+        }
+
+        // ===== HANDLE FILE UPLOADS =====
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                avatarFile = file;
+                document.getElementById('avatarFileName').textContent = `📎 ${file.name}`;
+                // Preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('profileAvatar').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                tampilkanToast("Foto profil dipilih!", "#4285F4");
+            }
+        }
+
+        function handleBannerUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                bannerFile = file;
+                document.getElementById('bannerFileName').textContent = `📎 ${file.name}`;
+                // Preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('profileBannerImg').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                tampilkanToast("Banner dipilih!", "#4285F4");
+            }
+        }
+
+        function handleProductUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                productFile = file;
+                document.getElementById('productFileName').textContent = `📎 ${file.name}`;
+                tampilkanToast("Foto produk dipilih!", "#4285F4");
+            }
+        }
+
+        // ===== AUTH & PROFILE =====
         async function periksaSesi() {
             try {
                 if (!window.supabase) { setTimeout(periksaSesi, 500); return; }
@@ -889,13 +1035,13 @@
                         <img src="${p.photo_url || 'https://placehold.co/200x160/f0f0f0/aaa?text=Foto'}" alt="${p.name}" loading="lazy">
                     </div>
                     <div class="product-info">
-                        ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ''}
+                        ${p.tag ? `<span class="product-tag">🏷️ ${p.tag}</span>` : ''}
                         <div class="product-name">${p.name}</div>
                         ${p.description ? `<div class="product-desc">${p.description}</div>` : ''}
                         <div class="product-price">${formatRupiah(p.price)}</div>
                         <div class="product-actions">
-                            <button class="btn-small" onclick="editProduk('${p.id}')">Edit</button>
-                            <button class="btn-small danger" onclick="hapusProduk('${p.id}')">Hapus</button>
+                            <button class="btn-small" onclick="editProduk('${p.id}')">✏️ Edit</button>
+                            <button class="btn-small danger" onclick="hapusProduk('${p.id}')">🗑️ Hapus</button>
                         </div>
                     </div>
                 `;
@@ -903,6 +1049,7 @@
             });
         }
 
+        // ===== ORDERS =====
         async function muatDaftarPesananPenjual() {
             const { data: pesanan, error } = await supabase
                 .from('orders').select('*').eq('seller_id', idUserAktif).order('created_at', { ascending: false });
@@ -940,14 +1087,14 @@
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
                         <div>
                             <div style="font-family:Lora,serif;font-size:11px;color:#65676b;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">${tanggal}</div>
-                            <div style="font-family:Lora,serif;font-size:14px;font-weight:700;">Transaksi #${order.id.slice(0,8).toUpperCase()}</div>
+                            <div style="font-family:Lora,serif;font-size:14px;font-weight:700;">🔖 #${order.id.slice(0,8).toUpperCase()}</div>
                         </div>
                         <span style="padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:800;font-family:Lora,serif;text-transform:uppercase;letter-spacing:.05em;${isPending?'background:#fef3c7;color:#b45309;':'background:#d1fae5;color:#065f46;'}">${order.status}</span>
                     </div>
                     <div style="background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:12px;font-size:13px;">
-                        <div style="font-family:Lora,serif;margin-bottom:4px;"><strong>Pembeli:</strong> ${buyerName}</div>
-                        <div style="font-family:Lora,serif;margin-bottom:4px;"><strong>Telepon:</strong> ${order.shipping_phone || '–'}</div>
-                        <div style="font-family:Lora,serif;"><strong>Alamat:</strong> ${order.shipping_address || '–'}</div>
+                        <div style="font-family:Lora,serif;margin-bottom:4px;"><strong>👤 Pembeli:</strong> ${buyerName}</div>
+                        <div style="font-family:Lora,serif;margin-bottom:4px;"><strong>📱 Telepon:</strong> ${order.shipping_phone || '–'}</div>
+                        <div style="font-family:Lora,serif;"><strong>📍 Alamat:</strong> ${order.shipping_address || '–'}</div>
                     </div>
                     <div style="margin-bottom:12px;">${itemsHtml}</div>
                     <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e4e6eb;padding-top:12px;">
@@ -955,7 +1102,7 @@
                             <div style="font-family:Lora,serif;font-size:11px;color:#65676b;">Total</div>
                             <div style="font-family:Lora,serif;font-size:18px;font-weight:700;">${formatRupiah(order.total)}</div>
                         </div>
-                        ${isPending ? `<button onclick="prosesKonfirmasiPesanan('${order.id}')" style="font-family:Lora,serif;font-size:13px;font-weight:700;background:#000;color:#fff;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;">Konfirmasi & Kirim</button>` : `<span style="font-family:Lora,serif;font-size:13px;font-weight:700;color:#065f46;">✓ Sedang Dikirim</span>`}
+                        ${isPending ? `<button onclick="prosesKonfirmasiPesanan('${order.id}')" style="font-family:Lora,serif;font-size:13px;font-weight:700;background:#000;color:#fff;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;">✅ Konfirmasi & Kirim</button>` : `<span style="font-family:Lora,serif;font-size:13px;font-weight:700;color:#065f46;">🚚 Sedang Dikirim</span>`}
                     </div>
                 `;
                 container.appendChild(card);
@@ -1006,13 +1153,13 @@
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
                         <div>
                             <div style="font-family:Lora,serif;font-size:11px;color:#65676b;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">${tanggal}</div>
-                            <div style="font-family:Lora,serif;font-size:14px;font-weight:700;">Transaksi #${order.id.slice(0,8).toUpperCase()}</div>
+                            <div style="font-family:Lora,serif;font-size:14px;font-weight:700;">🔖 #${order.id.slice(0,8).toUpperCase()}</div>
                         </div>
                         <span style="padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:800;font-family:Lora,serif;text-transform:uppercase;letter-spacing:.05em;${isPending?'background:#fef3c7;color:#b45309;':'background:#dbeafe;color:#1e40af;'}">${order.status}</span>
                     </div>
                     <div style="background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:12px;font-size:13px;">
-                        <div style="font-family:Lora,serif;"><strong>Toko:</strong> ${shopName}</div>
-                        <div style="font-family:Lora,serif;margin-top:4px;"><strong>Alamat Kirim:</strong> ${order.shipping_address || '–'}</div>
+                        <div style="font-family:Lora,serif;"><strong>🏪 Toko:</strong> ${shopName}</div>
+                        <div style="font-family:Lora,serif;margin-top:4px;"><strong>📍 Alamat Kirim:</strong> ${order.shipping_address || '–'}</div>
                     </div>
                     <div style="margin-bottom:12px;">${itemsHtml}</div>
                     <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e4e6eb;padding-top:12px;">
@@ -1020,7 +1167,7 @@
                             <div style="font-family:Lora,serif;font-size:11px;color:#65676b;">Total Belanjaan</div>
                             <div style="font-family:Lora,serif;font-size:18px;font-weight:700;">${formatRupiah(order.total)}</div>
                         </div>
-                        <span style="font-family:Lora,serif;font-size:13px;color:#65676b;font-style:italic;">via SandyPay</span>
+                        <span style="font-family:Lora,serif;font-size:13px;color:#65676b;font-style:italic;">💳 via SandyPay</span>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1047,13 +1194,17 @@
             setTimeout(() => window.location.href = "auth.html", 1000);
         }
 
+        // ===== MODAL FUNCTIONS =====
         function editProfilModal() {
             if (!userProfilAktif) return;
             document.getElementById('editNameInput').value = userProfilAktif.name || '';
             document.getElementById('editBioInput').value = userProfilAktif.message || '';
             document.getElementById('editPhoneInput').value = userProfilAktif.phone || '';
             document.getElementById('editAddressInput').value = userProfilAktif.address || '';
-            document.getElementById('editBannerInput').value = userProfilAktif.banner_url || '';
+            document.getElementById('avatarFileName').textContent = '';
+            document.getElementById('bannerFileName').textContent = '';
+            avatarFile = null;
+            bannerFile = null;
             document.getElementById('editProfilModal').classList.remove('hidden');
         }
 
@@ -1065,13 +1216,36 @@
             const newName = document.getElementById('editNameInput').value.trim();
             if (!newName) { tampilkanToast("Nama tidak boleh kosong!", "#ef4444"); return; }
 
-            const { error } = await supabase.from('profiles').update({
+            let updates = {
                 name: newName,
                 message: document.getElementById('editBioInput').value.trim(),
                 phone: document.getElementById('editPhoneInput').value.trim(),
-                address: document.getElementById('editAddressInput').value.trim(),
-                banner_url: document.getElementById('editBannerInput').value.trim()
-            }).eq('id', idUserAktif);
+                address: document.getElementById('editAddressInput').value.trim()
+            };
+
+            // Upload avatar if selected
+            if (avatarFile) {
+                try {
+                    const url = await uploadFileToStorage(avatarFile, `avatars/${idUserAktif}`);
+                    updates.avatar_url = url;
+                } catch (error) {
+                    tampilkanToast("Gagal upload avatar: " + error.message, "#ef4444");
+                    return;
+                }
+            }
+
+            // Upload banner if selected
+            if (bannerFile) {
+                try {
+                    const url = await uploadFileToStorage(bannerFile, `banners/${idUserAktif}`);
+                    updates.banner_url = url;
+                } catch (error) {
+                    tampilkanToast("Gagal upload banner: " + error.message, "#ef4444");
+                    return;
+                }
+            }
+
+            const { error } = await supabase.from('profiles').update(updates).eq('id', idUserAktif);
 
             if (error) { tampilkanToast("Gagal: " + error.message, "#ef4444"); return; }
             tampilkanToast("Profil diperbarui!", "#10b981");
@@ -1080,33 +1254,49 @@
         }
 
         function editAvatarPrompt() {
-            const url = prompt("URL foto profil baru:", userProfilAktif?.avatar_url || '');
-            if (url !== null) saveAvatarUrl(url);
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const url = await uploadFileToStorage(file, `avatars/${idUserAktif}`);
+                        await supabase.from('profiles').update({ avatar_url: url }).eq('id', idUserAktif);
+                        tampilkanToast("Foto profil diubah!", "#10b981");
+                        await muatDataProfil();
+                    } catch (error) {
+                        tampilkanToast("Gagal upload: " + error.message, "#ef4444");
+                    }
+                }
+            };
+            fileInput.click();
         }
 
         function editBannerPrompt() {
-            const url = prompt("URL banner baru:", userProfilAktif?.banner_url || '');
-            if (url !== null && url.trim()) {
-                saveBannerUrl(url.trim());
-            }
-        }
-
-        async function saveAvatarUrl(url) {
-            const { error } = await supabase.from('profiles').update({ avatar_url: url }).eq('id', idUserAktif);
-            if (error) { tampilkanToast("Gagal ubah foto profil", "#ef4444"); return; }
-            tampilkanToast("Foto profil diubah!", "#10b981");
-            await muatDataProfil();
-        }
-
-        async function saveBannerUrl(url) {
-            const { error } = await supabase.from('profiles').update({ banner_url: url }).eq('id', idUserAktif);
-            if (error) { tampilkanToast("Gagal ubah banner", "#ef4444"); return; }
-            tampilkanToast("Banner diubah!", "#10b981");
-            await muatDataProfil();
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const url = await uploadFileToStorage(file, `banners/${idUserAktif}`);
+                        await supabase.from('profiles').update({ banner_url: url }).eq('id', idUserAktif);
+                        tampilkanToast("Banner diubah!", "#10b981");
+                        await muatDataProfil();
+                    } catch (error) {
+                        tampilkanToast("Gagal upload: " + error.message, "#ef4444");
+                    }
+                }
+            };
+            fileInput.click();
         }
 
         function tambahProdukModal() {
-            ['prodNameInput','prodDescInput','prodTagInput','prodPriceInput','prodPhotoInput'].forEach(id => document.getElementById(id).value = '');
+            ['prodNameInput','prodDescInput','prodTagInput','prodPriceInput'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('productFileName').textContent = '';
+            productFile = null;
             document.getElementById('tambahProdukModal').classList.remove('hidden');
         }
 
@@ -1119,12 +1309,24 @@
             const price = parseFloat(document.getElementById('prodPriceInput').value);
             if (!name || isNaN(price) || price <= 0) { tampilkanToast("Lengkapi nama & harga!", "#ef4444"); return; }
 
+            let photoUrl = null;
+
+            // Upload product photo if selected
+            if (productFile) {
+                try {
+                    photoUrl = await uploadFileToStorage(productFile, `products/${idUserAktif}`);
+                } catch (error) {
+                    tampilkanToast("Gagal upload foto: " + error.message, "#ef4444");
+                    return;
+                }
+            }
+
             const { error } = await supabase.from('products').insert([{
                 name,
                 description: document.getElementById('prodDescInput').value.trim(),
                 tag: document.getElementById('prodTagInput').value.trim(),
                 price,
-                photo_url: document.getElementById('prodPhotoInput').value.trim(),
+                photo_url: photoUrl,
                 user_id: idUserAktif
             }]);
 
@@ -1153,7 +1355,8 @@
             document.getElementById('toastMessage').innerText = msg;
             t.style.borderLeftColor = color || '#fff';
             t.style.display = 'flex';
-            setTimeout(() => t.style.display = 'none', 3000);
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => t.style.display = 'none', 3000);
         }
 
         document.addEventListener("DOMContentLoaded", periksaSesi);
