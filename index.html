@@ -628,22 +628,45 @@
         let katalogProducts = [];
         let detailTokoAktif = null;
         let slideAktif = 0;
-
-        async function navigasiKeProfil(event) {
-            if (event) event.preventDefault();
-            
-            console.log('navigasiKeProfil: Checking login...');
-            const user = await dapatkanUserAktif();
-            
-            if (!user) {
-                console.log('navigasiKeProfil: No user, redirecting to auth.html');
-                await redirectKeAuth("Silakan login untuk mengakses profil!");
-            } else {
-                console.log('navigasiKeProfil: User valid, going to profile');
-                window.location.href = "profil.html";
-            }
+        
+async function navigasiKeProfil(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    
+    console.log('navigasiKeProfil: Memeriksa sesi login...');
+    
+    // Gunakan fungsi dari supabase.js
+    if (typeof dapatkanUserAktif !== 'function') {
+        console.error('Fungsi dapatkanUserAktif tidak tersedia!');
+        tampilkanToast("Sistem sedang sibuk. Coba lagi nanti.", "#dc2626");
+        return;
+    }
+    
+    try {
+        const user = await dapatkanUserAktif();
+        console.log('navigasiKeProfil: Hasil cek user:', user ? 'Login ditemukan' : 'Tidak ada login');
+        
+        if (!user) {
+            console.log('navigasiKeProfil: User belum login, arahkan ke auth.html');
+            tampilkanToast("Silakan login terlebih dahulu untuk mengakses profil!", "#dc2626");
+            setTimeout(() => {
+                window.location.href = "auth.html";
+            }, 1200);
+            return;
         }
-
+        
+        console.log('navigasiKeProfil: User valid, menuju profil.html');
+        window.location.href = "profil.html";
+        
+    } catch (error) {
+        console.error('navigasiKeProfil: Error:', error);
+        tampilkanToast("Terjadi kesalahan sistem. Silakan coba lagi.", "#dc2626");
+        setTimeout(() => {
+            window.location.href = "auth.html";
+        }, 1500);
+    }
+}
         const premiumMockBrands = [
             {
                 id: "mock-1",
