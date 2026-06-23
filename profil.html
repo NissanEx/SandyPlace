@@ -4,736 +4,880 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Saya – Sandy Place</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,600;0,700;1,400&family=Inter:wght=300;400;500;600;700&display=swap');
+        * { box-sizing: border-box; }
 
         :root {
-            --bg-color: #ffffff;
-            --text-color: #1a1a1a;
-            --gray-pill: #e1e1e1;
-            --transition-speed: 0.3s;
+            --bg: #f0f2f5;
+            --white: #ffffff;
+            --border: #e4e6eb;
+            --text-primary: #050505;
+            --text-secondary: #65676b;
+            --accent: #1877f2;
+            --header-h: 56px;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Lora', serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             overflow-x: hidden;
         }
 
-        /* ---- Sticky Header Bar ---- */
-        .header-bar {
+        /* ========== TOP NAVBAR ========== */
+        .navbar {
             position: sticky;
             top: 0;
-            z-index: 50;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            z-index: 100;
+            height: var(--header-h);
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            width: 100%;
-            border-bottom: 1px solid #f1f1f5;
-            transition: all var(--transition-speed);
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
         }
 
-        .logo {
+        .navbar-logo {
             font-family: 'Lora', serif;
-            font-size: 36px;
-            line-height: 0.8;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            user-select: none;
+            font-size: 28px;
+            line-height: 0.9;
             text-decoration: none;
-        }
-        .logo .light { font-weight: 300; color: #8c8c8c; }
-        .logo .bold  { font-weight: 700; color: #000; margin-left: 45px; margin-top: -6px; }
-
-        /* ---- Main Layout Container ---- */
-        .profile-container {
-            flex-grow: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 0 40px 80px 40px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            user-select: none;
+        }
+        .navbar-logo .l1 { font-weight: 400; color: #8c8c8c; font-size: 14px; letter-spacing: 0.05em; }
+        .navbar-logo .l2 { font-weight: 700; color: #000; font-size: 22px; margin-left: 22px; margin-top: -2px; }
+
+        .btn-keluar-nav {
+            font-family: 'Lora', serif;
+            font-size: 13px;
+            font-weight: 600;
+            background: #7f0505;
+            color: #fff;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-keluar-nav:hover { background: #600404; }
+
+        /* ========== PROFILE SECTION ========== */
+        .profile-section {
+            max-width: 940px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: visible;
         }
 
-        /* ---- Title Row Desktop Alignment ---- */
-        .profile-title-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: -55px; 
-            padding-left: 300px; 
+        /* Banner */
+        .banner-wrap {
             position: relative;
-            z-index: 30; 
-            transition: padding-left var(--transition-speed) ease;
-        }
-
-        @media (max-width: 768px) {
-            .profile-title-row {
-                padding-left: 0;
-                margin-bottom: 20px;
-                justify-content: center;
-            }
-        }
-
-        /* ---- Premium Profile Dark Card ---- */
-        .profile-card {
-            background-color: #000000;
-            border-radius: 28px;
-            color: #ffffff;
-            padding: 55px 55px 55px 300px; 
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            min-height: 320px;
-            display: flex;
-            align-items: center;
-            transition: all var(--transition-speed) ease;
-            margin-top: 90px; 
-        }
-
-        @media (max-width: 768px) {
-            .profile-card {
-                flex-direction: column;
-                padding: 160px 24px 40px 24px;
-                text-align: center;
-                margin-top: 100px;
-                min-height: auto;
-            }
-        }
-
-        /* ---- Avatar Placement ---- */
-        .profile-avatar-wrapper {
-            position: absolute;
-            left: 45px; 
-            top: -85px; 
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            background-color: #1a1a1a;
-            border: 4px solid #000;
+            cursor: pointer;
         }
+        @media (max-width: 768px) { .banner-wrap { height: 200px; } }
 
-        @media (max-width: 768px) {
-            .profile-avatar-wrapper {
-                left: 50%;
-                transform: translateX(-50%);
-                top: -110px;
-                width: 180px;
-                height: 180px;
-            }
-        }
-
-        .profile-avatar-img {
+        .banner-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
 
-        .avatar-hover-overlay {
+        .banner-edit-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0);
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-            cursor: pointer;
-            border-radius: 50%;
-            gap: 4px;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 16px;
+            transition: background 0.2s;
         }
+        .banner-wrap:hover .banner-edit-overlay { background: rgba(0,0,0,0.25); }
 
-        .profile-avatar-wrapper:hover .avatar-hover-overlay {
-            opacity: 1;
-        }
-
-        .avatar-hover-overlay span {
-            color: #ffffff;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        /* ---- Info Typography ---- */
-        .info-label {
+        .btn-edit-banner {
             font-family: 'Lora', serif;
-            font-size: 18px;
-            color: #a3a3a3;
-            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.9);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .banner-wrap:hover .btn-edit-banner { opacity: 1; }
+
+        /* Profile info row */
+        .profile-info-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            padding: 0 24px 16px 24px;
+            margin-top: -40px;
+            position: relative;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 600px) {
+            .profile-info-row {
+                flex-direction: column;
+                align-items: center;
+                margin-top: -50px;
+                text-align: center;
+            }
+        }
+
+        /* Avatar */
+        .avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+            width: 168px;
+            height: 168px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            overflow: hidden;
+            background: #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            .avatar-wrap { width: 128px; height: 128px; }
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
         }
 
-        .info-value-name {
-            font-family: 'Lora', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: #ffffff;
-            line-height: 1.2;
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            border-radius: 50%;
         }
+        .avatar-wrap:hover .avatar-overlay { background: rgba(0,0,0,0.4); }
 
-        .info-value-text {
-            font-size: 16px;
-            color: #ffffff;
-            line-height: 1.6;
-        }
-
-        .info-value-italic {
+        .avatar-overlay span {
             font-family: 'Lora', serif;
-            font-size: 16px;
-            font-style: italic;
-            color: #ffffff;
-            line-height: 1.6;
-        }
-
-        .btn-ganti {
-            background-color: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 8px 32px;
-            border-radius: 9999px;
-            font-family: 'Lora', serif;
+            font-size: 12px;
             font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .avatar-wrap:hover .avatar-overlay span { opacity: 1; }
+
+        /* Name & bio */
+        .profile-meta {
+            flex: 1;
+            padding-bottom: 8px;
+            min-width: 200px;
         }
 
-        .btn-ganti:hover {
-            transform: scale(1.05);
-            background-color: #f3f3f3;
-        }
-
-        .btn-keluar-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 35px;
-        }
-
-        .btn-keluar {
-            background-color: #7f0505; 
-            color: #ffffff;
-            border: none;
-            padding: 12px 48px;
-            border-radius: 12px;
+        .profile-name {
             font-family: 'Lora', serif;
+            font-size: 28px;
             font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            box-shadow: 0 4px 15px rgba(127, 5, 5, 0.2);
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+        @media (max-width: 600px) { .profile-name { font-size: 22px; } }
+
+        .profile-bio {
+            font-family: 'Lora', serif;
+            font-size: 15px;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin: 0 0 8px 0;
+            line-height: 1.5;
         }
 
-        .btn-keluar:hover {
-            transform: scale(1.05);
-            background-color: #600404;
-        }
-
-        /* ---- Tabs Section ---- */
-        .tabs-section {
-            margin-top: 80px;
-            background-color: #f9f9f9;
-            border-radius: 28px;
-            padding: 60px 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-
-        @media (max-width: 768px) {
-            .tabs-section {
-                padding: 30px 20px;
-                border-radius: 20px;
-            }
-        }
-
-        .tabs-header {
+        .follow-stats {
             display: flex;
-            gap: 32px;
-            border-bottom: 1px solid #e5e5e5;
-            margin-bottom: 40px;
+            gap: 16px;
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            color: var(--text-secondary);
         }
+        .follow-stats strong { color: var(--text-primary); font-weight: 700; }
 
-        @media (max-width: 768px) {
-            .tabs-header {
-                gap: 16px;
-                overflow-x: auto;
-                padding-bottom: 8px;
-            }
+        /* Action buttons */
+        .profile-actions {
+            display: flex;
+            gap: 8px;
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 600px) { .profile-actions { justify-content: center; } }
+
+        .btn-primary {
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            font-weight: 600;
+            background: var(--text-primary);
+            color: #fff;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: #333; }
+
+        .btn-secondary {
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            font-weight: 600;
+            background: #e4e6eb;
+            color: var(--text-primary);
+            border: none;
+            padding: 9px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .btn-secondary:hover { background: #d8dadf; }
+
+        /* Divider */
+        .profile-divider { border: none; border-top: 1px solid var(--border); margin: 0 24px; }
+
+        /* Tab bar */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            padding: 4px 24px 0;
+            overflow-x: auto;
         }
 
         .tab-btn {
+            font-family: 'Lora', serif;
+            font-size: 15px;
+            font-weight: 600;
             background: none;
             border: none;
-            padding: 12px 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: #a0a0a0;
+            padding: 14px 16px;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: color 0.3s ease;
             border-bottom: 3px solid transparent;
-            position: relative;
-            bottom: -1px;
             white-space: nowrap;
+            border-radius: 8px 8px 0 0;
+            transition: color 0.2s, background 0.15s;
+            position: relative;
+        }
+        .tab-btn:hover { background: #f0f2f5; color: var(--text-primary); }
+        .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); background: none; }
+
+        .tab-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ef4444;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9999px;
+            padding: 0 5px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .tab-badge.hidden { display: none; }
+
+        /* ========== MAIN CONTENT AREA ========== */
+        .content-wrap {
+            max-width: 940px;
+            margin: 16px auto 60px;
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+        @media (max-width: 768px) {
+            .content-wrap { grid-template-columns: 1fr; }
+            .sidebar-col { order: 2; }
+            .main-col { order: 1; }
         }
 
-        .tab-btn.active {
-            color: #000;
-            border-bottom-color: #000;
+        /* Sidebar cards */
+        .sidebar-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
         }
 
-        .tab-panel {
-            display: none;
+        .sidebar-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 14px 0;
         }
 
-        .tab-panel.active {
-            display: block;
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .info-row .info-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+        .info-row span { font-family: 'Lora', serif; line-height: 1.5; }
+        .info-row strong { color: var(--text-primary); }
+
+        /* Main content cards */
+        .main-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
         }
 
-        /* Product Grid */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Product grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
         }
 
         .product-card-item {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 16px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.18s, box-shadow 0.18s;
         }
+        .product-card-item:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
 
-        .product-card-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
+        .product-image { width: 100%; height: 160px; background: #f0f0f0; overflow: hidden; }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .product-image {
-            width: 100%;
-            height: 200px;
+        .product-info { padding: 12px; }
+
+        .product-tag {
+            display: inline-block;
             background: #f0f0f0;
-            overflow: hidden;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-info {
-            padding: 16px;
+            color: #555;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: 'Lora', serif;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            margin-bottom: 6px;
+            letter-spacing: 0.04em;
         }
 
         .product-name {
-            font-weight: 600;
+            font-family: 'Lora', serif;
+            font-weight: 700;
             font-size: 14px;
-            color: #000;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .product-desc {
+            font-family: 'Lora', serif;
+            font-size: 12px;
+            color: var(--text-secondary);
             margin-bottom: 8px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .product-price {
-            font-size: 18px;
+            font-family: 'Lora', serif;
+            font-size: 16px;
             font-weight: 700;
-            color: #4f46e5;
-            margin-bottom: 12px;
+            color: #1a56db;
+            margin-bottom: 10px;
         }
 
-        .product-actions {
-            display: flex;
-            gap: 8px;
-            font-size: 12px;
-        }
+        .product-actions { display: flex; gap: 8px; }
 
         .btn-small {
             flex: 1;
-            padding: 8px;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
+            font-family: 'Lora', serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
             cursor: pointer;
-            background: white;
-            transition: background 0.2s;
+            background: var(--white);
+            transition: background 0.15s;
         }
+        .btn-small:hover { background: #f5f5f5; }
+        .btn-small.danger { border-color: #fca5a5; color: #dc2626; }
+        .btn-small.danger:hover { background: #fef2f2; }
 
-        .btn-small:hover {
-            background: #f5f5f5;
-        }
-
-        /* Order Cards */
-        .orders-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        /* Order cards */
+        .orders-container { display: flex; flex-direction: column; gap: 14px; }
 
         .order-card {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 16px;
-            padding: 20px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            transition: box-shadow 0.18s;
         }
+        .order-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 
-        .order-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
+        /* Toast */
         .toast-notif {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #000;
+            bottom: 24px;
+            right: 24px;
+            background: #000;
             color: #fff;
-            padding: 12px 24px;
+            padding: 14px 24px;
             border-radius: 12px;
             border-left: 4px solid #fff;
             display: none;
-            flex-direction: column;
-            gap: 6px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-            z-index: 1000;
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            z-index: 9999;
+            max-width: 340px;
         }
 
-        .loading-screen {
+        /* Modal */
+        .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            padding: 16px;
+        }
+        .modal-overlay.hidden { display: none; }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 16px;
+            max-width: 460px;
+            width: 100%;
+            padding: 28px;
+            box-shadow: 0 20px 48px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .loading-screen.hidden {
-            display: none;
+        .modal-title {
+            font-family: 'Lora', serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
         }
+
+        .modal-label {
+            display: block;
+            font-family: 'Lora', serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .modal-input {
+            width: 100%;
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            background: #f7f8fa;
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 14px;
+        }
+        .modal-input:focus { border-color: #555; background: #fff; }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 6px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-modal-cancel {
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            font-weight: 600;
+            background: #e4e6eb;
+            color: var(--text-primary);
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-modal-cancel:hover { background: #d0d2d9; }
+
+        .btn-modal-save {
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            font-weight: 600;
+            background: var(--text-primary);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-modal-save:hover { background: #333; }
+
+        /* Loading */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            gap: 16px;
+        }
+        .loading-screen.hidden { display: none; }
 
         .loading-spinner {
-            border: 4px solid #f0f0f0;
-            border-top: 4px solid #000;
+            width: 40px; height: 40px;
+            border: 3px solid #e4e6eb;
+            border-top-color: #000;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
+        }
+        .loading-text {
+            font-family: 'Lora', serif;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Section header in tabs */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
         }
+        .section-title {
+            font-family: 'Lora', serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .btn-add {
+            font-family: 'Lora', serif;
+            font-size: 13px;
+            font-weight: 700;
+            background: var(--text-primary);
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-add:hover { background: #333; }
     </style>
 </head>
 <body>
+
+    <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
+        <div class="loading-text">Memuat profil…</div>
     </div>
 
-    <!-- STICKY TOP HEADER -->
-    <div class="header-bar">
-        <a href="index.html" class="logo">
-            <span class="light">sandy</span>
-            <span class="bold">place</span>
+    <!-- ===== TOP NAVBAR ===== -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">
+            <span class="l1">Sandy</span>
+            <span class="l2">Place</span>
         </a>
+        <button class="btn-keluar-nav" onclick="prosesKeluar()">Keluar</button>
+    </nav>
+
+    <!-- ===== PROFILE SECTION ===== -->
+    <div class="profile-section" style="max-width:940px;margin:0 auto;">
+
+        <!-- Banner -->
+        <div class="banner-wrap" onclick="editBannerPrompt()">
+            <img id="profileBannerImg" src="https://placehold.co/940x320/1a1a2e/ffffff?text=+&font=lora" class="banner-img" alt="banner">
+            <div class="banner-edit-overlay">
+                <button class="btn-edit-banner" onclick="editBannerPrompt()">
+                    ✏️ Edit Banner
+                </button>
+            </div>
+        </div>
+
+        <!-- Avatar + Name row -->
+        <div class="profile-info-row">
+            <div class="avatar-wrap" onclick="editAvatarPrompt()">
+                <img id="profileAvatar" src="https://placehold.co/168x168/cccccc/888888?text=?" class="avatar-img" alt="avatar">
+                <div class="avatar-overlay"><span>Ubah Foto</span></div>
+            </div>
+
+            <div class="profile-meta">
+                <h1 class="profile-name" id="profileName">Memuat…</h1>
+                <p class="profile-bio" id="profileBio">–</p>
+                <div class="follow-stats">
+                    <span><strong id="statFollowers">0</strong> Pengikut</span>
+                    <span><strong id="statFollowing">0</strong> Mengikuti</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-primary" onclick="editProfilModal()">✏️ Edit Profil</button>
+            </div>
+        </div>
+
+        <hr class="profile-divider">
+
+        <!-- Tab bar -->
+        <div class="tab-bar">
+            <button id="btnTabProducts" class="tab-btn active" onclick="pindahTabToko('products')">Toko Saya</button>
+            <button id="btnTabOrders" class="tab-btn" onclick="pindahTabToko('orders')">
+                Pesanan Masuk <span id="ordersBadge" class="tab-badge hidden">0</span>
+            </button>
+            <button id="btnTabMyOrders" class="tab-btn" onclick="pindahTabToko('my-orders')">
+                Belanjaan Saya <span id="myOrdersBadge" class="tab-badge hidden">0</span>
+            </button>
+        </div>
     </div>
 
-    <div class="profile-container">
-        <div class="profile-title-row">
-            <div class="info-label">Profil</div>
-        </div>
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="content-wrap">
 
-        <div class="profile-card">
-            <!-- Banner overlay di atas kartu -->
-            <div id="profileBanner" style="position:absolute;top:0;left:0;right:0;height:90px;border-radius:28px 28px 0 0;background-color:#1a1a1a;opacity:0.4;pointer-events:none;z-index:0;"></div>
-            
-            <div class="profile-avatar-wrapper">
-                <img id="profileAvatar" src="https://placehold.co/220x220" class="profile-avatar-img">
-                <div class="avatar-hover-overlay" onclick="editAvatarPrompt()">
-                    <span>Ubah Foto</span>
+        <!-- Sidebar -->
+        <div class="sidebar-col">
+            <div class="sidebar-card">
+                <h3>Tentang</h3>
+                <div class="info-row">
+                    <span class="info-icon">✉️</span>
+                    <span><strong>Email: </strong><span id="profileEmail">–</span></span>
                 </div>
-            </div>
-
-            <div class="flex-1 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 w-full" style="position:relative;z-index:1;">
-                <div>
-                    <span class="info-label">nama</span>
-                    <h1 class="info-value-name" id="profileName">Loading...</h1>
-                    
-                    <div class="mt-3">
-                        <span class="text-xs text-zinc-400 font-semibold tracking-wider uppercase block mb-1">pesan saya</span>
-                        <p class="info-value-italic" id="profileBio">Sedang dimuat...</p>
-                    </div>
-
-                    <!-- Info kontak dari kolom DB: email, phone, address -->
-                    <div class="mt-4 space-y-1.5">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider w-16">Email</span>
-                            <span class="text-sm text-zinc-200" id="profileEmail">-</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider w-16">Telepon</span>
-                            <span class="text-sm text-zinc-200" id="profilePhone">-</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider w-16">Alamat</span>
-                            <span class="text-sm text-zinc-200" id="profileAddress">-</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-5">
-                        <button class="btn-ganti" onclick="editProfilModal()">Edit Detail</button>
-                    </div>
+                <div class="info-row">
+                    <span class="info-icon">📞</span>
+                    <span><strong>Telepon: </strong><span id="profilePhone">–</span></span>
                 </div>
-
-                <div class="bg-zinc-900/60 border border-zinc-800 p-6 rounded-2xl min-w-[200px] text-center md:text-left">
-                    <span class="text-[10px] text-zinc-500 font-extrabold uppercase tracking-widest block mb-3">Ikuti (Follow Up)</span>
-                    <div class="flex items-center justify-around md:justify-start md:gap-8 gap-4">
-                        <div>
-                            <span class="block text-2xl font-bold font-serif text-white" id="statFollowers">0</span>
-                            <span class="block text-[10px] text-zinc-500 uppercase font-medium mt-0.5">Pengikut</span>
-                        </div>
-                        <div class="h-8 w-[1px] bg-zinc-800"></div>
-                        <div>
-                            <span class="block text-2xl font-bold font-serif text-white" id="statFollowing">0</span>
-                            <span class="block text-[10px] text-zinc-500 uppercase font-medium mt-0.5">Mengikuti</span>
-                        </div>
-                    </div>
+                <div class="info-row">
+                    <span class="info-icon">📍</span>
+                    <span><strong>Alamat: </strong><span id="profileAddress">–</span></span>
                 </div>
             </div>
         </div>
 
-        <div class="tabs-section">
-            <div class="tabs-header">
-                <button id="btnTabProducts" class="tab-btn active" onclick="pindahTabToko('products')">
-                    Toko Saya
-                </button>
-                <button id="btnTabOrders" class="tab-btn" onclick="pindahTabToko('orders')">
-                    Pesanan Masuk
-                    <span id="ordersBadge" class="badge hidden" style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;">0</span>
-                </button>
-                <button id="btnTabMyOrders" class="tab-btn" onclick="pindahTabToko('my-orders')">
-                    Pesanan Saya
-                    <span id="myOrdersBadge" class="badge hidden" style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 4px;">0</span>
-                </button>
-            </div>
+        <!-- Main column -->
+        <div class="main-col">
 
             <!-- Tab: Toko Saya -->
             <div id="tabContentProducts" class="tab-panel active">
-                <div class="mb-6 flex flex-wrap gap-4 items-center justify-between">
-                    <button class="px-5 py-2.5 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors shadow-sm" onclick="tambahProdukModal()">
-                        + Tambah Produk
-                    </button>
+                <div class="main-card">
+                    <div class="section-header">
+                        <span class="section-title">Produk Saya</span>
+                        <button class="btn-add" onclick="tambahProdukModal()">+ Tambah Produk</button>
+                    </div>
+                    <div id="productsContainer" class="product-grid"></div>
                 </div>
-                <div id="productsContainer" class="product-grid"></div>
             </div>
 
             <!-- Tab: Pesanan Masuk -->
             <div id="tabContentOrders" class="tab-panel">
-                <div id="ordersContainer" class="orders-container"></div>
+                <div class="main-card">
+                    <div class="section-header">
+                        <span class="section-title">Pesanan Masuk</span>
+                    </div>
+                    <div id="ordersContainer" class="orders-container"></div>
+                </div>
             </div>
 
             <!-- Tab: Pesanan Saya -->
             <div id="tabContentMyOrders" class="tab-panel">
-                <div id="myOrdersContainer" class="orders-container"></div>
+                <div class="main-card">
+                    <div class="section-header">
+                        <span class="section-title">Riwayat Belanjaan</span>
+                    </div>
+                    <div id="myOrdersContainer" class="orders-container"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="btn-keluar-container">
-            <button class="btn-keluar" onclick="prosesKeluar()">Keluar</button>
         </div>
     </div>
 
-    <!-- Edit Profil Modal Dialog -->
-    <div id="editProfilModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 class="font-serif text-lg font-bold">Edit Detail Profil</h3>
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">Nama Lengkap</label>
-                    <input type="text" id="editNameInput" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:border-zinc-950">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">Pesan Saya (Bio)</label>
-                    <textarea id="editBioInput" rows="2" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:border-zinc-950"></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">No. Telepon</label>
-                    <input type="text" id="editPhoneInput" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:border-zinc-950" placeholder="Contoh: 08123456789">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">Alamat</label>
-                    <textarea id="editAddressInput" rows="2" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:border-zinc-950" placeholder="Jl. ..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">URL Banner Profil</label>
-                    <input type="text" id="editBannerInput" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:border-zinc-950" placeholder="https://...">
-                </div>
-            </div>
-            <div class="flex gap-2 justify-end">
-                <button onclick="closeEditProfilModal()" class="px-4 py-2 border border-zinc-200 rounded-lg text-sm font-semibold hover:bg-zinc-50">Batal</button>
-                <button onclick="saveProfilDetails()" class="px-4 py-2 bg-black text-white rounded-lg text-sm font-semibold hover:bg-zinc-800">Simpan</button>
+    <!-- ===== MODAL: EDIT PROFIL ===== -->
+    <div id="editProfilModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 class="modal-title">Edit Profil</h3>
+            <label class="modal-label">Nama Lengkap</label>
+            <input type="text" id="editNameInput" class="modal-input" placeholder="Nama lengkap Anda">
+
+            <label class="modal-label">Pesan / Bio</label>
+            <textarea id="editBioInput" rows="3" class="modal-input" style="resize:vertical;"></textarea>
+
+            <label class="modal-label">No. Telepon</label>
+            <input type="text" id="editPhoneInput" class="modal-input" placeholder="08xxxxxxxxxx">
+
+            <label class="modal-label">Alamat</label>
+            <textarea id="editAddressInput" rows="2" class="modal-input" placeholder="Jl. ..." style="resize:vertical;"></textarea>
+
+            <label class="modal-label">URL Banner Profil</label>
+            <input type="text" id="editBannerInput" class="modal-input" placeholder="https://...">
+
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="closeEditProfilModal()">Batal</button>
+                <button class="btn-modal-save" onclick="saveProfilDetails()">Simpan</button>
             </div>
         </div>
     </div>
 
-    <!-- Tambah Produk Modal Dialog -->
-    <div id="tambahProdukModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 class="font-serif text-lg font-bold">Tambah Produk Baru</h3>
-            <div class="space-y-3 overflow-y-auto max-h-[70vh] pr-1">
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">Nama Produk</label>
-                    <input type="text" id="prodNameInput" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">Deskripsi Produk</label>
-                    <textarea id="prodDescInput" rows="3" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none" placeholder="Tuliskan deskripsi produk..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">Tag / Kategori</label>
-                    <input type="text" id="prodTagInput" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none" placeholder="Contoh: buku, fiksi, novel">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">Harga (Rp)</label>
-                    <input type="number" id="prodPriceInput" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-zinc-600 mb-1">URL Foto Produk</label>
-                    <input type="text" id="prodPhotoInput" class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:outline-none" placeholder="https://...">
-                </div>
-            </div>
-            <div class="flex gap-2 justify-end">
-                <button onclick="closeTambahProdukModal()" class="px-4 py-2 border border-zinc-200 rounded-lg text-sm font-semibold hover:bg-zinc-50">Batal</button>
-                <button onclick="saveNewProduct()" class="px-4 py-2 bg-black text-white rounded-lg text-sm font-semibold hover:bg-zinc-800">Tambahkan</button>
+    <!-- ===== MODAL: TAMBAH PRODUK ===== -->
+    <div id="tambahProdukModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 class="modal-title">Tambah Produk Baru</h3>
+
+            <label class="modal-label">Nama Produk</label>
+            <input type="text" id="prodNameInput" class="modal-input" placeholder="Nama produk">
+
+            <label class="modal-label">Deskripsi</label>
+            <textarea id="prodDescInput" rows="3" class="modal-input" placeholder="Deskripsi singkat produk…" style="resize:vertical;"></textarea>
+
+            <label class="modal-label">Tag / Kategori</label>
+            <input type="text" id="prodTagInput" class="modal-input" placeholder="Contoh: buku, fiksi, novel">
+
+            <label class="modal-label">Harga (Rp)</label>
+            <input type="number" id="prodPriceInput" class="modal-input" placeholder="50000">
+
+            <label class="modal-label">URL Foto Produk</label>
+            <input type="text" id="prodPhotoInput" class="modal-input" placeholder="https://...">
+
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="closeTambahProdukModal()">Batal</button>
+                <button class="btn-modal-save" onclick="saveNewProduct()">Tambahkan</button>
             </div>
         </div>
     </div>
 
+    <!-- Toast -->
     <div id="shopToast" class="toast-notif"><span id="toastMessage"></span></div>
 
     <script>
         let idUserAktif = null;
         let userProfilAktif = null;
 
-        // Memvalidasi integritas library Supabase sebelum memanggil getSession
         async function periksaSesi() {
             try {
-                console.log('periksaSesi: Memulai verifikasi sesi autentikasi...');
-                
-                if (!window.supabase) {
-                    console.warn("Library Supabase belum sepenuhnya terinisialisasi. Menunggu...");
-                    setTimeout(periksaSesi, 500);
+                if (!window.supabase) { setTimeout(periksaSesi, 500); return; }
+
+                const { data: { session }, error } = await window.supabase.auth.getSession();
+                if (error || !session || !session.user) {
+                    document.getElementById('loadingScreen').classList.add('hidden');
+                    tampilkanToast("Akses ditolak. Silakan masuk.", "#dc2626");
+                    setTimeout(() => window.location.href = "auth.html", 1200);
                     return;
                 }
 
-                const { data: { session }, error: sessionError } = await window.supabase.auth.getSession();
-                
-                // Menutup skenario jika user tidak terautentikasi / mengalami error session
-                if (sessionError || !session || !session.user) {
-                    document.getElementById('loadingScreen').classList.add('hidden');
-                    tampilkanToast("Akses ditolak. Silakan masuk terlebih dahulu.", "#dc2626");
-                    setTimeout(() => {
-                        window.location.href = "auth.html";
-                    }, 1200);
-                    return;
-                }
-                
                 idUserAktif = session.user.id;
-                console.log('periksaSesi: Sesi terverifikasi sah. ID Pengguna:', idUserAktif);
-                
                 await muatDataProfil();
                 await muatProdukToko();
-                
                 document.getElementById('loadingScreen').classList.add('hidden');
-            } catch (error) {
-                console.error("Error saat periksaSesi:", error);
+            } catch (e) {
                 document.getElementById('loadingScreen').classList.add('hidden');
-                tampilkanToast("Terjadi kesalahan sistem. Mengarahkan kembali...", "#dc2626");
-                setTimeout(() => {
-                    window.location.href = "auth.html";
-                }, 1500);
+                tampilkanToast("Kesalahan sistem.", "#dc2626");
+                setTimeout(() => window.location.href = "auth.html", 1500);
             }
         }
 
         async function muatDataProfil() {
             const { data, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', idUserAktif)
-                .single();
-
-            if (error) {
-                console.error("Gagal memuat profil:", error);
-                return;
-            }
+                .from('profiles').select('*').eq('id', idUserAktif).single();
+            if (error) { console.error(error); return; }
 
             userProfilAktif = data;
             document.getElementById('profileName').innerText = data.name || 'User Baru';
-            document.getElementById('profileBio').innerText = data.message || 'Selamat datang di profil saya! Silakan jelajahi toko saya di bawah untuk melihat rilis produk terbaru kami.';
-            
-            document.getElementById('statFollowers').innerText = (data.followers !== undefined && data.followers !== null) ? data.followers : 0;
-            document.getElementById('statFollowing').innerText = (data.following !== undefined && data.following !== null) ? data.following : 0;
+            document.getElementById('profileBio').innerText = data.message || '–';
+            document.getElementById('statFollowers').innerText = data.followers ?? 0;
+            document.getElementById('statFollowing').innerText = data.following ?? 0;
+            document.getElementById('profileEmail').innerText = data.email || '–';
+            document.getElementById('profilePhone').innerText = data.phone || '–';
+            document.getElementById('profileAddress').innerText = data.address || '–';
 
-            // Tampilkan info kontak dari kolom DB
-            document.getElementById('profileEmail').innerText = data.email || '-';
-            document.getElementById('profilePhone').innerText = data.phone || '-';
-            document.getElementById('profileAddress').innerText = data.address || '-';
-
-            // Banner URL
-            if (data.banner_url) {
-                const bannerEl = document.getElementById('profileBanner');
-                if (bannerEl) {
-                    bannerEl.style.backgroundImage = "url('" + data.banner_url + "')";
-                    bannerEl.style.backgroundSize = 'cover';
-                    bannerEl.style.backgroundPosition = 'center';
-                    bannerEl.style.backgroundColor = 'transparent';
-                }
-            }
-
-            if (data.avatar_url) {
-                document.getElementById('profileAvatar').src = data.avatar_url;
-            }
+            if (data.avatar_url) document.getElementById('profileAvatar').src = data.avatar_url;
+            if (data.banner_url) document.getElementById('profileBannerImg').src = data.banner_url;
         }
 
         async function muatProdukToko() {
             const { data: produk, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('user_id', idUserAktif)
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error("Gagal memuat produk:", error);
-                return;
-            }
+                .from('products').select('*').eq('user_id', idUserAktif).order('created_at', { ascending: false });
+            if (error) { console.error(error); return; }
 
             const container = document.getElementById('productsContainer');
             container.innerHTML = '';
 
-            if (produk.length === 0) {
-                container.innerHTML = '<p class="col-span-full text-center text-gray-400 italic py-8">Anda belum memiliki produk. Mulai buat sekarang!</p>';
+            if (!produk.length) {
+                container.innerHTML = '<p style="font-family:Lora,serif;font-style:italic;color:#65676b;text-align:center;padding:32px 0;grid-column:1/-1;">Belum ada produk. Tambahkan sekarang!</p>';
                 return;
             }
 
@@ -742,16 +886,16 @@
                 card.className = 'product-card-item';
                 card.innerHTML = `
                     <div class="product-image">
-                        <img src="${p.photo_url || 'https://placehold.co/280x200'}" alt="${p.name}">
+                        <img src="${p.photo_url || 'https://placehold.co/200x160/f0f0f0/aaa?text=Foto'}" alt="${p.name}" loading="lazy">
                     </div>
                     <div class="product-info">
-                        ${p.tag ? `<span style="display:inline-block;background:#f0f0f0;color:#555;font-size:10px;font-weight:700;padding:2px 10px;border-radius:9999px;margin-bottom:8px;letter-spacing:0.05em;">${p.tag}</span>` : ''}
+                        ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ''}
                         <div class="product-name">${p.name}</div>
-                        ${p.description ? `<div style="font-size:12px;color:#777;margin-bottom:8px;line-height:1.5;">${p.description}</div>` : ''}
+                        ${p.description ? `<div class="product-desc">${p.description}</div>` : ''}
                         <div class="product-price">${formatRupiah(p.price)}</div>
                         <div class="product-actions">
                             <button class="btn-small" onclick="editProduk('${p.id}')">Edit</button>
-                            <button class="btn-small" onclick="hapusProduk('${p.id}')">Hapus</button>
+                            <button class="btn-small danger" onclick="hapusProduk('${p.id}')">Hapus</button>
                         </div>
                     </div>
                 `;
@@ -760,107 +904,58 @@
         }
 
         async function muatDaftarPesananPenjual() {
-            const { data: pesanan, error: errorPesanan } = await supabase
-                .from('orders')
-                .select('*')
-                .eq('seller_id', idUserAktif)
-                .order('created_at', { ascending: false });
-
-            if (errorPesanan) {
-                console.error("Gagal mengambil pesanan penjual:", errorPesanan);
-                return;
-            }
+            const { data: pesanan, error } = await supabase
+                .from('orders').select('*').eq('seller_id', idUserAktif).order('created_at', { ascending: false });
+            if (error) { console.error(error); return; }
 
             const badge = document.getElementById('ordersBadge');
-            const activePending = pesanan.filter(o => o.status === "Menunggu Konfirmasi").length;
-            if (badge) {
-                if (activePending > 0) {
-                    badge.innerText = activePending;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
+            const pending = pesanan.filter(o => o.status === "Menunggu Konfirmasi").length;
+            badge.innerText = pending;
+            pending > 0 ? badge.classList.remove('hidden') : badge.classList.add('hidden');
 
             const container = document.getElementById('ordersContainer');
             container.innerHTML = '';
 
-            if (pesanan.length === 0) {
-                container.innerHTML = '<p class="font-serif text-zinc-400 italic text-center py-6">Belum ada pesanan masuk dari pembeli.</p>';
+            if (!pesanan.length) {
+                container.innerHTML = '<p style="font-family:Lora,serif;font-style:italic;color:#65676b;text-align:center;padding:24px 0;">Belum ada pesanan masuk.</p>';
                 return;
             }
 
             for (const order of pesanan) {
-                const { data: items } = await supabase
-                    .from('order_items')
-                    .select('*')
-                    .eq('order_id', order.id);
-
-                const { data: pembeli } = await supabase
-                    .from('profiles')
-                    .select('name')
-                    .eq('id', order.buyer_id)
-                    .single();
-
-                const buyerName = pembeli ? pembeli.name : "Pembeli Komunitas";
+                const { data: items } = await supabase.from('order_items').select('*').eq('order_id', order.id);
+                const { data: pembeli } = await supabase.from('profiles').select('name').eq('id', order.buyer_id).single();
+                const buyerName = pembeli?.name || "Pembeli";
                 const isPending = order.status === "Menunggu Konfirmasi";
+                const tanggal = new Date(order.created_at).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
 
-                let itemsHtml = '';
-                if (items) {
-                    itemsHtml = items.map(it => `
-                        <div class="flex justify-between text-xs py-1.5 border-b border-zinc-100 last:border-0">
-                            <span class="text-zinc-700">${it.product_name} <strong class="text-zinc-950 font-bold">x${it.qty}</strong></span>
-                            <span class="font-bold text-zinc-900">${formatRupiah(it.price * it.qty)}</span>
-                        </div>
-                    `).join('');
-                }
+                const itemsHtml = (items || []).map(it => `
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px;">
+                        <span style="font-family:Lora,serif;">${it.product_name} <strong>×${it.qty}</strong></span>
+                        <span style="font-family:Lora,serif;font-weight:700;">${formatRupiah(it.price * it.qty)}</span>
+                    </div>`).join('');
 
                 const card = document.createElement('div');
-                card.className = "border border-zinc-200 p-5 rounded-2xl flex flex-col gap-4 bg-white shadow-xs";
-                const tanggal = new Date(order.created_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
-
+                card.className = 'order-card';
                 card.innerHTML = `
-                    <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
                         <div>
-                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">${tanggal}</span>
-                            <h5 class="text-sm font-bold text-zinc-950">ID Transaksi: ${order.id.slice(0, 8).toUpperCase()}</h5>
+                            <div style="font-family:Lora,serif;font-size:11px;color:#65676b;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">${tanggal}</div>
+                            <div style="font-family:Lora,serif;font-size:14px;font-weight:700;">Transaksi #${order.id.slice(0,8).toUpperCase()}</div>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest ${
-                            isPending 
-                            ? 'bg-amber-100 text-amber-700' 
-                            : 'bg-emerald-100 text-emerald-700'
-                        }">
-                            ${order.status}
-                        </span>
+                        <span style="padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:800;font-family:Lora,serif;text-transform:uppercase;letter-spacing:.05em;${isPending?'background:#fef3c7;color:#b45309;':'background:#d1fae5;color:#065f46;'}">${order.status}</span>
                     </div>
-
-                    <div class="bg-zinc-50 p-4 rounded-xl text-xs space-y-1.5 border border-zinc-100">
-                        <div><strong class="text-zinc-800">Nama Penerima:</strong> ${buyerName}</div>
-                        <div><strong class="text-zinc-800">No. Telepon:</strong> ${order.shipping_phone || '-'}</div>
-                        <div><strong class="text-zinc-800">Alamat Tujuan:</strong> ${order.shipping_address || '-'}</div>
+                    <div style="background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:12px;font-size:13px;">
+                        <div style="font-family:Lora,serif;margin-bottom:4px;"><strong>Pembeli:</strong> ${buyerName}</div>
+                        <div style="font-family:Lora,serif;margin-bottom:4px;"><strong>Telepon:</strong> ${order.shipping_phone || '–'}</div>
+                        <div style="font-family:Lora,serif;"><strong>Alamat:</strong> ${order.shipping_address || '–'}</div>
                     </div>
-
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Ringkasan Produk</span>
-                        <div class="bg-white border border-zinc-200/60 rounded-xl px-4 py-2">
-                            ${itemsHtml}
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between border-t border-zinc-100 pt-3 mt-1">
+                    <div style="margin-bottom:12px;">${itemsHtml}</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e4e6eb;padding-top:12px;">
                         <div>
-                            <span class="text-[10px] text-zinc-400 block">Total Pembayaran</span>
-                            <span class="text-base font-serif font-bold text-zinc-950">${formatRupiah(order.total)}</span>
+                            <div style="font-family:Lora,serif;font-size:11px;color:#65676b;">Total</div>
+                            <div style="font-family:Lora,serif;font-size:18px;font-weight:700;">${formatRupiah(order.total)}</div>
                         </div>
-                        ${isPending ? `
-                            <button onclick="prosesKonfirmasiPesanan('${order.id}')" class="px-5 py-2.5 bg-zinc-950 text-white rounded-xl text-xs font-bold hover:bg-zinc-800 transition shadow-md">
-                                Konfirmasi & Kirim
-                            </button>
-                        ` : `
-                            <span class="text-xs text-emerald-600 font-bold flex items-center gap-1">
-                                Dikirim & Diproses
-                            </span>
-                        `}
+                        ${isPending ? `<button onclick="prosesKonfirmasiPesanan('${order.id}')" style="font-family:Lora,serif;font-size:13px;font-weight:700;background:#000;color:#fff;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;">Konfirmasi & Kirim</button>` : `<span style="font-family:Lora,serif;font-size:13px;font-weight:700;color:#065f46;">✓ Sedang Dikirim</span>`}
                     </div>
                 `;
                 container.appendChild(card);
@@ -868,115 +963,64 @@
         }
 
         async function prosesKonfirmasiPesanan(idPesanan) {
-            const { error } = await supabase
-                .from('orders')
-                .update({ status: "Sedang Dikirim" })
-                .eq('id', idPesanan);
-
-            if (error) {
-                tampilkanToast("Gagal melakukan konfirmasi pesanan: " + error.message, "#dc2626");
-                return;
-            }
-
-            tampilkanToast("Pesanan berhasil diproses & sedang dikirim!", "#10b981");
+            const { error } = await supabase.from('orders').update({ status: "Sedang Dikirim" }).eq('id', idPesanan);
+            if (error) { tampilkanToast("Gagal: " + error.message, "#dc2626"); return; }
+            tampilkanToast("Pesanan dikonfirmasi & sedang dikirim!", "#10b981");
             await muatDaftarPesananPenjual();
         }
 
         async function muatDaftarBelanjaanSaya() {
-            const { data: pesanan, error: errorPesanan } = await supabase
-                .from('orders')
-                .select('*')
-                .eq('buyer_id', idUserAktif)
-                .order('created_at', { ascending: false });
+            const { data: pesanan, error } = await supabase
+                .from('orders').select('*').eq('buyer_id', idUserAktif).order('created_at', { ascending: false });
+            if (error) { console.error(error); return; }
 
-            if (errorPesanan) {
-                console.error("Gagal mengambil riwayat belanjaan:", errorPesanan);
-                return;
-            }
-
-            const activePurchases = pesanan.filter(o => o.status !== "Selesai").length;
             const badge = document.getElementById('myOrdersBadge');
-            if (badge) {
-                if (activePurchases > 0) {
-                    badge.innerText = activePurchases;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
+            const aktif = pesanan.filter(o => o.status !== "Selesai").length;
+            badge.innerText = aktif;
+            aktif > 0 ? badge.classList.remove('hidden') : badge.classList.add('hidden');
 
             const container = document.getElementById('myOrdersContainer');
             container.innerHTML = '';
 
-            if (pesanan.length === 0) {
-                container.innerHTML = '<p class="font-serif text-zinc-400 italic text-center py-6">Anda belum memiliki riwayat pembelian produk apapun.</p>';
+            if (!pesanan.length) {
+                container.innerHTML = '<p style="font-family:Lora,serif;font-style:italic;color:#65676b;text-align:center;padding:24px 0;">Belum ada riwayat pembelian.</p>';
                 return;
             }
 
             for (const order of pesanan) {
-                const { data: items } = await supabase
-                    .from('order_items')
-                    .select('*')
-                    .eq('order_id', order.id);
-
-                const { data: penjual } = await supabase
-                    .from('profiles')
-                    .select('name')
-                    .eq('id', order.seller_id)
-                    .single();
-
-                const shopName = penjual ? penjual.name : "Toko Komunitas";
+                const { data: items } = await supabase.from('order_items').select('*').eq('order_id', order.id);
+                const { data: penjual } = await supabase.from('profiles').select('name').eq('id', order.seller_id).single();
+                const shopName = penjual?.name || "Toko";
                 const isPending = order.status === "Menunggu Konfirmasi";
+                const tanggal = new Date(order.created_at).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'});
 
-                let itemsHtml = '';
-                if (items) {
-                    itemsHtml = items.map(it => `
-                        <div class="flex justify-between text-xs py-1.5 border-b border-zinc-100 last:border-0">
-                            <span class="text-zinc-700">${it.product_name} <strong class="text-zinc-950 font-bold">x${it.qty}</strong></span>
-                            <span class="font-bold text-zinc-900">${formatRupiah(it.price * it.qty)}</span>
-                        </div>
-                    `).join('');
-                }
+                const itemsHtml = (items || []).map(it => `
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px;">
+                        <span style="font-family:Lora,serif;">${it.product_name} <strong>×${it.qty}</strong></span>
+                        <span style="font-family:Lora,serif;font-weight:700;">${formatRupiah(it.price * it.qty)}</span>
+                    </div>`).join('');
 
                 const card = document.createElement('div');
-                card.className = "border border-zinc-200 p-5 rounded-2xl flex flex-col gap-4 bg-white shadow-xs";
-                const tanggal = new Date(order.created_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
-
+                card.className = 'order-card';
                 card.innerHTML = `
-                    <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
                         <div>
-                            <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">${tanggal}</span>
-                            <h5 class="text-sm font-bold text-zinc-950">ID Transaksi: ${order.id.slice(0, 8).toUpperCase()}</h5>
+                            <div style="font-family:Lora,serif;font-size:11px;color:#65676b;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">${tanggal}</div>
+                            <div style="font-family:Lora,serif;font-size:14px;font-weight:700;">Transaksi #${order.id.slice(0,8).toUpperCase()}</div>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest ${
-                            isPending 
-                            ? 'bg-amber-100 text-amber-700' 
-                            : 'bg-indigo-100 text-indigo-700'
-                        }">
-                            ${order.status}
-                        </span>
+                        <span style="padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:800;font-family:Lora,serif;text-transform:uppercase;letter-spacing:.05em;${isPending?'background:#fef3c7;color:#b45309;':'background:#dbeafe;color:#1e40af;'}">${order.status}</span>
                     </div>
-
-                    <div class="bg-zinc-50 p-4 rounded-xl text-xs space-y-1.5 border border-zinc-100">
-                        <div><strong class="text-zinc-800">Nama Toko:</strong> ${shopName}</div>
-                        <div><strong class="text-zinc-800">Alamat Pengiriman Anda:</strong> ${order.shipping_address || '-'}</div>
+                    <div style="background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:12px;font-size:13px;">
+                        <div style="font-family:Lora,serif;"><strong>Toko:</strong> ${shopName}</div>
+                        <div style="font-family:Lora,serif;margin-top:4px;"><strong>Alamat Kirim:</strong> ${order.shipping_address || '–'}</div>
                     </div>
-
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Daftar Barang Belanja</span>
-                        <div class="bg-white border border-zinc-200/60 rounded-xl px-4 py-2">
-                            ${itemsHtml}
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between border-t border-zinc-100 pt-3 mt-1">
+                    <div style="margin-bottom:12px;">${itemsHtml}</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e4e6eb;padding-top:12px;">
                         <div>
-                            <span class="text-[10px] text-zinc-400 block">Total Belanjaan</span>
-                            <span class="text-base font-serif font-bold text-zinc-950">${formatRupiah(order.total)}</span>
+                            <div style="font-family:Lora,serif;font-size:11px;color:#65676b;">Total Belanjaan</div>
+                            <div style="font-family:Lora,serif;font-size:18px;font-weight:700;">${formatRupiah(order.total)}</div>
                         </div>
-                        <span class="text-xs text-zinc-500 italic">
-                            Metode pembayaran: SandyPay
-                        </span>
+                        <span style="font-family:Lora,serif;font-size:13px;color:#65676b;font-style:italic;">via SandyPay</span>
                     </div>
                 `;
                 container.appendChild(card);
@@ -984,33 +1028,23 @@
         }
 
         function pindahTabToko(tabName) {
-            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-            if (tabName === 'products') {
-                document.getElementById('tabContentProducts').classList.add('active');
-                document.getElementById('btnTabProducts').classList.add('active');
-            } else if (tabName === 'orders') {
-                document.getElementById('tabContentOrders').classList.add('active');
-                document.getElementById('btnTabOrders').classList.add('active');
-                muatDaftarPesananPenjual();
-            } else if (tabName === 'my-orders') {
-                document.getElementById('tabContentMyOrders').classList.add('active');
-                document.getElementById('btnTabMyOrders').classList.add('active');
-                muatDaftarBelanjaanSaya();
+            const map = { products: ['tabContentProducts','btnTabProducts'], orders: ['tabContentOrders','btnTabOrders'], 'my-orders': ['tabContentMyOrders','btnTabMyOrders'] };
+            if (map[tabName]) {
+                document.getElementById(map[tabName][0]).classList.add('active');
+                document.getElementById(map[tabName][1]).classList.add('active');
             }
+
+            if (tabName === 'orders') muatDaftarPesananPenjual();
+            if (tabName === 'my-orders') muatDaftarBelanjaanSaya();
         }
 
         async function prosesKeluar() {
-            const { error } = await supabase.auth.signOut();
-            if (error) {
-                tampilkanToast("Keluar gagal: " + error.message, "#dc2626");
-                return;
-            }
-            tampilkanToast("Berhasil keluar...", "#dc2626");
-            setTimeout(() => {
-                window.location.href = "auth.html";
-            }, 1000);
+            await supabase.auth.signOut();
+            tampilkanToast("Berhasil keluar…", "#dc2626");
+            setTimeout(() => window.location.href = "auth.html", 1000);
         }
 
         function editProfilModal() {
@@ -1029,60 +1063,50 @@
 
         async function saveProfilDetails() {
             const newName = document.getElementById('editNameInput').value.trim();
-            const newBio = document.getElementById('editBioInput').value.trim();
+            if (!newName) { tampilkanToast("Nama tidak boleh kosong!", "#ef4444"); return; }
 
-            if (!newName) {
-                tampilkanToast("Nama tidak boleh kosong!", "#ef4444");
-                return;
-            }
+            const { error } = await supabase.from('profiles').update({
+                name: newName,
+                message: document.getElementById('editBioInput').value.trim(),
+                phone: document.getElementById('editPhoneInput').value.trim(),
+                address: document.getElementById('editAddressInput').value.trim(),
+                banner_url: document.getElementById('editBannerInput').value.trim()
+            }).eq('id', idUserAktif);
 
-            const newPhone = document.getElementById('editPhoneInput').value.trim();
-            const newAddress = document.getElementById('editAddressInput').value.trim();
-            const newBanner = document.getElementById('editBannerInput').value.trim();
-
-            const { error } = await supabase
-                .from('profiles')
-                .update({ name: newName, message: newBio, phone: newPhone, address: newAddress, banner_url: newBanner })
-                .eq('id', idUserAktif);
-
-            if (error) {
-                tampilkanToast("Gagal menyimpan profil: " + error.message, "#ef4444");
-                return;
-            }
-
-            tampilkanToast("Profil berhasil diperbarui!", "#10b981");
+            if (error) { tampilkanToast("Gagal: " + error.message, "#ef4444"); return; }
+            tampilkanToast("Profil diperbarui!", "#10b981");
             closeEditProfilModal();
             await muatDataProfil();
         }
 
         function editAvatarPrompt() {
-            const newUrl = prompt("Masukkan URL foto profil yang baru:", userProfilAktif ? userProfilAktif.avatar_url || '' : '');
-            if (newUrl !== null) {
-                saveAvatarUrl(newUrl);
+            const url = prompt("URL foto profil baru:", userProfilAktif?.avatar_url || '');
+            if (url !== null) saveAvatarUrl(url);
+        }
+
+        function editBannerPrompt() {
+            const url = prompt("URL banner baru:", userProfilAktif?.banner_url || '');
+            if (url !== null && url.trim()) {
+                saveBannerUrl(url.trim());
             }
         }
 
         async function saveAvatarUrl(url) {
-            const { error } = await supabase
-                .from('profiles')
-                .update({ avatar_url: url })
-                .eq('id', idUserAktif);
+            const { error } = await supabase.from('profiles').update({ avatar_url: url }).eq('id', idUserAktif);
+            if (error) { tampilkanToast("Gagal ubah foto profil", "#ef4444"); return; }
+            tampilkanToast("Foto profil diubah!", "#10b981");
+            await muatDataProfil();
+        }
 
-            if (error) {
-                tampilkanToast("Gagal mengubah foto profil", "#ef4444");
-                return;
-            }
-
-            tampilkanToast("Foto profil berhasil diubah!", "#10b981");
+        async function saveBannerUrl(url) {
+            const { error } = await supabase.from('profiles').update({ banner_url: url }).eq('id', idUserAktif);
+            if (error) { tampilkanToast("Gagal ubah banner", "#ef4444"); return; }
+            tampilkanToast("Banner diubah!", "#10b981");
             await muatDataProfil();
         }
 
         function tambahProdukModal() {
-            document.getElementById('prodNameInput').value = '';
-            document.getElementById('prodDescInput').value = '';
-            document.getElementById('prodTagInput').value = '';
-            document.getElementById('prodPriceInput').value = '';
-            document.getElementById('prodPhotoInput').value = '';
+            ['prodNameInput','prodDescInput','prodTagInput','prodPriceInput','prodPhotoInput'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('tambahProdukModal').classList.remove('hidden');
         }
 
@@ -1093,74 +1117,46 @@
         async function saveNewProduct() {
             const name = document.getElementById('prodNameInput').value.trim();
             const price = parseFloat(document.getElementById('prodPriceInput').value);
-            const photoUrl = document.getElementById('prodPhotoInput').value.trim();
+            if (!name || isNaN(price) || price <= 0) { tampilkanToast("Lengkapi nama & harga!", "#ef4444"); return; }
 
-            if (!name || isNaN(price) || price <= 0) {
-                tampilkanToast("Lengkapi nama produk dan harga dengan benar!", "#ef4444");
-                return;
-            }
+            const { error } = await supabase.from('products').insert([{
+                name,
+                description: document.getElementById('prodDescInput').value.trim(),
+                tag: document.getElementById('prodTagInput').value.trim(),
+                price,
+                photo_url: document.getElementById('prodPhotoInput').value.trim(),
+                user_id: idUserAktif
+            }]);
 
-            const description = document.getElementById('prodDescInput').value.trim();
-            const tag = document.getElementById('prodTagInput').value.trim();
-
-            const { error } = await supabase
-                .from('products')
-                .insert([{
-                    name: name,
-                    description: description,
-                    tag: tag,
-                    price: price,
-                    photo_url: photoUrl,
-                    user_id: idUserAktif
-                }]);
-
-            if (error) {
-                tampilkanToast("Gagal menambahkan produk: " + error.message, "#ef4444");
-                return;
-            }
-
-            tampilkanToast("Produk berhasil ditambahkan!", "#10b981");
+            if (error) { tampilkanToast("Gagal: " + error.message, "#ef4444"); return; }
+            tampilkanToast("Produk ditambahkan!", "#10b981");
             closeTambahProdukModal();
             await muatProdukToko();
         }
 
-        function editProduk(id) {
-            tampilkanToast("Fitur edit produk sedang dikembangkan", "#4285F4");
-        }
+        function editProduk(id) { tampilkanToast("Fitur edit produk sedang dikembangkan", "#4285F4"); }
 
         async function hapusProduk(id) {
             if (!confirm("Hapus produk ini?")) return;
-            const { error } = await supabase
-                .from('products')
-                .delete()
-                .eq('id', id);
-            
-            if (error) {
-                tampilkanToast("Gagal menghapus produk", "#dc2626");
-                return;
-            }
-            tampilkanToast("Produk berhasil dihapus", "#10b981");
+            const { error } = await supabase.from('products').delete().eq('id', id);
+            if (error) { tampilkanToast("Gagal hapus produk", "#dc2626"); return; }
+            tampilkanToast("Produk dihapus", "#10b981");
             await muatProdukToko();
         }
 
         function formatRupiah(num) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+            return new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', minimumFractionDigits:0 }).format(num);
         }
 
-        function tampilkanToast(message, colorHex) {
-            const toast = document.getElementById('shopToast');
-            const toastMsg = document.getElementById('toastMessage');
-            if (toast && toastMsg) {
-                toastMsg.innerText = message;
-                toast.style.borderColor = colorHex || '#fff';
-                toast.style.display = 'flex';
-                setTimeout(() => { toast.style.display = 'none'; }, 3000);
-            }
+        function tampilkanToast(msg, color) {
+            const t = document.getElementById('shopToast');
+            document.getElementById('toastMessage').innerText = msg;
+            t.style.borderLeftColor = color || '#fff';
+            t.style.display = 'flex';
+            setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            periksaSesi();
-        });
+        document.addEventListener("DOMContentLoaded", periksaSesi);
     </script>
 </body>
 </html>
