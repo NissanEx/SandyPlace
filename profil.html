@@ -7,7 +7,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js"></script>
+    <script src="supabase.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,600;0,700;1,400&family=Inter:wght=300;400;500;600;700&display=swap');
 
@@ -415,7 +415,6 @@
             z-index: 1000;
         }
 
-        /* Loading screen styles */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -449,7 +448,6 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen untuk login check -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
     </div>
@@ -468,7 +466,6 @@
         </div>
 
         <div class="profile-card">
-            <!-- Avatar Bulat Overlap -->
             <div class="profile-avatar-wrapper">
                 <img id="profileAvatar" src="https://placehold.co/220x220" class="profile-avatar-img">
                 <div class="avatar-hover-overlay" onclick="editAvatarPrompt()">
@@ -476,14 +473,11 @@
                 </div>
             </div>
 
-            <!-- Detail Bio Kiri & Kolom Pesan Kanan -->
             <div class="flex-1 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 w-full">
-                <!-- Data Detail -->
                 <div>
                     <span class="info-label">nama</span>
                     <h1 class="info-value-name" id="profileName">Loading...</h1>
                     
-                    <!-- Bio / Pesan Saya -->
                     <div class="mt-4">
                         <span class="text-xs text-zinc-400 font-semibold tracking-wider uppercase block mb-1">pesan saya</span>
                         <p class="info-value-italic" id="profileBio">Sedang dimuat...</p>
@@ -494,7 +488,6 @@
                     </div>
                 </div>
 
-                <!-- Area Ikuti / Follow Up Panel -->
                 <div class="bg-zinc-900/60 border border-zinc-800 p-6 rounded-2xl min-w-[200px] text-center md:text-left">
                     <span class="text-[10px] text-zinc-500 font-extrabold uppercase tracking-widest block mb-3">Ikuti (Follow Up)</span>
                     <div class="flex items-center justify-around md:justify-start md:gap-8 gap-4">
@@ -512,7 +505,6 @@
             </div>
         </div>
 
-        <!-- Tabs untuk Products, Orders, & My Orders -->
         <div class="tabs-section">
             <div class="tabs-header">
                 <button id="btnTabProducts" class="tab-btn active" onclick="pindahTabToko('products')">
@@ -600,39 +592,41 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="shopToast" class="toast-notif"><span id="toastMessage"></span></div>
 
     <script>
-        // ===== INISIALISASI & SESSION CHECK =====
         let idUserAktif = null;
         let userProfilAktif = null;
 
+        // Memvalidasi integritas library Supabase sebelum memanggil getSession
         async function periksaSesi() {
             try {
                 console.log('periksaSesi: Memulai verifikasi sesi autentikasi...');
                 
-                // Ambil data sesi secara real-time dari Supabase
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                if (!window.supabase) {
+                    console.warn("Library Supabase belum sepenuhnya terinisialisasi. Menunggu...");
+                    setTimeout(periksaSesi, 500);
+                    return;
+                }
+
+                const { data: { session }, error: sessionError } = await window.supabase.auth.getSession();
                 
-                // Jika terjadi galat atau sesi tidak ditemukan, arahkan langsung ke halaman autentikasi
-           if (sessionError || !session || !session.user) {
-    // Sembunyikan dulu loading screen
-    document.getElementById('loadingScreen').classList.add('hidden');
-    
-    tampilkanToast("Akses ditolak. Silakan masuk terlebih dahulu.", "#dc2626");
-    setTimeout(() => {
-        window.location.href = "auth.html";
-    }, 1200);
-    return;
-}
+                // Menutup skenario jika user tidak terautentikasi / mengalami error session
+                if (sessionError || !session || !session.user) {
+                    document.getElementById('loadingScreen').classList.add('hidden');
+                    tampilkanToast("Akses ditolak. Silakan masuk terlebih dahulu.", "#dc2626");
+                    setTimeout(() => {
+                        window.location.href = "auth.html";
+                    }, 1200);
+                    return;
+                }
+                
                 idUserAktif = session.user.id;
                 console.log('periksaSesi: Sesi terverifikasi sah. ID Pengguna:', idUserAktif);
                 
                 await muatDataProfil();
                 await muatProdukToko();
                 
-                // Sembunyikan loading screen setelah data dimuat dengan aman
                 document.getElementById('loadingScreen').classList.add('hidden');
             } catch (error) {
                 console.error("Error saat periksaSesi:", error);
@@ -660,7 +654,6 @@
             document.getElementById('profileName').innerText = data.name || 'User Baru';
             document.getElementById('profileBio').innerText = data.message || 'Selamat datang di profil saya! Silakan jelajahi toko saya di bawah untuk melihat rilis produk terbaru kami.';
             
-            // Integrasikan data Pengikut & Mengikuti dari Supabase secara dinamis
             document.getElementById('statFollowers').innerText = (data.followers_count !== undefined && data.followers_count !== null) ? data.followers_count : 0;
             document.getElementById('statFollowing').innerText = (data.following_count !== undefined && data.following_count !== null) ? data.following_count : 0;
 
@@ -721,7 +714,6 @@
                 return;
             }
 
-            // Update badge
             const badge = document.getElementById('ordersBadge');
             const activePending = pesanan.filter(o => o.status === "Menunggu Konfirmasi").length;
             if (badge) {
@@ -833,7 +825,6 @@
             await muatDaftarPesananPenjual();
         }
 
-        // ===== MY ORDERS TRACKING (PEMBELI) =====
         async function muatDaftarBelanjaanSaya() {
             const { data: pesanan, error: errorPesanan } = await supabase
                 .from('orders')
@@ -846,7 +837,6 @@
                 return;
             }
 
-            // Update badge jumlah belanjaan yang sedang aktif diproses
             const activePurchases = pesanan.filter(o => o.status !== "Selesai").length;
             const badge = document.getElementById('myOrdersBadge');
             if (badge) {
@@ -966,7 +956,6 @@
             }, 1000);
         }
 
-        // ===== MODAL CONTROLLERS & LOGICS =====
         function editProfilModal() {
             if (!userProfilAktif) return;
             document.getElementById('editNameInput').value = userProfilAktif.name || '';
@@ -1002,9 +991,6 @@
             await muatDataProfil();
         }
 
-        /************************************************************************
-         * UPDATE: Perubahan Foto Avatar Supabase
-         ************************************************************************/
         function editAvatarPrompt() {
             const newUrl = prompt("Masukkan URL foto profil yang baru:", userProfilAktif ? userProfilAktif.avatar_url || '' : '');
             if (newUrl !== null) {
