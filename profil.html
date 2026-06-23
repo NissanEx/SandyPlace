@@ -51,31 +51,63 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.06);
         }
 
+        /* PERBAIKAN: Gaya logo agar persis dengan index.html */
         .navbar-logo {
             font-family: 'Lora', serif;
-            font-size: 28px;
-            line-height: 0.9;
-            text-decoration: none;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            flex-direction: row; /* Ubah ke baris untuk desktop/umum */
             user-select: none;
-        }
-        .navbar-logo .l1 { font-weight: 400; color: #8c8c8c; font-size: 14px; letter-spacing: 0.05em; }
-        .navbar-logo .l2 { font-weight: 700; color: #000; font-size: 22px; margin-left: 22px; margin-top: -2px; }
-
-        .btn-keluar-nav {
-            font-family: 'Lora', serif;
-            font-size: 13px;
-            font-weight: 600;
-            background: #7f0505;
-            color: #fff;
-            border: none;
-            padding: 8px 22px;
-            border-radius: 8px;
+            text-decoration: none;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .btn-keluar-nav:hover { background: #600404; }
+        .navbar-logo .l1 { 
+            font-weight: 400; 
+            color: #8c8c8c; 
+            font-size: 14px; 
+            letter-spacing: 0.05em; 
+            margin-right: 4px; /* Jarak antara kata */
+        }
+        .navbar-logo .l2 { 
+            font-weight: 700; 
+            color: #000; 
+            font-size: 22px; 
+            line-height: 1;
+        }
+
+        /* Menambahkan media query agar responsif seperti di index */
+        @media (max-width: 768px) {
+            .navbar-logo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar-logo .l1 {
+                margin-right: 0;
+                margin-bottom: -2px;
+            }
+            .navbar-logo .l2 {
+                margin-left: 0;
+            }
+        }
+
+        /* PERBAIKAN: Tombol keluar diganti icon roda gigi */
+        .btn-settings-nav {
+            font-size: 24px;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: color 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-settings-nav:hover { 
+            color: var(--text-primary);
+            background: #e4e6eb;
+        }
 
         /* ========== PROFILE SECTION ========== */
         .profile-section {
@@ -644,6 +676,40 @@
         
         /* Utility to hide elements */
         .hidden { display: none !important; }
+
+        /* Gaya untuk modal Pengaturan Akun */
+        .settings-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Lora', serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            background: #f7f8fa;
+        }
+        .settings-menu-item:hover {
+            background: #e4e6eb;
+        }
+        .settings-menu-item.danger {
+            color: #dc2626;
+            background: #fef2f2;
+        }
+        .settings-menu-item.danger:hover {
+            background: #fee2e2;
+        }
+        .settings-menu-item i {
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -664,8 +730,34 @@
             <span class="l1">Sandy</span>
             <span class="l2">Place</span>
         </a>
-        <button class="btn-keluar-nav" onclick="prosesKeluar()">Keluar</button>
+        <!-- PERBAIKAN: Tombol Pengaturan menggantikan tombol Keluar langsung -->
+        <button class="btn-settings-nav" onclick="bukaPengaturanModal()" title="Pengaturan Akun">
+            <i class="ph ph-gear"></i>
+        </button>
     </nav>
+
+    <!-- ===== MODAL: PENGATURAN AKUN ===== -->
+    <div id="pengaturanModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 400px; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);">
+                <h3 class="modal-title" style="margin: 0; border: none; padding: 0;">Pengaturan Akun</h3>
+                <button onclick="tutupPengaturanModal()" style="background:none; border:none; cursor:pointer; font-size:20px; color:var(--text-secondary);"><i class="ph ph-x"></i></button>
+            </div>
+            
+            <div class="settings-menu">
+                <button class="settings-menu-item" onclick="bukaGantiSandiModal()">
+                    <i class="ph ph-lock-key"></i> Ganti Kata Sandi
+                </button>
+                <button class="settings-menu-item danger" onclick="bukaHapusAkunModal()">
+                    <i class="ph ph-user-minus"></i> Hapus Akun
+                </button>
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 8px 0;">
+                <button class="settings-menu-item" onclick="prosesKeluar()" style="justify-content: center; background: #1a1a2e; color: white;">
+                    <i class="ph ph-sign-out"></i> Keluar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ===== PROFILE SECTION ===== -->
     <div class="profile-section" style="max-width:940px;margin:0 auto;">
@@ -826,7 +918,7 @@
         </div>
     </div>
 
-    <!-- ===== MODAL: KONFIRMASI HAPUS ===== -->
+    <!-- ===== MODAL: KONFIRMASI HAPUS PRODUK ===== -->
     <div id="confirmDeleteModal" class="modal-overlay hidden">
         <div class="modal-box" style="max-width: 380px; text-align: center; padding: 32px 24px;">
             <i class="ph-fill ph-warning-circle" style="font-size: 48px; color: #ef4444; margin-bottom: 16px; display: inline-block;"></i>
@@ -835,6 +927,44 @@
             <div class="modal-footer" style="justify-content: center; border:none; padding-top:0;">
                 <button class="btn-modal-cancel" onclick="closeConfirmDeleteModal()">Batal</button>
                 <button class="btn-modal-save" style="background: #dc2626;" onclick="eksekusiHapusProduk()">Hapus Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: GANTI KATA SANDI ===== -->
+    <div id="gantiSandiModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 400px;">
+            <h3 class="modal-title">Ganti Kata Sandi</h3>
+            
+            <label class="modal-label">Kata Sandi Baru</label>
+            <input type="password" id="newPasswordInput" class="modal-input" placeholder="Masukkan kata sandi baru">
+
+            <label class="modal-label">Konfirmasi Kata Sandi Baru</label>
+            <input type="password" id="confirmPasswordInput" class="modal-input" placeholder="Ulangi kata sandi baru">
+            
+            <p id="passwordErrorMsg" style="color: #dc2626; font-size: 12px; margin-top: -8px; margin-bottom: 12px; display: none;"></p>
+
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="tutupGantiSandiModal()">Batal</button>
+                <button class="btn-modal-save" onclick="prosesGantiSandi()">Perbarui Sandi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: KONFIRMASI HAPUS AKUN ===== -->
+    <div id="hapusAkunModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 380px; text-align: center; padding: 32px 24px;">
+            <i class="ph-fill ph-user-minus" style="font-size: 48px; color: #dc2626; margin-bottom: 16px; display: inline-block;"></i>
+            <h3 class="modal-title" style="border:none; padding-bottom:0; margin-bottom: 12px; font-size: 22px;">Hapus Akun Permanen?</h3>
+            <p style="font-family: 'Lora', serif; color: var(--text-secondary); margin-bottom: 16px; font-size: 14px; line-height: 1.5;">
+                Semua data Anda, termasuk produk, pesanan, dan profil akan dihapus secara permanen. Anda akan langsung dialihkan ke halaman Login.
+            </p>
+            <p style="font-family: 'Lora', serif; color: #dc2626; font-weight: bold; margin-bottom: 24px; font-size: 14px;">
+                Tindakan ini tidak dapat dibatalkan!
+            </p>
+            <div class="modal-footer" style="justify-content: center; border:none; padding-top:0;">
+                <button class="btn-modal-cancel" onclick="tutupHapusAkunModal()">Batal</button>
+                <button class="btn-modal-save" style="background: #dc2626;" onclick="prosesHapusAkun()">Hapus Akun</button>
             </div>
         </div>
     </div>
@@ -855,7 +985,10 @@
                 if (error || !session || !session.user) {
                     document.getElementById('loadingScreen').classList.add('hidden');
                     tampilkanToast("Akses ditolak. Akses login diperlukan.", "#dc2626");
-                    // Redirect dinonaktifkan untuk lingkungan preview
+                    // Redirect jika tidak dalam lingkungan preview
+                    setTimeout(() => {
+                         window.location.href = "auth.html";
+                    }, 1500);
                     return;
                 }
 
@@ -1060,15 +1193,112 @@
             if (tabName === 'my-orders') muatDaftarBelanjaanSaya();
         }
 
+        // Fungsi Pengaturan Modal
+        function bukaPengaturanModal() {
+            document.getElementById('pengaturanModal').classList.remove('hidden');
+        }
+
+        function tutupPengaturanModal() {
+            document.getElementById('pengaturanModal').classList.add('hidden');
+        }
+
         async function prosesKeluar() {
+            tutupPengaturanModal();
             if (window.supabase) {
                 await window.supabase.auth.signOut();
             }
             tampilkanToast("Berhasil keluar…", "#dc2626");
             setTimeout(() => {
-                // Hanya reload halaman saat ini untuk mereset state, tanpa berpindah ke file lain
-                window.location.reload();
+                window.location.href = "auth.html";
             }, 1000);
+        }
+
+        // Fitur Ganti Sandi
+        function bukaGantiSandiModal() {
+            tutupPengaturanModal();
+            document.getElementById('newPasswordInput').value = '';
+            document.getElementById('confirmPasswordInput').value = '';
+            document.getElementById('passwordErrorMsg').style.display = 'none';
+            document.getElementById('gantiSandiModal').classList.remove('hidden');
+        }
+
+        function tutupGantiSandiModal() {
+            document.getElementById('gantiSandiModal').classList.add('hidden');
+        }
+
+        async function prosesGantiSandi() {
+            const newPassword = document.getElementById('newPasswordInput').value;
+            const confirmPassword = document.getElementById('confirmPasswordInput').value;
+            const errorMsg = document.getElementById('passwordErrorMsg');
+
+            if (newPassword.length < 6) {
+                errorMsg.innerText = "Kata sandi minimal 6 karakter.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                errorMsg.innerText = "Konfirmasi kata sandi tidak cocok.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+
+            try {
+                const { data, error } = await window.supabase.auth.updateUser({
+                    password: newPassword
+                });
+
+                if (error) throw error;
+
+                tutupGantiSandiModal();
+                tampilkanToast("Kata sandi berhasil diperbarui!", "#10b981");
+            } catch (error) {
+                tampilkanToast("Gagal mengubah sandi: " + error.message, "#dc2626");
+            }
+        }
+
+        // Fitur Hapus Akun
+        function bukaHapusAkunModal() {
+            tutupPengaturanModal();
+            document.getElementById('hapusAkunModal').classList.remove('hidden');
+        }
+
+        function tutupHapusAkunModal() {
+            document.getElementById('hapusAkunModal').classList.add('hidden');
+        }
+
+        async function prosesHapusAkun() {
+            if (!idUserAktif) return;
+            
+            try {
+                // Di Supabase, menghapus user biasa dilakukan melalui Admin API.
+                // Untuk lingkungan ini, kita panggil fungsi edge/RPC jika ada, 
+                // atau kita hapus data dari tabel terkait lalu sign out user.
+                
+                // Hapus data dari public.profiles (Akan memicu cascade delete jika diatur di DB)
+                const { error: deleteProfileError } = await window.supabase
+                    .from('profiles')
+                    .delete()
+                    .eq('id', idUserAktif);
+                    
+                if(deleteProfileError) throw deleteProfileError;
+                
+                // Keluar dari sesi
+                await window.supabase.auth.signOut();
+                
+                tutupHapusAkunModal();
+                tampilkanToast("Akun Anda telah berhasil dihapus.", "#dc2626");
+                
+                setTimeout(() => {
+                    window.location.href = "auth.html";
+                }, 1500);
+                
+            } catch (error) {
+                tampilkanToast("Gagal menghapus akun: " + error.message, "#dc2626");
+                tutupHapusAkunModal();
+            }
         }
 
         function editProfilModal() {
