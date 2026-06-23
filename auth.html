@@ -8,9 +8,8 @@
     <!-- Memuat Supabase JS Client dari CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase.js"></script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght=0,400;0,600;0,700;1,400&family=Inter:wght=400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
 
         :root {
             --bg-color: #ffffff;
@@ -35,18 +34,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 24px;
+            padding: 40px 60px;
             width: 100%;
             background: transparent;
         }
-        @media (min-width: 768px) {
-            .header-bar {
-                padding: 40px 60px;
-            }
-        }
 
         .logo {
-            font-size: 28px;
+            font-size: 44px;
             line-height: 0.8;
             cursor: pointer;
             display: flex;
@@ -56,16 +50,7 @@
             text-decoration: none;
         }
         .logo .light { font-weight: 400; color: #8c8c8c; }
-        .logo .bold  { font-weight: 700; color: #000; margin-left: 35px; margin-top: -4px; }
-        @media (min-width: 768px) {
-            .logo {
-                font-size: 44px;
-            }
-            .logo .bold {
-                margin-left: 55px;
-                margin-top: -6px;
-            }
-        }
+        .logo .bold  { font-weight: 700; color: #000; margin-left: 55px; margin-top: -6px; }
 
         .cs-btn {
             background: none;
@@ -85,63 +70,49 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 24px 40px 24px;
+            padding: 0 60px 60px 60px;
             max-width: 1440px;
             margin: 0 auto;
             width: 100%;
         }
-        @media (min-width: 768px) {
-            .auth-container {
-                padding: 0 40px 60px 40px;
-            }
-        }
-        @media (min-width: 1024px) {
-            .auth-container {
-                padding: 0 60px 60px 60px;
-            }
-        }
 
         .auth-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 80px;
             width: 100%;
             align-items: center;
         }
-        @media (min-width: 768px) {
+
+        @media (max-width: 1024px) {
             .auth-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
                 gap: 50px;
             }
-        }
-        @media (min-width: 1024px) {
-            .auth-grid {
-                grid-template-columns: 1.1fr 1fr;
-                gap: 80px;
+            .header-bar {
+                padding: 20px 30px;
+            }
+            .auth-container {
+                padding: 0 30px 40px 30px;
             }
         }
 
         .quote-panel {
-            display: none;
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 28px;
+            padding: 55px;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
-        @media (min-width: 768px) {
-            .quote-panel {
-                background-color: #000000;
-                color: #ffffff;
-                border-radius: 28px;
-                padding: 55px;
-                min-height: 380px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-                position: relative;
-                overflow: hidden;
-                transition: transform 0.3s ease;
-            }
-            .quote-panel:hover {
-                transform: translateY(-4px);
-            }
+        .quote-panel:hover {
+            transform: translateY(-4px);
         }
 
         .quote-content-wrapper {
@@ -205,59 +176,42 @@
             justify-content: center;
             width: 100%;
             max-width: 520px;
-            margin: 0 auto;
+            margin-left: auto;
         }
-        @media (min-width: 768px) {
+
+        @media (max-width: 1024px) {
             .form-panel {
-                margin-left: auto;
-                margin-right: 0;
+                margin: 0 auto;
             }
         }
 
         .form-title {
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 600;
             color: #000000;
-            margin-bottom: 24px;
-            text-align: center;
+            margin-bottom: 40px;
             transition: opacity 0.2s ease;
-        }
-        @media (min-width: 768px) {
-            .form-title {
-                font-size: 32px;
-                margin-bottom: 40px;
-                text-align: left;
-            }
         }
 
         .form-row {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            align-items: center;
+            margin-bottom: 24px;
             position: relative;
-            width: 100%;
         }
-        @media (min-width: 1024px) {
+
+        @media (max-width: 480px) {
             .form-row {
-                display: grid;
-                grid-template-columns: 140px 1fr;
-                align-items: center;
-                gap: 0;
-                margin-bottom: 24px;
+                grid-template-columns: 1fr;
+                gap: 8px;
             }
         }
 
         .form-label {
-            font-size: 16px;
+            font-size: 18px;
             color: #000000;
             font-weight: 500;
-        }
-        @media (min-width: 1024px) {
-            .form-label {
-                font-size: 18px;
-            }
         }
 
         .form-input {
@@ -276,29 +230,28 @@
             background-color: #d6d6d6;
         }
 
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
         .btn-auth {
-            text-align: center;
             font-family: 'Lora', serif;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
-            padding: 14px 20px;
+            padding: 12px 32px;
             border-radius: 9999px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             border: none;
-            white-space: nowrap;
-        }
-        @media (min-width: 480px) {
-            .btn-auth {
-                padding: 12px 32px;
-                font-size: 16px;
-            }
         }
 
         .btn-auth.active {
             background-color: #000000;
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .btn-auth.active:hover {
             transform: scale(1.04);
@@ -325,12 +278,7 @@
         .row-transition.show {
             max-height: 100px;
             opacity: 1;
-            margin-bottom: 20px;
-        }
-        @media (min-width: 1024px) {
-            .row-transition.show {
-                margin-bottom: 24px;
-            }
+            margin-bottom: 24px;
         }
 
         .cs-overlay {
@@ -345,53 +293,34 @@
             padding: 20px;
             animation: fadeIn 0.3s ease;
         }
-        
         .cs-modal {
             background: #ffffff;
             border: 2px solid #000000;
             border-radius: 28px;
             max-width: 450px;
             width: 100%;
-            padding: 24px;
+            padding: 35px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.25);
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @media (min-width: 480px) {
-            .cs-modal {
-                padding: 35px;
-            }
         }
 
         .toast-notif {
             display: none;
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
             background: #000;
             color: white;
             border: 1px solid #fff;
-            padding: 14px 20px;
+            padding: 16px 28px;
             border-radius: 9999px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             z-index: 3000;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
             align-items: center;
-            justify-content: center;
             gap: 10px;
             animation: slideUpFade 0.3s ease-out;
-            text-align: center;
-        }
-        @media (min-width: 768px) {
-            .toast-notif {
-                left: auto;
-                right: 30px;
-                width: auto;
-                font-size: 14px;
-                text-align: left;
-                justify-content: flex-start;
-            }
         }
     </style>
 </head>
@@ -418,7 +347,7 @@
     <div class="auth-container">
         <div class="auth-grid">
             
-            <!-- Panel Kutipan Kiri (Tampil Mulai Layar MD/Tablet Ke Atas) -->
+            <!-- Panel Kutipan Kiri -->
             <div class="quote-panel">
                 <div class="quote-content-wrapper" id="quoteWrapper">
                     <div class="quote-book-title" id="bookTitle">Madilog</div>
@@ -464,9 +393,9 @@
                         <input type="password" id="confirmPassword" class="form-input" placeholder="Ulangi kata sandi">
                     </div>
 
-                    <div class="btn-container flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 mt-6 sm:mt-9">
-                        <button type="button" id="signUpBtn" class="btn-auth w-full sm:w-auto inactive order-2 sm:order-1" onclick="setMode('signup')">Sign-Up</button>
-                        <button type="submit" id="signInBtn" class="btn-auth w-full sm:w-auto active order-1 sm:order-2">Sign-In</button>
+                    <div class="btn-container">
+                        <button type="button" id="signUpBtn" class="btn-auth inactive" onclick="setMode('signup')">Sign-Up</button>
+                        <button type="submit" id="signInBtn" class="btn-auth active">Sign-In</button>
                     </div>
                 </form>
             </div>
@@ -492,22 +421,6 @@
     <div id="shopToast" class="toast-notif"><span id="toastMessage"></span></div>
 
     <script>
-        // === INISIALISASI SUPABASE SECARA MANDIRI & AMAN ===
-        const SUPABASE_URL = 'https://aprnwmcliuubjosmtqis.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_OX9pW9J_w-oC6QCZPqPYcg_a0TogFm3';
-
-        let supabase;
-        if (window.supabase) {
-            if (typeof window.supabase.createClient === 'function') {
-                // Inisialisasi jika masih berupa pustaka CDN mentah
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                window.supabase = supabase;
-            } else {
-                // Gunakan instansi klien yang sudah terbentuk sebelumnya
-                supabase = window.supabase;
-            }
-        }
-
         const quotesRepository = [
             {
                 book: "Madilog",
@@ -536,8 +449,6 @@
             const bodyEl = document.getElementById('quoteBody');
             const authorEl = document.getElementById('bookAuthor');
             const dots = document.querySelectorAll('.carousel-dot');
-
-            if (!wrapper) return; // Penanganan aman jika elemen tidak dirender di mobile
 
             wrapper.classList.add('fade-out');
 
@@ -589,16 +500,13 @@
                 document.getElementById('userFullName').setAttribute('required', 'true');
                 document.getElementById('confirmPassword').setAttribute('required', 'true');
 
-                // Mengaktifkan pendaftaran (submit) dan mencabut listener pergantian mode
-                signUpBtn.className = "btn-auth active w-full sm:w-auto order-1 sm:order-2";
+                signUpBtn.className = "btn-auth active";
                 signUpBtn.setAttribute('type', 'submit');
-                signUpBtn.removeAttribute('onclick');
-                signUpBtn.onclick = null;
+                signUpBtn.removeAttribute('onclick'); // PERBAIKAN: hapus onclick agar bisa submit form
 
-                // Mengubah tombol masuk menjadi tombol pasif pengalih mode
-                signInBtn.className = "btn-auth inactive w-full sm:w-auto order-2 sm:order-1";
+                signInBtn.className = "btn-auth inactive";
                 signInBtn.setAttribute('type', 'button');
-                signInBtn.onclick = function() { setMode('signin'); };
+                signInBtn.setAttribute('onclick', "setMode('signin')");
             } else {
                 header.innerText = "Sign In";
                 fullNameRow.classList.remove('show');
@@ -607,16 +515,13 @@
                 document.getElementById('userFullName').removeAttribute('required');
                 document.getElementById('confirmPassword').removeAttribute('required');
 
-                // Mengaktifkan tombol masuk (submit) dan mencabut listener pergantian mode
-                signInBtn.className = "btn-auth active w-full sm:w-auto order-1 sm:order-2";
+                signInBtn.className = "btn-auth active";
                 signInBtn.setAttribute('type', 'submit');
-                signInBtn.removeAttribute('onclick');
-                signInBtn.onclick = null;
+                signInBtn.removeAttribute('onclick'); // sudah benar, pertahankan
 
-                // Mengubah tombol pendaftaran menjadi tombol pasif pengalih mode
-                signUpBtn.className = "btn-auth inactive w-full sm:w-auto order-2 sm:order-1";
+                signUpBtn.className = "btn-auth inactive";
                 signUpBtn.setAttribute('type', 'button');
-                signUpBtn.onclick = function() { setMode('signup'); };
+                signUpBtn.setAttribute('onclick', "setMode('signup')");
             }
         }
 
@@ -624,11 +529,6 @@
             event.preventDefault();
             const email = document.getElementById('userEmail').value.trim();
             const pass = document.getElementById('userPassword').value;
-
-            if (!supabase) {
-                showToast("Supabase belum siap. Silakan muat ulang halaman.", "#dc2626");
-                return;
-            }
 
             if (authMode === 'signup') {
                 const fullName = document.getElementById('userFullName').value.trim();
@@ -641,14 +541,12 @@
 
                 showToast("Sedang mendaftarkan akun di Supabase...", "#4285F4");
 
-                // Mengirim metadata full_name agar trigger handle_new_user() dapat membacanya otomatis
+                // Proses pendaftaran dengan Supabase Auth
                 const { data, error } = await supabase.auth.signUp({
                     email: email,
                     password: pass,
                     options: {
-                        data: {
-                            full_name: fullName
-                        }
+                        data: { full_name: fullName } // PERBAIKAN: sertakan metadata nama
                     }
                 });
 
@@ -658,13 +556,10 @@
                 }
 
                 if (data.user) {
-                    // MENGGUNAKAN UPSERT dengan { onConflict: 'id' }:
-                    // Jika database trigger "handle_new_user" sudah menginsert baris di tabel profiles terlebih dahulu,
-                    // upsert ini akan melakukan update properti tambahan dengan aman (menghindari error duplicate key pkey).
-                    // Menyertakan nama kolom "followers" dan "following" (int4) yang valid sesuai ER Diagram (image_09a37a.png).
+                    // Buat baris profil di table profiles sesuai ERD schema
                     const { error: profileError } = await supabase
                         .from('profiles')
-                        .upsert([{
+                        .insert([{
                             id: data.user.id,
                             name: fullName,
                             email: email,
@@ -673,10 +568,10 @@
                             message: "Selamat datang di profil saya! Silakan jelajahi toko saya di bawah.",
                             followers: 0,
                             following: 0
-                        }], { onConflict: 'id' });
+                        }]);
 
                     if (profileError) {
-                        console.error("Gagal memperbarui data profil tambahan:", profileError);
+                        console.error("Gagal membuat profil data:", profileError);
                     }
 
                     showToast("Pendaftaran Berhasil! Silakan masuk.", "#10b981");
@@ -687,6 +582,7 @@
             } else {
                 showToast("Sedang melakukan verifikasi masuk...", "#4285F4");
                 
+                // Proses masuk dengan Supabase Auth
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: pass
@@ -720,27 +616,15 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            // Hanya aktifkan rotasi kutipan jika panel kutipan dimuat/ditampilkan (layar lebar)
-            if (window.innerWidth >= 768) {
-                startQuoteCarousel();
-            }
+document.addEventListener("DOMContentLoaded", async () => {
+    startQuoteCarousel();
 
-            if (!supabase) {
-                console.error("Gagal mengakses instansi klien Supabase.");
-                return;
-            }
-
-            try {
-                // Pakai getSession() langsung dari supabase client yang telah dipastikan terinisialisasi
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session && session.user) {
-                    window.location.href = "profil.html";
-                }
-            } catch (e) {
-                console.error("Kesalahan memeriksa sesi aktif:", e);
-            }
-        });
+    // Pakai getSession() langsung, bukan fungsi custom
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session && session.user) {
+        window.location.href = "profil.html";
+    }
+});
     </script>
 </body>
 </html>
